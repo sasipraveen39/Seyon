@@ -16,38 +16,65 @@ html,body,.container-fluid {
 	margin-top: 30%;
 }
 
-.homepage-logo{
+.homepage-content-image-box {
+	overflow: hidden;
+	padding-right:0;
+    padding-left:0;
+}
+
+.homepage-content-image {
+	transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	-webkit-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	height: 100%;
+	width: 100%;
+	color: #fff;
+	text-align: center;
+	text-rendering: optimizeLegibility;
+	border-radius: 0rem;
+	border:0px;
+	padding:-10px;
+}
+
+.homepage-content-image:hover {
+	transform: scale(1.2);
+	-moz-transform: scale(1.2);
+	-webkit-transform: scale(1.2);
+	-o-transform: scale(1.2);
+	-ms-transform: scale(1.2); /* IE 9 */
+	-ms-filter:
+		"progid:DXImageTransform.Microsoft.Matrix(M11=1.2, M12=0, M21=0, M22=1.2, SizingMethod='auto expand')";
+	/* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=1.2, M12=0, M21=0,
+		M22=1.2, SizingMethod='auto expand' ); /* IE6 and 7 */
+}
+
+.homepage-logo {
 	background-color: #fff;
 }
 
 .homepage-content1 {
-	background: linear-gradient(#102765, rgba(0, 0, 0, 0.55)), url("../../resources/pics/house3.jpg") no-repeat center;
-    background-size: cover;
-    color: #fff;
-    text-align: center;
-    text-rendering: optimizeLegibility;
+	background: linear-gradient(#102765, rgba(0, 0, 0, 0.55) ),
+		url("../../resources/pics/house3.jpg") no-repeat center;
+	background-size: cover;
 }
 
 .homepage-content2 {
-	background: linear-gradient(#5D8C07, rgba(0, 0, 0, 0.55)), url("../../resources/pics/house2.jpg") no-repeat center;
-    background-size: cover;
-    color: #fff;
-    text-align: center;
-    text-rendering: optimizeLegibility;
+	background: linear-gradient(#5D8C07, rgba(0, 0, 0, 0.55) ),
+		url("../../resources/pics/house2.jpg") no-repeat center;
+	background-size: cover;
 }
 
 .homepage-content3 {
-	background: linear-gradient(#7B0744, rgba(0, 0, 0, 0.55)), url("../../resources/pics/house4.jpg") no-repeat center;
-    background-size: cover;
-    color: #fff;
-    text-align: center;
-    text-rendering: optimizeLegibility;
+	background: linear-gradient(#7B0744, rgba(0, 0, 0, 0.55) ),
+		url("../../resources/pics/house4.jpg") no-repeat center;
+	background-size: cover;
 }
 
 .homepage-content4 {
-	background: linear-gradient(#976808, rgba(0, 0, 0, 0.55)), url("../../resources/pics/house1.jpg") no-repeat center;
-    background-size: cover;
-    color: #fff;
-    text-align: center;
-    text-rendering: optimizeLegibility;
+	background: linear-gradient(#976808, rgba(0, 0, 0, 0.55) ),
+		url("../../resources/pics/house1.jpg") no-repeat center;
+	background-size: cover;
 }
