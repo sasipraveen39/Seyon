@@ -1,0 +1,95 @@
+package co.seyon.test;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import co.seyon.dao.Bundle;
+import co.seyon.model.*;
+
+public class ScratchPad {
+
+	public static void main(String[] args) {
+		System.out.println("Start");
+		
+		Bundle bundle = new Bundle();
+		
+		Login login = new Login();
+		login.setUsername("sasipraveen45");
+		login.setPassword("sample");
+		login.setActive(true);
+		login.setUserType("ADMIN");
+		
+		User user = new User();
+		user.setName("Sasi Praveen");
+		user.setEmail("sasipraveen39@gmail.com");
+		user.setMobileNumber("9790829078");
+		user.setLandlineNumber("04442817868");
+		
+		Address address = new Address();
+		address.setAddressLine1("No. 108, T.K.Mudali St, Choolai");
+		address.setState("Tamil Nadu");
+		address.setCity("Chennai");
+		address.setCountry("India");
+		address.setPincode("600112");
+		address.setAddressType("MAILING");
+		
+		user.setAddress(address);
+		login.setUser(user);
+		
+		Project project = new Project();
+		project.setTitle("Sample Project1");
+		project.setProjectType("COMMERCIAL");
+		project.setCode("1234");
+		project.setClientName("Sasi Praveen");
+		project.setAddress(address);
+		project.setTotalAreaOfProject(2500);
+		project.setEstimatedEndDate(new Date());
+		project.setStartDate(new Date());
+		project.setRequestedDate(new Date());
+		project.setEstimatedTotalAmount(new BigDecimal(1000.12));
+		project.setUser(user);
+		
+		History history = new History();
+		history.setChangeReason("Sample");
+		history.setFieldName("Sample");
+		history.setCurrentValue("Sample");
+		history.setProject(project);
+		history.setHistoryType("Added");
+		history.setPreviousValue("<none>");
+		
+		Document document = new Document();
+		document.setName("Sample");
+		document.setFileLocation("Sample");
+		document.setDocumentType("Sample");
+		document.setProject(project);
+		
+		Drawing drawing = new Drawing();
+		drawing.setDateOfIssue(new Date());
+		drawing.setDrawingNumber("1234");
+		drawing.setTypeOfDrawing("Mail");
+		drawing.setDocument(document);
+		drawing.setStatus("FINAL");
+		drawing.setProject(project);
+		
+		Bill bill = new Bill();
+		bill.setBillDate(new Date());
+		bill.setBillType("Sample");
+		bill.setBillNumber("12345");
+		bill.setTotalBillAmount(new BigDecimal(2000.33));
+		bill.setDocument(document);
+		bill.setBillStatus("Pending");
+		bill.setProject(project);
+		
+		Payment payment = new Payment();
+		payment.setStatus("not Paid");
+		payment.setDueDate(new Date());
+		payment.setDocument(document);
+		payment.setBill(bill);
+		payment.setAmountPayable(new BigDecimal(100.22));
+		
+		bundle.persistAll(new Object[]{login,user, address, project, drawing, document, bill, payment, history});
+		bundle.closeConnection();
+		
+		System.out.println("Complete");
+	}
+}
