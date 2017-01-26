@@ -3,6 +3,8 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import co.seyon.enums.BillType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -91,12 +93,12 @@ public class Bill implements Serializable {
 		this.billStatus = billStatus;
 	}
 
-	public String getBillType() {
-		return this.billType;
+	public BillType getBillType() {
+		return BillType.valueOf(this.billType);
 	}
 
-	public void setBillType(String billType) {
-		this.billType = billType;
+	public void setBillType(BillType billType) {
+		this.billType = billType.toString();
 	}
 
 	public Timestamp getCreateTime() {

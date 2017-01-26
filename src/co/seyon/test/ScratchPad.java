@@ -4,6 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import co.seyon.dao.Bundle;
+import co.seyon.enums.AddressType;
+import co.seyon.enums.BillType;
+import co.seyon.enums.DocumentType;
+import co.seyon.enums.DrawingType;
+import co.seyon.enums.HistoryType;
+import co.seyon.enums.UserType;
 import co.seyon.model.*;
 
 public class ScratchPad {
@@ -14,10 +20,10 @@ public class ScratchPad {
 		Bundle bundle = new Bundle();
 		
 		Login login = new Login();
-		login.setUsername("sasipraveen45");
+		login.setUsername("sasipraveen48");
 		login.setPassword("sample");
 		login.setActive(true);
-		login.setUserType("ADMIN");
+		login.setUserType(UserType.ADMIN);
 		
 		User user = new User();
 		user.setName("Sasi Praveen");
@@ -31,7 +37,7 @@ public class ScratchPad {
 		address.setCity("Chennai");
 		address.setCountry("India");
 		address.setPincode("600112");
-		address.setAddressType("MAILING");
+		address.setAddressType(AddressType.BILLING);
 		
 		user.setAddress(address);
 		login.setUser(user);
@@ -54,26 +60,26 @@ public class ScratchPad {
 		history.setFieldName("Sample");
 		history.setCurrentValue("Sample");
 		history.setProject(project);
-		history.setHistoryType("Added");
+		history.setHistoryType(HistoryType.ADD);
 		history.setPreviousValue("<none>");
 		
 		Document document = new Document();
 		document.setName("Sample");
 		document.setFileLocation("Sample");
-		document.setDocumentType("Sample");
+		document.setDocumentType(DocumentType.BILL);
 		document.setProject(project);
 		
 		Drawing drawing = new Drawing();
 		drawing.setDateOfIssue(new Date());
 		drawing.setDrawingNumber("1234");
-		drawing.setTypeOfDrawing("Mail");
+		drawing.setTypeOfDrawing(DrawingType.STRUCTURAL);
 		drawing.setDocument(document);
 		drawing.setStatus("FINAL");
 		drawing.setProject(project);
 		
 		Bill bill = new Bill();
 		bill.setBillDate(new Date());
-		bill.setBillType("Sample");
+		bill.setBillType(BillType.ADVANCE);
 		bill.setBillNumber("12345");
 		bill.setTotalBillAmount(new BigDecimal(2000.33));
 		bill.setDocument(document);

@@ -3,6 +3,8 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import co.seyon.enums.ModeOfPayment;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -96,12 +98,12 @@ public class Payment implements Serializable {
 		this.dueDate = dueDate;
 	}
 
-	public String getModeOfPayment() {
-		return this.modeOfPayment;
+	public ModeOfPayment getModeOfPayment() {
+		return ModeOfPayment.valueOf(this.modeOfPayment);
 	}
 
-	public void setModeOfPayment(String modeOfPayment) {
-		this.modeOfPayment = modeOfPayment;
+	public void setModeOfPayment(ModeOfPayment modeOfPayment) {
+		this.modeOfPayment = modeOfPayment.toString();
 	}
 
 	public int getPaymentDate() {

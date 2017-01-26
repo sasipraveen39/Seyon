@@ -3,6 +3,8 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import co.seyon.enums.DrawingType;
+
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -90,12 +92,12 @@ public class Drawing implements Serializable {
 		this.status = status;
 	}
 
-	public String getTypeOfDrawing() {
-		return this.typeOfDrawing;
+	public DrawingType getTypeOfDrawing() {
+		return DrawingType.valueOf(this.typeOfDrawing);
 	}
 
-	public void setTypeOfDrawing(String typeOfDrawing) {
-		this.typeOfDrawing = typeOfDrawing;
+	public void setTypeOfDrawing(DrawingType typeOfDrawing) {
+		this.typeOfDrawing = typeOfDrawing.toString();
 	}
 
 	public Project getProject() {

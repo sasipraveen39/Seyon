@@ -3,6 +3,8 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import co.seyon.enums.DocumentType;
+
 import java.sql.Timestamp;
 
 
@@ -79,12 +81,12 @@ public class Document implements Serializable {
 		this.description = description;
 	}
 
-	public String getDocumentType() {
-		return this.documentType;
+	public DocumentType getDocumentType() {
+		return DocumentType.valueOf(this.documentType);
 	}
 
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
+	public void setDocumentType(DocumentType documentType) {
+		this.documentType = documentType.toString();
 	}
 
 	public String getFileLocation() {

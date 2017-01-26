@@ -3,6 +3,8 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import co.seyon.enums.AddressType;
+
 import java.sql.Timestamp;
 
 
@@ -90,12 +92,12 @@ public class Address implements Serializable {
 		this.addressLine3 = addressLine3;
 	}
 
-	public String getAddressType() {
-		return this.addressType;
+	public AddressType getAddressType() {
+		return AddressType.valueOf(this.addressType);
 	}
 
-	public void setAddressType(String addressType) {
-		this.addressType = addressType;
+	public void setAddressType(AddressType addressType) {
+		this.addressType = addressType.toString();
 	}
 
 	public String getCity() {

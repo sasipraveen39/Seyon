@@ -2,6 +2,9 @@ package co.seyon.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import co.seyon.enums.HistoryType;
+
 import java.sql.Timestamp;
 
 
@@ -85,12 +88,12 @@ public class History implements Serializable {
 		this.fieldName = fieldName;
 	}
 
-	public String getHistoryType() {
-		return this.historyType;
+	public HistoryType getHistoryType() {
+		return HistoryType.valueOf(this.historyType);
 	}
 
-	public void setHistoryType(String historyType) {
-		this.historyType = historyType;
+	public void setHistoryType(HistoryType historyType) {
+		this.historyType = historyType.toString();
 	}
 
 	public String getPreviousValue() {

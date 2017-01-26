@@ -2,6 +2,9 @@ package co.seyon.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import co.seyon.enums.UserType;
+
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -98,12 +101,12 @@ public class Login implements Serializable {
 		this.password = password;
 	}
 
-	public String getUserType() {
-		return this.userType;
+	public UserType getUserType() {
+		return UserType.valueOf(this.userType);
 	}
 
-	public void setUserType(String userType) {
-		this.userType = userType;
+	public void setUserType(UserType userType) {
+		this.userType = userType.toString();
 	}
 
 	public String getUsername() {
