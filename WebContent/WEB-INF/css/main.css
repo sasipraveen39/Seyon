@@ -1,1 +1,53 @@
 @CHARSET "ISO-8859-1";
+
+html,body,.container-fluid {
+	height: 100%;
+}
+
+.full-height {
+	height: 100%;
+}
+
+.half-height {
+	height: 50%;
+}
+
+.vertical-center {
+	margin-top: 30%;
+}
+
+.homepage-logo{
+	background-color: #fff;
+}
+
+.homepage-content1 {
+	background: linear-gradient(#102765, rgba(0, 0, 0, 0.55)), url("../../resources/pics/house3.jpg") no-repeat center;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    text-rendering: optimizeLegibility;
+}
+
+.homepage-content2 {
+	background: linear-gradient(#5D8C07, rgba(0, 0, 0, 0.55)), url("../../resources/pics/house2.jpg") no-repeat center;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    text-rendering: optimizeLegibility;
+}
+
+.homepage-content3 {
+	background: linear-gradient(#7B0744, rgba(0, 0, 0, 0.55)), url("../../resources/pics/house4.jpg") no-repeat center;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    text-rendering: optimizeLegibility;
+}
+
+.homepage-content4 {
+	background: linear-gradient(#976808, rgba(0, 0, 0, 0.55)), url("../../resources/pics/house1.jpg") no-repeat center;
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    text-rendering: optimizeLegibility;
+}
