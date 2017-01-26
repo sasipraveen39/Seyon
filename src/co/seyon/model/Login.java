@@ -8,50 +8,56 @@ import co.seyon.enums.UserType;
 import java.util.Date;
 import java.sql.Timestamp;
 
-
 /**
  * The persistent class for the login database table.
  * 
  */
 @Entity
-@Table(name="login")
+@Table(name = "login")
+@NamedQueries({
+		@NamedQuery(name = "Login.findAll", query = "SELECT l FROM Login l"),
+		@NamedQuery(name = "Login.findByUserName", query = "SELECT l FROM Login l WHERE l.username = :username") })
 public class Login implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(unique=true, nullable=false)
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(unique = true, nullable = false)
 	private int idlogin;
 
-	@Column(nullable=false)
+	@Column(nullable = false)
 	private boolean active;
 
-	@Column(name="create_time", nullable=false)
+	@Column(name = "create_time", nullable = false)
 	private Timestamp createTime;
 
-    @Temporal( TemporalType.TIMESTAMP)
-	@Column(name="last_login")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_login")
 	private Date lastLogin;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "current_login")
+	private Date currentLogin;
 
-	@Column(name="logged_in", nullable=false)
+	@Column(name = "logged_in", nullable = false)
 	private boolean loggedIn;
 
-	@Column(nullable=false, length=1000)
+	@Column(nullable = false, length = 1000)
 	private String password;
 
-	@Column(name="user_type", nullable=false, length=45)
+	@Column(name = "user_type", nullable = false, length = 45)
 	private String userType;
 
-	@Column(nullable=false, length=45)
+	@Column(nullable = false, length = 45)
 	private String username;
 
-	//bi-directional one-to-one association to User
-	@OneToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="user_id", nullable=false)
+	// bi-directional one-to-one association to User
+	@OneToOne(cascade = { CascadeType.ALL })
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
-    public Login() {
-    }
+	public Login() {
+	}
 
 	public int getIdlogin() {
 		return this.idlogin;
@@ -124,5 +130,26 @@ public class Login implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
+	public Date getCurrentLogin() {
+		return currentLogin;
+	}
+
+	public void setCurrentLogin(Date currentLogin) {
+		this.currentLogin = currentLogin;
+	}
+
+	public boolean isActiveAndNotExpired() {
+		boolean result = false;
+		switch (this.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				result = true;
+				break;
+			default:
+				result = this.getActive();
+		}
+		return result;
+	}
+
 }
