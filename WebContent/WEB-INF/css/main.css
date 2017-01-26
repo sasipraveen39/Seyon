@@ -13,13 +13,16 @@ html,body,.container-fluid {
 }
 
 .vertical-center {
-	margin-top: 30%;
+	min-height: 100%;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
 }
 
 .homepage-content-image-box {
 	overflow: hidden;
-	padding-right:0;
-    padding-left:0;
+	padding-right: 0;
+	padding-left: 0;
 }
 
 .homepage-content-image {
@@ -33,9 +36,7 @@ html,body,.container-fluid {
 	color: #fff;
 	text-align: center;
 	text-rendering: optimizeLegibility;
-	border-radius: 0rem;
-	border:0px;
-	padding:-10px;
+	cursor: pointer;
 }
 
 .homepage-content-image:hover {
@@ -77,4 +78,19 @@ html,body,.container-fluid {
 	background: linear-gradient(#976808, rgba(0, 0, 0, 0.55) ),
 		url("../../resources/pics/house1.jpg") no-repeat center;
 	background-size: cover;
+}
+
+.login-container {
+	transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	-webkit-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	height: 100%;
+	width: 100%;
+	margin-top: 0%;
+}
+
+.login-container:hover {
+	margin-top: -70%;
 }
