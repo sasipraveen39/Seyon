@@ -33,7 +33,6 @@ html,body,.container-fluid {
 	-o-transition: all 1s ease;
 	height: 100%;
 	width: 100%;
-	color: #fff;
 	text-align: center;
 	text-rendering: optimizeLegibility;
 	cursor: pointer;
@@ -78,6 +77,54 @@ html,body,.container-fluid {
 	background: linear-gradient(#976808, rgba(0, 0, 0, 0.55) ),
 		url("../../resources/pics/house1.jpg") no-repeat center;
 	background-size: cover;
+}
+
+.homepage-content{	
+	transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	-webkit-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	
+	min-height: 50%;
+	min-height: 50vh;
+	padding: 0;
+    margin: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.homepage-content:hover {
+	transform: scale(0.85);
+	-moz-transform: scale(0.85);
+	-webkit-transform: scale(0.85);
+	-o-transform: scale(0.85);
+	-ms-transform: scale(1); /* IE 9 */
+	-ms-filter:
+		"progid:DXImageTransform.Microsoft.Matrix(M11=0.85, M12=0, M21=0, M22=0.85, SizingMethod='auto expand')";
+	/* IE8 */
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.85, M12=0, M21=0,
+		M22=0.85, SizingMethod='auto expand' ); /* IE6 and 7 */
+}
+
+
+
+
+.homepage-content-logo{
+}
+
+.flex-row {
+    width: auto;
+}
+.flex-item {
+    padding: 0.1em;
+    line-height: 100%;
+    text-align: center;
+}
+
+.homepage-content-desc{
+	color:#fff;
 }
 
 .login-container {

@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="resources/css/bootstrap-grid.min.css">
 <link rel="stylesheet" href="resources/css/bootstrap-reboot.min.css">
 <link rel="stylesheet" href="resources/css/main.css">
+<link rel="stylesheet" href="resources/css/font-awesome.min.css">
 
 </head>
 <body></body>

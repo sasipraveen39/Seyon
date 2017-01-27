@@ -11,29 +11,82 @@
 		<div class="row full-height">
 			<div class="col homepage-logo">
 				<div class="vertical-center">
-					<img class="img-fluid"
-						src="resources/pics/seyon-full.png" alt="Seyon logo">
+					<img class="img-fluid" src="resources/pics/seyon-full.png"
+						alt="Seyon logo">
 				</div>
 			</div>
 			<div class="col">
 				<div class="row half-height">
 					<div class="col homepage-content-image-box">
-						<div class="homepage-content1 homepage-content-image">Sample
-							1</div>
+						<div class="homepage-content1 homepage-content-image">
+							<div class="homepage-content">
+								<div class="flex-row">
+									<div class="flex-item homepage-content-logo">
+										<span class="fa-stack fa-3x"> <i
+											class="fa fa-circle fa-stack-2x fa-inverse"></i> <i
+											class="fa fa-shopping-cart fa-stack-1x"></i>
+										</span>
+									</div>
+									<div class="flex-item homepage-content-desc">
+										Shop for construction materials at <br />production rate 
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="col homepage-content-image-box">
-						<div class="homepage-content2 homepage-content-image">Sample
-							2</div>
+						<div class="homepage-content2 homepage-content-image">
+							<div class="homepage-content">
+								<div class="flex-row">
+									<div class="flex-item homepage-content-logo">
+										<span class="fa-stack fa-3x"> <i
+											class="fa fa-circle fa-stack-2x fa-inverse"></i> <i
+											class="fa fa-envelope-open fa-stack-1x"></i>
+										</span>
+									</div>
+									<div class="flex-item homepage-content-desc">
+										Drop us a note and we will <br />contact you
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="row half-height">
 					<div class="col homepage-content-image-box">
-						<div class="homepage-content3 homepage-content-image">Sample
-							3</div>
+						<div class="homepage-content3 homepage-content-image">
+							<div class="homepage-content">
+								<div class="flex-row">
+									<div class="flex-item homepage-content-logo">
+										<span class="fa-stack fa-3x"> <i
+											class="fa fa-circle fa-stack-2x fa-inverse"></i> <i
+											class="fa fa-camera fa-stack-1x"></i>
+										</span>
+									</div>
+									<div class="flex-item homepage-content-desc">
+										Unique world class designs at<br />economic price
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="col homepage-content-image-box">
 						<div class="login-container">
-							<div class=" homepage-content4 homepage-content-image">Login</div>
+							<div class="homepage-content4 homepage-content-image">
+								<div class="homepage-content">
+									<div class="flex-row">
+										<div class="flex-item homepage-content-logo">
+											<span class="fa-stack fa-3x"> <i
+												class="fa fa-circle fa-stack-2x fa-inverse"></i> <i
+												class="fa fa-sign-in fa-stack-1x"></i>
+											</span>
+										</div>
+										<div class="flex-item homepage-content-desc">
+											Login to check the status of<br/>your dream project
+										</div>
+									</div>
+								</div>
+							</div>
 							<div class="card">
 								<div class="card-block">
 									<h3 class="card-title">Login</h3>
