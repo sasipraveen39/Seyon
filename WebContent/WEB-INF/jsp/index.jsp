@@ -90,9 +90,30 @@
 							<div class="card">
 								<div class="card-block">
 									<h3 class="card-title">Login</h3>
-									<p class="card-text">With supporting text below as a
-										natural lead-in to additional content.</p>
-									<a href="#" class="btn btn-primary">Login</a>
+									<div class="card-text">
+										<form>
+											<div class="form-group row">
+												<label for="username" class="col-sm-3 col-form-label">Username</label>
+												<div class="col-sm-9">
+													<input type="email" class="form-control" id="username"
+														placeholder="Username">
+												</div>
+											</div>
+											<div class="form-group row">
+												<label for="password" class="col-sm-3 col-form-label">Password</label>
+												<div class="col-sm-9">
+													<input type="password" class="form-control"
+														id="password" placeholder="Password">
+												</div>
+											</div>
+											<div class="form-group row">
+												<div class="offset-sm-3 col-sm-9">
+													<button type="submit" class="btn btn-primary">Sign
+														in</button>
+												</div>
+											</div>
+										</form>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -111,7 +132,7 @@
 										<small>Copyright © 2017, </small><img
 											src="resources/pics/seyon.png" width="20" height="27"
 											class="d-inline-block align-top" alt="Seyon logo">
-											Seyon. <small>All Rights Reserved.</small>
+										Seyon. <small>All Rights Reserved.</small>
 									</footer></li>
 								<li class="footer-link"><a href="#">About us</a></li>
 								<li><a href="#">Contact us</a></li>
