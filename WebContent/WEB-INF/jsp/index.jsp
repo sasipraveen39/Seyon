@@ -28,7 +28,7 @@
 										</span>
 									</div>
 									<div class="flex-item homepage-content-desc">
-										Shop for construction materials at <br />production rate 
+										Shop for construction materials at <br />production rate
 									</div>
 								</div>
 							</div>
@@ -82,7 +82,7 @@
 											</span>
 										</div>
 										<div class="flex-item homepage-content-desc">
-											Login to check the status of<br/>your dream project
+											Login to check the status of<br />your dream project
 										</div>
 									</div>
 								</div>
@@ -98,6 +98,27 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="navbar-xs">
+				<nav class="navbar fixed-bottom navbar-inverse bg-inverse bg-faded">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<div class="navbar-brand">
+							<ul class="footer-links">
+								<li><footer>
+										<small>Copyright © 2017, </small><img
+											src="resources/pics/seyon.png" width="20" height="27"
+											class="d-inline-block align-top" alt="Seyon logo">
+											Seyon. <small>All Rights Reserved.</small>
+									</footer></li>
+								<li class="footer-link"><a href="#">About us</a></li>
+								<li><a href="#">Contact us</a></li>
+							</ul>
+						</div>
+					</div>
+				</nav>
 			</div>
 		</div>
 	</div>
