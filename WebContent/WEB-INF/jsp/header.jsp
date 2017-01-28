@@ -36,23 +36,28 @@
 </script>
 </head>
 <body>
-	<div class="navbar-xs">
-		<nav class="navbar fixed-bottom navbar-inverse bg-inverse bg-faded">
-			<div class="navbar-header">
-				<div class="navbar-brand">
-					<ul class="footer-links">
-						<li><footer>
-								<small>Copyright © 2017, </small><img
-									src="resources/pics/seyon.png" width="20" height="27"
-									class="d-inline-block align-top" alt="Seyon logo"> Seyon.
-								<small>All Rights Reserved.</small>
-							</footer></li>
-						<li class="footer-link"><a href="#">About us</a></li>
-						<li><a href="#">Contact us</a></li>
-					</ul>
-				</div>
+	<nav
+		class="navbar fixed-bottom navbar-toggleable-md navbar-inverse bg-inverse bg-faded navbar-content">
+		<div class="container">
+			<button class="navbar-toggler navbar-toggler-right" type="button"
+				data-toggle="collapse" data-target="#navbarNavDropdownFooter"
+				aria-controls="navbarNavDropdownFooter" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand navbar-brand-footer" href="/Seyon"> <span class="small-font">Copyright © 2017, </span><img
+				src="resources/pics/seyon.png" width="22" height="29"
+				class="d-inline-block align-top" alt="Seyon logo"><span
+				class="navbar-brand-footer-text"> Seyon.</span><span class="small-font"> All Rights Reserved.</span>
+			</a>
+			<div class="collapse navbar-collapse justify-content-end"
+				id="navbarNavDropdownFooter">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link  footer-link" href="#">About us</a></li>
+					<li class="nav-item"><a class="nav-link  footer-link" href="#">Contact us</a></li>
+				</ul>
 			</div>
-		</nav>
-	</div>
+		</div>
+	</nav>
 </body>
 </html>
