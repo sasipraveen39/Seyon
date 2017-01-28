@@ -11,6 +11,7 @@ import co.seyon.enums.DrawingType;
 import co.seyon.enums.HistoryType;
 import co.seyon.enums.UserType;
 import co.seyon.model.*;
+import co.seyon.util.EncryptionUtil;
 
 public class ScratchPad {
 
@@ -20,10 +21,10 @@ public class ScratchPad {
 		Bundle bundle = new Bundle();
 		
 		Login login = new Login();
-		login.setUsername("sasipraveen48");
-		login.setPassword("sample");
+		login.setUsername("sasipraveen50");
+		login.setPassword(EncryptionUtil.getSecurePassword("sample"));
 		login.setActive(true);
-		login.setUserType(UserType.ADMIN);
+		login.setUserType(UserType.VENDOR);
 		
 		User user = new User();
 		user.setName("Sasi Praveen");

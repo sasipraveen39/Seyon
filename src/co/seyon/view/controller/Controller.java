@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.seyon.dao.Finder;
+import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
 import co.seyon.model.Login;
@@ -28,6 +30,7 @@ import co.seyon.view.validator.PasswordValidator;
 
 @org.springframework.stereotype.Controller
 public class Controller {
+	public static final String LOGIN = "login";
 	public static final String ERROR_MESSAGE = "errorMessage";
 	public static final String USER = "user";
 	public static final String LOGGEDIN = "loggedIn";
@@ -35,6 +38,10 @@ public class Controller {
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
 	public static final String RETURN_PAGE = "returnpage";
+	
+	private static final String VENDOR = UserType.VENDOR.toString().toLowerCase();
+	private static final String ADMIN = UserType.ADMIN.toString().toLowerCase();
+	private static final String CLIENT = UserType.CLIENT.toString().toLowerCase();
 	
 	private SeyonService service;
 	private Finder finder;
@@ -67,7 +74,14 @@ public class Controller {
 		if(loggedIn != null){
 			nextPage="redirect:dashboard";
 		}else {
-			model.addAttribute("login", new Login());
+			Login login = null;
+			if(model.containsAttribute(LOGIN)){
+				login = (Login)model.asMap().get(LOGIN); 
+			}else{
+				login = new Login();
+			}
+			login.setPassword(null);
+			model.addAttribute(LOGIN, login);
 			nextPage ="index";
 		}
 		return nextPage;
@@ -79,8 +93,8 @@ public class Controller {
 	}
 
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public String login(@ModelAttribute("login") Login login,
-			BindingResult result, Model model, HttpServletRequest request) {
+	public String login(@ModelAttribute(LOGIN) Login login,
+			BindingResult result, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
 		String nextPage = "redirect:/";
 		try {
 			User loggedIn = service.login(login.getUsername(),
@@ -91,12 +105,14 @@ public class Controller {
 				request.getSession().setAttribute(LOGGEDINNAME, name);
 				nextPage = "redirect:dashboard";
 			} else {
-				model.addAttribute(ERROR_MESSAGE, "Invalid Username/Password");
+				redirectAttributes.addFlashAttribute(LOGIN, login);
+				redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Invalid Username/Password");
 			}
 		} catch (UserDeActiveException e) {
-			model.addAttribute(ERROR_MESSAGE, "Username has been de-activated");
+			redirectAttributes.addFlashAttribute(LOGIN, login);
+			redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Username has been de-activated");
 		} catch (InitialPasswordException e) {
-			model.addAttribute(USERNAME, login.getUsername());
+			redirectAttributes.addFlashAttribute(USERNAME, login.getUsername());
 			nextPage = "redirect:resetPassword";
 		}
 		return nextPage;
@@ -158,13 +174,14 @@ public class Controller {
 			Login login = loggedIn.getLogin();
 			switch (login.getUserType()) {
 			case ADMIN:
-				nextPage = "admindashboard";
+				nextPage = ADMIN+"_dashboard";
 				break;
 			case VENDOR:
-				nextPage = "vendordashboard";
+				nextPage = VENDOR+"_dashboard";
 				break;
-			default:
-				nextPage = "developerdashboard";
+			case CLIENT:
+				nextPage = CLIENT+"_dashboard";
+				break;
 			}
 		}
 		return nextPage;

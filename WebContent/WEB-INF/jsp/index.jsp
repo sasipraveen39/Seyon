@@ -1,12 +1,30 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <jsp:directive.include file="header.jsp" />
-<title>Homepage - Seyon</title>
+<title>HomePage - Seyon</title>
+<script>
+
+</script>
 </head>
 <body>
+	<c:if test="${not empty errorMessage}">
+		<div class="top-alert">
+			<div class="alert alert-danger alert-dismissible fade show"
+				role="alert">
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<strong>Oops!</strong> ${errorMessage}.
+			</div>
+		</div>
+	</c:if>
 	<div class="container-fluid">
 		<div class="row full-height">
 			<div class="col homepage-logo">
@@ -91,19 +109,21 @@
 								<div class="card-block">
 									<h3 class="card-title">Login</h3>
 									<div class="card-text">
-										<form>
+										<form:form id="login-form" class="form-horizontal"
+											commandName="login" action="login" method="post">
 											<div class="form-group row">
 												<label for="username" class="col-sm-3 col-form-label">Username</label>
 												<div class="col-sm-9">
-													<input type="email" class="form-control" id="username"
-														placeholder="Username">
+													<form:input path="username" id="username" name="username"
+														class="form-control" type="text"
+														placeholder="Username" />
 												</div>
 											</div>
 											<div class="form-group row">
 												<label for="password" class="col-sm-3 col-form-label">Password</label>
 												<div class="col-sm-9">
-													<input type="password" class="form-control"
-														id="password" placeholder="Password">
+													<form:input path="password" id="password" name="password" type="password"
+														placeholder="Password" class="form-control" />
 												</div>
 											</div>
 											<div class="form-group row">
@@ -112,34 +132,13 @@
 														in</button>
 												</div>
 											</div>
-										</form>
+										</form:form>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="navbar-xs">
-				<nav class="navbar fixed-bottom navbar-inverse bg-inverse bg-faded">
-					<!-- Brand and toggle get grouped for better mobile display -->
-					<div class="navbar-header">
-						<div class="navbar-brand">
-							<ul class="footer-links">
-								<li><footer>
-										<small>Copyright © 2017, </small><img
-											src="resources/pics/seyon.png" width="20" height="27"
-											class="d-inline-block align-top" alt="Seyon logo">
-										Seyon. <small>All Rights Reserved.</small>
-									</footer></li>
-								<li class="footer-link"><a href="#">About us</a></li>
-								<li><a href="#">Contact us</a></li>
-							</ul>
-						</div>
-					</div>
-				</nav>
 			</div>
 		</div>
 	</div>

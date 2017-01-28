@@ -5,11 +5,10 @@ html,body,.container-fluid {
 }
 
 
-.navbar-primary .navbar .nav.pull-right {margin-left: 10px; margin-right: 0;}
-.navbar-xs .navbar { min-height:4%; height: 4%; }
-.navbar-xs .navbar .navbar-brand{ margin-left:36% ;font-size: 1em; line-height: 4%; }
-.navbar-xs .navbar .navbar-brand .footer-links li > footer > img{margin-top:-5.7%; line-height: 4%;}
-.navbar-xs .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 4%; }
+.navbar-xs > .navbar { min-height:4%; height: 4%; }
+.navbar-xs > .navbar .navbar-brand{ margin-left:36% ;font-size: 1em; line-height: 4%; }
+.navbar-xs > .navbar .navbar-brand .footer-links li > footer > img{margin-top:-5.7%; line-height: 4%;}
+.navbar-xs > .navbar .navbar-nav > li > a {  padding-top: 0px; padding-bottom: 0px; line-height: 4%; }
 
 .footer-links{
 	list-style-type: none;
@@ -136,6 +135,7 @@ html,body,.container-fluid {
 .homepage-content-logo{
 }
 
+
 .flex-row {
     width: auto;
 }
@@ -162,4 +162,16 @@ html,body,.container-fluid {
 
 .login-container:hover {
 	margin-top: -62%;
+}
+
+.top-alert{
+	z-index: 2000;
+	position:absolute;
+	margin-top:2%;
+	margin-left:15%;
+    width: 70%;
+}
+
+.hidden{
+	display:none !important;
 }
