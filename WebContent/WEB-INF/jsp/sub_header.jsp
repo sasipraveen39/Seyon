@@ -38,7 +38,7 @@
 		$('.nav-item-border').click(function(e) {
 		    $('.navbar li.active').removeClass('active');
 		    var $this = $(this);
-		    if (!$this.hasClass('active')) {
+		    if (!$this.hasClass('dropdown') && !$this.hasClass('active')) {
 		        $this.addClass('active');
 		    }
 		});
