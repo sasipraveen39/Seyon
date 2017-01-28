@@ -1,5 +1,10 @@
 @CHARSET "ISO-8859-1";
 
+:root{
+	--main-color:#f8b02a;
+	--header-color:#292b2c;
+}
+
 html,body,.container-fluid {
 	height: 100%;
 }
@@ -174,4 +179,31 @@ html,body,.container-fluid {
 
 .hidden{
 	display:none !important;
+}
+
+.navbar-container{
+	background-color: var(--header-color);
+	width: 100%;
+}
+
+.navbar-content{
+	padding : 0rem 0rem !important;
+}
+
+.nav-item{
+	padding-left :.5rem !important;
+	padding-right:.5rem !important;
+	border-top: 2px solid var(--header-color);
+	border-bottom: 2px solid var(--header-color);
+}
+
+.nav-item:hover{
+	border-top: 2px solid var(--main-color);
+	border-bottom: 2px solid var(--main-color);
+}
+
+.navbar-brand-header{
+	vertical-align: bottom;
+	padding:0rem;
+	font-size: 2rem;
 }

@@ -13,14 +13,12 @@
 <script src="resources/js/tether.min.js"></script>
 <script src="resources/js/bootstrap.min.js"></script>
 <script src="resources/js/main.js"></script>
-<script src="resources/js/scripts.js"></script>
 
 <link rel="stylesheet" href="resources/css/bootstrap.min.css">
 <link rel="stylesheet" href="resources/css/bootstrap-grid.min.css">
 <link rel="stylesheet" href="resources/css/bootstrap-reboot.min.css">
 <link rel="stylesheet" href="resources/css/main.css">
 <link rel="stylesheet" href="resources/css/font-awesome.min.css">
-<link rel="stylesheet" href="resources/css/styles.css">
 <script>
 	$.ajaxSetup({
 		cache : false
@@ -40,38 +38,43 @@
 </head>
 <body>
 	<!-- Header -->
-	<nav
-		class="navbar navbar-toggleable-md navbar-inverse bg-inverse bg-faded">
-		<button class="navbar-toggler navbar-toggler-right" type="button"
-			data-toggle="collapse" data-target="#navbarNavDropdown"
-			aria-controls="navbarNavDropdown" aria-expanded="false"
-			aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<a class="navbar-brand" href="/Seyon"> <img
-			src="resources/pics/seyon.png" width="20" height="27"
-			class="d-inline-block align-top" alt="Seyon logo"> Seyon
-		</a>
-		<div class="collapse navbar-collapse" id="navbarNavDropdown">
-			<ul class="navbar-nav">
-				<li class="nav-item active"><a class="nav-link" href="#">Home
-
-				</a></li>
-				<li class="nav-item active"><a class="nav-link" href="#">Features</a>
-				</li>
-				<li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
-				<li class="nav-item dropdown"><a
-					class="nav-link dropdown-toggle" href="#"
-					id="navbarDropdownMenuLink" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false"> Settings </a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-						<a class="dropdown-item" href="#">Change Password</a> <a
-							class="dropdown-item" href="logout">Logout</a>
-					</div></li>
-			</ul>
+	<div class="navbar-container">
+		<div class="container">
+			<nav
+				class="navbar navbar-toggleable-md navbar-inverse bg-inverse bg-faded navbar-content">
+				<button class="navbar-toggler navbar-toggler-right" type="button"
+					data-toggle="collapse" data-target="#navbarNavDropdown"
+					aria-controls="navbarNavDropdown" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<a class="navbar-brand navbar-brand-header" href="/Seyon"> <img
+					src="resources/pics/seyon.png" width="40" height="53"
+					class="d-inline-block align-top" alt="Seyon logo"> Seyon
+				</a>
+				<div class="collapse navbar-collapse justify-content-end"
+					id="navbarNavDropdown">
+					<ul class="navbar-nav ">
+						<li class="nav-item active"><a class="nav-link" href="#">Home
+						</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">Features</a>
+						</li>
+						<li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+						<li class="nav-item dropdown"><a
+							class="nav-link dropdown-toggle" href="#"
+							id="navbarDropdownMenuLink" data-toggle="dropdown"
+							aria-haspopup="true" aria-expanded="false"> Settings </a>
+							<div class="dropdown-menu"
+								aria-labelledby="navbarDropdownMenuLink">
+								<a class="dropdown-item" href="#">Change Password</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="logout">Logout</a>
+							</div></li>
+					</ul>
+				</div>
+			</nav>
 		</div>
-	</nav>
-
+	</div>
 	<!-- Footer -->
 	<div class="navbar-xs">
 		<nav class="navbar fixed-bottom navbar-inverse bg-inverse bg-faded">
