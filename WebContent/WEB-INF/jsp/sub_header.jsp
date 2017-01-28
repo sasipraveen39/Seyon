@@ -33,6 +33,16 @@
 		},
 		async : false
 	});
+	
+	$(document).ready(function(){
+		$('.nav-item-border').click(function(e) {
+		    $('.navbar li.active').removeClass('active');
+		    var $this = $(this);
+		    if (!$this.hasClass('active')) {
+		        $this.addClass('active');
+		    }
+		});
+	});
 </script>
 
 </head>
@@ -56,7 +66,7 @@
 			<div class="collapse navbar-collapse justify-content-end"
 				id="navbarNavDropdown">
 				<ul class="navbar-nav">
-					<li class="nav-item active nav-item-border"><a
+					<li class="nav-item nav-item-border"><a
 						class="nav-link" href="#">Home </a></li>
 					<li class="nav-item nav-item-border"><a class="nav-link"
 						href="#">Features</a></li>
