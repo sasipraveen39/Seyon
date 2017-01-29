@@ -54,7 +54,9 @@
 						$('#searchTable tbody').html(content);
 						$('#searchTable').removeClass('hidden');
 						$('#zeroResult').addClass('hidden');
+						$('#resultCount').html(data.result.length);
 					}else if(data.code == "204"){
+						$('#resultCount').html('0');
 						$('#searchTable').addClass('hidden');
 						$('#zeroResult').removeClass('hidden');
 					}
@@ -185,7 +187,7 @@
 						</div>
 
 						<div class="card hidden" id="searchResult">
-							<h3 class="card-header">Search Result</h3>
+							<h3 class="card-header">Search Result (<span id="resultCount"></span>)</h3>
 							<div class="card-block">
 							<h4 class="card-title hidden" id="zeroResult">Search returned zero results.</h4>
 								<div class="card-text">
