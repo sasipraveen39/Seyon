@@ -1,10 +1,19 @@
 package co.seyon.view.model;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 public class AccountSearch {
 
+	@JsonView(Views.Public.class)
 	private String accountNumber;
+	
+	@JsonView(Views.Public.class)
 	private String accountName;
+	
+	@JsonView(Views.Public.class)
 	private String mobileNumber;
+	
+	@JsonView(Views.Public.class)
 	private String email;
 
 	public String getAccountNumber() {

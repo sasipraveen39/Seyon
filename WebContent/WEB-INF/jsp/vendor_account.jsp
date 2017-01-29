@@ -29,7 +29,7 @@
 				contentType : "application/json",
 				url : "seacrhAccount",
 				data : JSON
-						.stringify(search),
+						.stringify(accountSearch),
 				dataType : 'json',
 				timeout : 100000,
 				success : function(data) {

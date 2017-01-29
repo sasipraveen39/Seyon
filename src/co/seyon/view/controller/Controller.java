@@ -251,14 +251,13 @@ public class Controller {
 	@ResponseBody
 	@JsonView(Views.Public.class)
 	@RequestMapping(value = "seacrhAccount", method = RequestMethod.POST)
-	public AjaxResponse searchAccount(@RequestBody AccountSearch search,
+	public AjaxResponse searchAccount(@RequestBody AccountSearch accountSearch,
 			HttpServletRequest request) {
 		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
 		AjaxResponse result = new AjaxResponse();
-
 		if (loggedIn != null) {
-			List<User> users = new ArrayList<>();
-			users.add(loggedIn);
+			List<User> users = finder.findUsers(accountSearch.getAccountNumber(), accountSearch.getAccountName()
+					, accountSearch.getMobileNumber(), accountSearch.getEmail());
 			if (users.size() > 0) {
 				List<AccountSearchResult> searchResult = new ArrayList<>();
 				for (User u : users) {

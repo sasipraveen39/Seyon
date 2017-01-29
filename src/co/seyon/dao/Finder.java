@@ -1,10 +1,15 @@
 package co.seyon.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+
+import org.apache.commons.lang3.StringUtils;
 
 import co.seyon.model.Login;
 import co.seyon.model.Project;
@@ -45,6 +50,32 @@ public class Finder {
 		return result;
 	}
 
+	public List<User> findUsers(String accountNumber, String accountName, String mobileNumber, String email){
+		String queryString = "Select u from User u";
+		List<String> constraints = new ArrayList<>();
+		if(StringUtils.isNotBlank(accountNumber)){
+			constraints.add( "u.accountNumber='"+accountNumber+"'");
+		}
+		
+		if(StringUtils.isNotBlank(accountName)){
+			constraints.add( "u.name like '"+accountName+"%'");
+		}
+		
+		if(StringUtils.isNotBlank(mobileNumber)){
+			constraints.add( "u.mobileNumber='"+mobileNumber+"'");
+		}
+		
+		if(StringUtils.isNotBlank(email)){
+			constraints.add( "u.email='"+email+"'");
+		}
+		
+		if(constraints.size() > 0){
+			queryString += " where "+ StringUtils.join(constraints, " and ");	
+		}
+		TypedQuery<User> query = entitymanager.createQuery(queryString, User.class);
+		return query.getResultList(); 
+	}
+	
 	public int findLastSequence(Class className) {
 		String sequence = null;
 		int seqNum = -1;
