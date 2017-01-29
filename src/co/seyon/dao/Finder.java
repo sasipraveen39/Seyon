@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
+import co.seyon.enums.UserType;
 import co.seyon.model.Login;
 import co.seyon.model.Project;
 import co.seyon.model.User;
@@ -51,8 +52,12 @@ public class Finder {
 	}
 
 	public List<User> findUsers(String accountNumber, String accountName, String mobileNumber, String email){
-		String queryString = "Select u from User u";
+		String queryString = "Select u from User u, Login l";
 		List<String> constraints = new ArrayList<>();
+		
+		constraints.add("l = u.login");
+		constraints.add("l.userType='"+UserType.CLIENT+"'");
+		
 		if(StringUtils.isNotBlank(accountNumber)){
 			constraints.add( "u.accountNumber='"+accountNumber+"'");
 		}

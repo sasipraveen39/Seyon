@@ -22,13 +22,13 @@ public class ScratchPad {
 		Bundle bundle = new Bundle();
 		
 		Login login = new Login();
-		login.setUsername("sasipraveen50");
+		login.setUsername("sasipraveen51");
 		login.setPassword(EncryptionUtil.getSecurePassword("sample"));
 		login.setActive(true);
-		login.setUserType(UserType.VENDOR);
+		login.setUserType(UserType.CLIENT);
 		
 		User user = new User();
-		user.setName("Sasi Praveen");
+		user.setName("Praveen");
 		user.setEmail("sasipraveen39@gmail.com");
 		user.setMobileNumber("9790829078");
 		user.setLandlineNumber("04442817868");
