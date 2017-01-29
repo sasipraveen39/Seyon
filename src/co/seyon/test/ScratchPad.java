@@ -11,6 +11,7 @@ import co.seyon.enums.DrawingType;
 import co.seyon.enums.HistoryType;
 import co.seyon.enums.UserType;
 import co.seyon.model.*;
+import co.seyon.sequence.SequenceGenerator;
 import co.seyon.util.EncryptionUtil;
 
 public class ScratchPad {
@@ -21,7 +22,7 @@ public class ScratchPad {
 		Bundle bundle = new Bundle();
 		
 		Login login = new Login();
-		login.setUsername("sasipraveen50");
+		login.setUsername("sasipraveen11");
 		login.setPassword(EncryptionUtil.getSecurePassword("sample"));
 		login.setActive(true);
 		login.setUserType(UserType.VENDOR);
@@ -31,6 +32,7 @@ public class ScratchPad {
 		user.setEmail("sasipraveen39@gmail.com");
 		user.setMobileNumber("9790829078");
 		user.setLandlineNumber("04442817868");
+		user.setAccountNumber(SequenceGenerator.generateSequence(User.class));
 		
 		Address address = new Address();
 		address.setAddressLine1("No. 108, T.K.Mudali St, Choolai");
@@ -54,6 +56,7 @@ public class ScratchPad {
 		project.setStartDate(new Date());
 		project.setRequestedDate(new Date());
 		project.setEstimatedTotalAmount(new BigDecimal(1000.12));
+		project.setProjectNumber(SequenceGenerator.generateSequence(Project.class));
 		project.setUser(user);
 		
 		History history = new History();

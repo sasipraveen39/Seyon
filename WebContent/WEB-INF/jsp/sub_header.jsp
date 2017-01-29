@@ -33,14 +33,14 @@
 		},
 		async : false
 	});
-	
-	$(document).ready(function(){
+
+	$(document).ready(function() {
 		$('.nav-item-border').click(function(e) {
-		    $('.navbar li.active').removeClass('active');
-		    var $this = $(this);
-		    if (!$this.hasClass('dropdown') && !$this.hasClass('active')) {
-		        $this.addClass('active');
-		    }
+			$('.navbar li.active').removeClass('active');
+			var $this = $(this);
+			if (!$this.hasClass('dropdown') && !$this.hasClass('active')) {
+				$this.addClass('active');
+			}
 		});
 	});
 </script>
@@ -66,16 +66,16 @@
 			<div class="collapse navbar-collapse justify-content-end"
 				id="navbarNavDropdown">
 				<ul class="navbar-nav">
-					<li class="nav-item nav-item-border"><a
-						class="nav-link" href="#">Home </a></li>
 					<li class="nav-item nav-item-border"><a class="nav-link"
-						href="#">Features</a></li>
+						href="/Seyon">Home</a></li>
 					<li class="nav-item nav-item-border"><a class="nav-link"
-						href="#">Pricing</a></li>
+						href="account">Account</a></li>
+					<li class="nav-item nav-item-border"><a class="nav-link"
+						href="project">Project</a></li>
 					<li class="nav-item nav-item-border dropdown"><a
 						class="nav-link dropdown-toggle" href="#"
 						id="navbarDropdownMenuLink" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="false"> Settings </a>
+						aria-haspopup="true" aria-expanded="false"> Settings</a>
 						<div class="dropdown-menu"
 							aria-labelledby="navbarDropdownMenuLink">
 							<a class="dropdown-item" href="#">Change Password</a>
@@ -98,16 +98,20 @@
 				aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<a class="navbar-brand navbar-brand-footer" href="/Seyon"> <span class="small-font">Copyright © 2017, </span><img
+			<a class="navbar-brand navbar-brand-footer" href="/Seyon"> <span
+				class="small-font">Copyright © 2017, </span><img
 				src="resources/pics/seyon.png" width="22" height="29"
 				class="d-inline-block align-top" alt="Seyon logo"><span
-				class="navbar-brand-footer-text"> Seyon.</span><span class="small-font"> All Rights Reserved.</span>
+				class="navbar-brand-footer-text"> Seyon.</span><span
+				class="small-font"> All Rights Reserved.</span>
 			</a>
 			<div class="collapse navbar-collapse justify-content-end"
 				id="navbarNavDropdownFooter">
 				<ul class="navbar-nav">
-					<li class="nav-item"><a class="nav-link  footer-link" href="#">About us</a></li>
-					<li class="nav-item"><a class="nav-link  footer-link" href="#">Contact us</a></li>
+					<li class="nav-item"><a class="nav-link  footer-link" href="#">About
+							us</a></li>
+					<li class="nav-item"><a class="nav-link  footer-link" href="#">Contact
+							us</a></li>
 				</ul>
 			</div>
 		</div>

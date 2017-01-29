@@ -179,8 +179,8 @@ CREATE TABLE `payment` (
   PRIMARY KEY (`idpayment`),
   KEY `FK_payment_bill_id` (`bill_id`),
   KEY `FK_payment_receipt_document_id` (`receipt_document_id`),
-  CONSTRAINT `FK_payment_receipt_document_id` FOREIGN KEY (`receipt_document_id`) REFERENCES `document` (`iddocument`),
-  CONSTRAINT `FK_payment_bill_id` FOREIGN KEY (`bill_id`) REFERENCES `bill` (`idbill`)
+  CONSTRAINT `FK_payment_bill_id` FOREIGN KEY (`bill_id`) REFERENCES `bill` (`idbill`),
+  CONSTRAINT `FK_payment_receipt_document_id` FOREIGN KEY (`receipt_document_id`) REFERENCES `document` (`iddocument`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -206,7 +206,9 @@ CREATE TABLE `project` (
   `estimated_total_amount` decimal(12,2) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `project_number` varchar(10) NOT NULL,
   PRIMARY KEY (`idproject`),
+  UNIQUE KEY `project_number_UNIQUE` (`project_number`),
   KEY `FK_project_user_id` (`user_id`),
   KEY `FK_project_address_id` (`address_id`),
   CONSTRAINT `FK_project_address_id` FOREIGN KEY (`address_id`) REFERENCES `address` (`idaddress`),
@@ -243,7 +245,9 @@ CREATE TABLE `user` (
   `landline_number` varchar(100) DEFAULT NULL,
   `address_id` int(11) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `account_number` varchar(10) NOT NULL,
   PRIMARY KEY (`iduser`),
+  UNIQUE KEY `account_number_UNIQUE` (`account_number`),
   KEY `FK_user_address_id` (`address_id`),
   CONSTRAINT `FK_user_address_id` FOREIGN KEY (`address_id`) REFERENCES `address` (`idaddress`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -258,4 +262,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-26 18:33:20
+-- Dump completed on 2017-01-28 22:45:56

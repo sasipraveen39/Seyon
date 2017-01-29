@@ -38,55 +38,55 @@ public class Controller {
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
 	public static final String RETURN_PAGE = "returnpage";
-	
-	private static final String VENDOR = UserType.VENDOR.toString().toLowerCase();
+
+	private static final String VENDOR = UserType.VENDOR.toString()
+			.toLowerCase();
 	private static final String ADMIN = UserType.ADMIN.toString().toLowerCase();
-	private static final String CLIENT = UserType.CLIENT.toString().toLowerCase();
-	
+	private static final String CLIENT = UserType.CLIENT.toString()
+			.toLowerCase();
+
 	private SeyonService service;
 	private Finder finder;
 	private PasswordValidator passwordValidator;
-	
+
 	public Controller() {
 		service = new SeyonService();
 		finder = new Finder();
 		passwordValidator = new PasswordValidator();
 	}
-	
+
 	@InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setLenient(true);
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-    }
-	
-	
-	
+	public void initBinder(WebDataBinder binder) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		sdf.setLenient(true);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+	}
+
 	@InitBinder("Password")
-	protected void initPasswordBinder(WebDataBinder binder){
+	protected void initPasswordBinder(WebDataBinder binder) {
 		binder.addValidators(passwordValidator);
 	}
 
 	@RequestMapping("/")
 	public String index(Model model, HttpServletRequest request) {
 		Object loggedIn = request.getSession().getAttribute(LOGGEDIN);
-		String nextPage  = null;
-		if(loggedIn != null){
-			nextPage="redirect:dashboard";
-		}else {
+		String nextPage = null;
+		if (loggedIn != null) {
+			nextPage = "redirect:dashboard";
+		} else {
 			Login login = null;
-			if(model.containsAttribute(LOGIN)){
-				login = (Login)model.asMap().get(LOGIN); 
-			}else{
+			if (model.containsAttribute(LOGIN)) {
+				login = (Login) model.asMap().get(LOGIN);
+			} else {
 				login = new Login();
 			}
 			login.setPassword(null);
 			model.addAttribute(LOGIN, login);
-			nextPage ="index";
+			nextPage = "index";
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("intro")
 	public ModelAndView intro() {
 		return new ModelAndView("intro");
@@ -94,7 +94,8 @@ public class Controller {
 
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public String login(@ModelAttribute(LOGIN) Login login,
-			BindingResult result, Model model, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+			BindingResult result, Model model, HttpServletRequest request,
+			RedirectAttributes redirectAttributes) {
 		String nextPage = "redirect:/";
 		try {
 			User loggedIn = service.login(login.getUsername(),
@@ -106,11 +107,13 @@ public class Controller {
 				nextPage = "redirect:dashboard";
 			} else {
 				redirectAttributes.addFlashAttribute(LOGIN, login);
-				redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Invalid Username/Password");
+				redirectAttributes.addFlashAttribute(ERROR_MESSAGE,
+						"Invalid Username/Password");
 			}
 		} catch (UserDeActiveException e) {
 			redirectAttributes.addFlashAttribute(LOGIN, login);
-			redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Username has been de-activated");
+			redirectAttributes.addFlashAttribute(ERROR_MESSAGE,
+					"Username has been de-activated");
 		} catch (InitialPasswordException e) {
 			redirectAttributes.addFlashAttribute(USERNAME, login.getUsername());
 			nextPage = "redirect:resetPassword";
@@ -127,7 +130,7 @@ public class Controller {
 
 	@RequestMapping("changePassword")
 	public String changePassword(Model model, HttpServletRequest request) {
-		User loggedIn = (User)request.getSession().getAttribute(LOGGEDIN);
+		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (loggedIn != null) {
 			nextPage = "changepassword";
@@ -139,9 +142,7 @@ public class Controller {
 		model.addAttribute(ERROR_MESSAGE, request.getParameter(ERROR_MESSAGE));
 		return nextPage;
 	}
-	
-	
-	
+
 	@RequestMapping(value = "savePassword", method = RequestMethod.POST)
 	public String savePassword(Model model, HttpServletRequest request) {
 		String username = request.getParameter(USERNAME);
@@ -166,45 +167,27 @@ public class Controller {
 		return nextPage;
 	}
 
-	@RequestMapping("dashboard")
-	public String dashboard(Model model, HttpServletRequest request) {
-		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
-		String nextPage = "redirect:/";
-		if (loggedIn != null) {
-			Login login = loggedIn.getLogin();
-			switch (login.getUserType()) {
-			case ADMIN:
-				nextPage = ADMIN+"_dashboard";
-				break;
-			case VENDOR:
-				nextPage = VENDOR+"_dashboard";
-				break;
-			case CLIENT:
-				nextPage = CLIENT+"_dashboard";
-				break;
-			}
-		}
-		return nextPage;
-	}
-
-		
 	@RequestMapping(value = "saveChangedPassword", method = RequestMethod.POST)
-	public String saveChangedPassword(@ModelAttribute("passwordhelper") Password password,
+	public String saveChangedPassword(
+			@ModelAttribute("passwordhelper") Password password,
 			BindingResult result, Model model, HttpServletRequest request) {
 		String nextPage = "redirect:/";
 		Object loggedIn = request.getSession().getAttribute(LOGGEDIN);
 		if (loggedIn != null) {
-			nextPage="changepassword";
+			nextPage = "changepassword";
 			passwordValidator.validate(password, result);
-			if(!result.hasErrors()){
+			if (!result.hasErrors()) {
 				String username = password.getUsername();
 				if (service.updatePassword(username, password.getNewPassword())) {
 					try {
-						User loggedInNow = (User)service.login(username, password.getNewPassword());
+						User loggedInNow = (User) service.login(username,
+								password.getNewPassword());
 						if (loggedInNow != null) {
-							request.getSession().setAttribute(LOGGEDIN, loggedInNow);
+							request.getSession().setAttribute(LOGGEDIN,
+									loggedInNow);
 							String name = loggedInNow.getName();
-							request.getSession().setAttribute(LOGGEDINNAME, name);
+							request.getSession().setAttribute(LOGGEDINNAME,
+									name);
 							nextPage = "redirect:dashboard";
 						}
 					} catch (UserDeActiveException | InitialPasswordException e) {
@@ -218,20 +201,19 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping(value = "logout")
 	public String logout(Model model, HttpServletRequest request) {
 		String nextPage = "redirect:/";
-		User loggedIn = (User)request.getSession().getAttribute(LOGGEDIN);
+		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
 		if (loggedIn != null) {
-				Login login = loggedIn.getLogin();
-				service.logOut(login);
-				request.getSession().invalidate();
-				nextPage = "redirect:/";
+			Login login = loggedIn.getLogin();
+			service.logOut(login);
+			request.getSession().invalidate();
+			nextPage = "redirect:/";
 		}
 		return nextPage;
 	}
-	
 
 	@RequestMapping(value = "removeLogin", method = RequestMethod.GET)
 	public @ResponseBody
@@ -245,16 +227,50 @@ public class Controller {
 		return service.activateLogin(username);
 	}
 
-	
 	@RequestMapping(value = "isLoggedIn", method = RequestMethod.GET)
 	public @ResponseBody
 	boolean isLoggedIN(HttpServletRequest request) {
 		boolean result = false;
-		User loggedIn = (User)request.getSession().getAttribute(LOGGEDIN);
+		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
 		if (loggedIn != null) {
 			Login login = loggedIn.getLogin();
 			result = login.getLoggedIn();
 		}
 		return result;
+	}
+
+	@RequestMapping("dashboard")
+	public String dashboard(Model model, HttpServletRequest request) {
+		return navigatePage("_dashboard", request);
+	}
+
+	@RequestMapping("account")
+	public String account(Model model, HttpServletRequest request) {
+		return navigatePage("_account", request);
+	}
+
+	@RequestMapping("project")
+	public String project(Model model, HttpServletRequest request) {
+		return navigatePage("_project", request);
+	}
+
+	private String navigatePage(String pageSuffix, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+				nextPage = ADMIN + pageSuffix;
+				break;
+			case VENDOR:
+				nextPage = VENDOR + pageSuffix;
+				break;
+			case CLIENT:
+				nextPage = CLIENT + pageSuffix;
+				break;
+			}
+		}
+		return nextPage;
 	}
 }
