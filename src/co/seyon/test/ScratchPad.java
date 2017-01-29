@@ -22,7 +22,7 @@ public class ScratchPad {
 		Bundle bundle = new Bundle();
 		
 		Login login = new Login();
-		login.setUsername("sasipraveen11");
+		login.setUsername("sasipraveen50");
 		login.setPassword(EncryptionUtil.getSecurePassword("sample"));
 		login.setActive(true);
 		login.setUserType(UserType.VENDOR);

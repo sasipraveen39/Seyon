@@ -1,7 +1,9 @@
 package co.seyon.view.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,8 +28,14 @@ import co.seyon.exception.UserDeActiveException;
 import co.seyon.model.Login;
 import co.seyon.model.User;
 import co.seyon.service.SeyonService;
+import co.seyon.view.model.AccountSearch;
+import co.seyon.view.model.AccountSearchResult;
+import co.seyon.view.model.AjaxResponse;
 import co.seyon.view.model.Password;
+import co.seyon.view.model.Views;
 import co.seyon.view.validator.PasswordValidator;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 @org.springframework.stereotype.Controller
 public class Controller {
@@ -235,6 +244,38 @@ public class Controller {
 		if (loggedIn != null) {
 			Login login = loggedIn.getLogin();
 			result = login.getLoggedIn();
+		}
+		return result;
+	}
+
+	@ResponseBody
+	@JsonView(Views.Public.class)
+	@RequestMapping(value = "seacrhAccount", method = RequestMethod.POST)
+	public AjaxResponse searchAccount(@RequestBody AccountSearch search,
+			HttpServletRequest request) {
+		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
+		AjaxResponse result = new AjaxResponse();
+
+		if (loggedIn != null) {
+			List<User> users = new ArrayList<>();
+			users.add(loggedIn);
+			if (users.size() > 0) {
+				List<AccountSearchResult> searchResult = new ArrayList<>();
+				for (User u : users) {
+					AccountSearchResult accountSearchResult = new AccountSearchResult();
+					accountSearchResult.setAccountName(u.getName());
+					accountSearchResult.setAccountNumber(u.getAccountNumber());
+					accountSearchResult.setEmail(u.getEmail());
+					accountSearchResult.setMobileNumber(u.getMobileNumber());
+					searchResult.add(accountSearchResult);
+				}
+				result.setResult(searchResult);
+				result.setCode("200");
+				result.setMsg(searchResult.size() + " Accounts found");
+			} else {
+				result.setCode("204");
+				result.setMsg("No Account found!");
+			}
 		}
 		return result;
 	}

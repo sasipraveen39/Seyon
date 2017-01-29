@@ -22,6 +22,10 @@ html,body,.container-fluid {
 	height: 50%;
 }
 
+.page-height{
+	height : 93%;
+}
+
 .vertical-center {
 	min-height: 100%;
 	min-height: 100vh;
@@ -218,4 +222,12 @@ html,body,.container-fluid {
 
 .dropdown-divider{
 	background-color : var(--main-color) !important;
+}
+
+.breadcrumb {
+    background-color: inherit;
+}
+
+.breadcrumb > li + li:before {
+     content: "\276F\00a0" !important;
 }
