@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 public class AccountSearchResult extends SearchResult {
 	@JsonView(Views.Public.class)
 	private String accountNumber;
-	
+
 	@JsonView(Views.Public.class)
 	private String accountName;
-	
+
 	@JsonView(Views.Public.class)
 	private String mobileNumber;
-	
+
 	@JsonView(Views.Public.class)
 	private String email;
 
@@ -45,5 +45,14 @@ public class AccountSearchResult extends SearchResult {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AccountSearchResult) {
+			return this.accountNumber == ((AccountSearchResult) obj)
+					.getAccountNumber();
+		}
+		return false;
 	}
 }

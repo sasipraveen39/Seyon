@@ -9,69 +9,112 @@
 <jsp:directive.include file="sub_header.jsp" />
 <title>Account - Seyon</title>
 <script>
-	$(document).ready(function() {
-		$('#reset').click(function(e) {
-			$("form#accountSearchForm :input").each(function() {
-				var input = $(this);
-				input.val(null);
-			});
-			e.preventDefault();
-		});
-		
-		$('#search').click(function(e){
-			var accountSearch = {};
-			accountSearch["accountNumber"] = $('#accountNumber').val();
-			accountSearch["accountName"] = $('#accountName').val();
-			accountSearch["mobileNumber"] = $('#mobileNumber').val();
-			accountSearch["email"] = $('#email').val();
-			$.ajax({
-				type : "POST",
-				contentType : "application/json",
-				url : "seacrhAccount",
-				data : JSON
-						.stringify(accountSearch),
-				dataType : 'json',
-				timeout : 100000,
-				success : function(data) {
-					console.log("SUCCESS: ",data);
-					if (data.code == "200") {
-						var content ="";
-						jQuery.each(data.result,function(index,value) {
-											content += '<tr>';
-											content += '<th scope=\"row\"><a href=\"retrieveAccount?num='+value.accountNumber+'\">'
-													+ value.accountNumber+ '</a></th>';
-											content += '<td>'
-													+ value.accountName
-													+ '</td>';
-											content += '<td>'
-													+ value.mobileNumber
-													+ '</td>';
-											content += '<td>'
-													+ value.email
-													+ '</td>';
-											content += '</tr>';
+	$(document)
+			.ready(
+					function() {
+						$('#reset').click(function(e) {
+							$("form#accountSearchForm :input").each(function() {
+								var input = $(this);
+								input.val(null);
+							});
+							e.preventDefault();
+						});
+
+						$('#search')
+								.click(
+										function(e) {
+											var accountSearch = {};
+											accountSearch["accountNumber"] = $(
+													'#accountNumber').val();
+											accountSearch["accountName"] = $(
+													'#accountName').val();
+											accountSearch["mobileNumber"] = $(
+													'#mobileNumber').val();
+											accountSearch["email"] = $('#email')
+													.val();
+											$
+													.ajax({
+														type : "POST",
+														contentType : "application/json",
+														url : "seacrhAccount",
+														data : JSON
+																.stringify(accountSearch),
+														dataType : 'json',
+														timeout : 100000,
+														success : function(data) {
+															console
+																	.log(
+																			"SUCCESS: ",
+																			data);
+															if (data.code == "200") {
+																var content = "";
+																jQuery
+																		.each(
+																				data.result,
+																				function(
+																						index,
+																						value) {
+																					content += '<tr>';
+																					content += '<th scope=\"row\"><a href=\"retrieveAccount?num='
+																							+ value.accountNumber
+																							+ '\">'
+																							+ value.accountNumber
+																							+ '</a></th>';
+																					content += '<td>'
+																							+ value.accountName
+																							+ '</td>';
+																					content += '<td>'
+																							+ value.mobileNumber
+																							+ '</td>';
+																					content += '<td>'
+																							+ value.email
+																							+ '</td>';
+																					content += '</tr>';
+																				});
+																$(
+																		'#searchTable tbody')
+																		.html(
+																				content);
+																$(
+																		'#searchTable')
+																		.removeClass(
+																				'hidden');
+																$('#zeroResult')
+																		.addClass(
+																				'hidden');
+																$(
+																		'#resultCount')
+																		.html(
+																				data.result.length);
+															} else if (data.code == "204") {
+																$(
+																		'#resultCount')
+																		.html(
+																				'0');
+																$(
+																		'#searchTable')
+																		.addClass(
+																				'hidden');
+																$('#zeroResult')
+																		.removeClass(
+																				'hidden');
+															}
+															$('#searchResult')
+																	.removeClass(
+																			'hidden');
+														},
+														error : function(e) {
+															console.log(
+																	"ERROR: ",
+																	e);
+														},
+														done : function(e) {
+															console.log("DONE");
+														}
+													});
+											e.preventDefault();
 										});
-						$('#searchTable tbody').html(content);
-						$('#searchTable').removeClass('hidden');
-						$('#zeroResult').addClass('hidden');
-						$('#resultCount').html(data.result.length);
-					}else if(data.code == "204"){
-						$('#resultCount').html('0');
-						$('#searchTable').addClass('hidden');
-						$('#zeroResult').removeClass('hidden');
-					}
-					$('#searchResult').removeClass('hidden');
-				},
-				error : function(e) {
-					console.log("ERROR: ",e);
-				},
-				done : function(e) {
-					console.log("DONE");
-				}
-			});
-			e.preventDefault();
-		});
-	});
+					});
 </script>
 </head>
 <body>
@@ -107,24 +150,14 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<th scope="row">1</th>
-												<td>Mark</td>
-												<td>Otto</td>
-												<td>@mdo</td>
-											</tr>
-											<tr>
-												<th scope="row">2</th>
-												<td>Jacob</td>
-												<td>Thornton</td>
-												<td>@fat</td>
-											</tr>
-											<tr>
-												<th scope="row">3</th>
-												<td>Larry</td>
-												<td>the Bird</td>
-												<td>@twitter</td>
-											</tr>
+											<c:forEach items="${recentAccounts}" var="recentAccount">
+												<tr>
+													<th scope="row"><a href="retrieveAccount?num=${recentAccount.accountNumber}">${recentAccount.accountNumber}</a></th>
+													<td>${recentAccount.accountName}</td>
+													<td>${recentAccount.mobileNumber}</td>
+													<td>${recentAccount.email}</td>
+												</tr>
+											</c:forEach>
 										</tbody>
 									</table>
 								</div>
@@ -187,9 +220,12 @@
 						</div>
 
 						<div class="card hidden" id="searchResult">
-							<h3 class="card-header">Search Result (<span id="resultCount"></span>)</h3>
+							<h3 class="card-header">
+								Search Result (<span id="resultCount"></span>)
+							</h3>
 							<div class="card-block">
-							<h4 class="card-title hidden" id="zeroResult">Search returned zero results.</h4>
+								<h4 class="card-title hidden" id="zeroResult">Search
+									returned zero results.</h4>
 								<div class="card-text">
 									<table class="table table-striped" id="searchTable">
 										<thead>

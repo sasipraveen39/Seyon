@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import co.seyon.cache.Cache;
 import co.seyon.dao.Finder;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
@@ -256,8 +257,10 @@ public class Controller {
 		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
 		AjaxResponse result = new AjaxResponse();
 		if (loggedIn != null) {
-			List<User> users = finder.findUsers(accountSearch.getAccountNumber(), accountSearch.getAccountName()
-					, accountSearch.getMobileNumber(), accountSearch.getEmail());
+			List<User> users = finder.findUsers(
+					accountSearch.getAccountNumber(),
+					accountSearch.getAccountName(),
+					accountSearch.getMobileNumber(), accountSearch.getEmail());
 			if (users.size() > 0) {
 				List<AccountSearchResult> searchResult = new ArrayList<>();
 				for (User u : users) {
@@ -281,21 +284,71 @@ public class Controller {
 
 	@RequestMapping("dashboard")
 	public String dashboard(Model model, HttpServletRequest request) {
-		return navigatePage("_dashboard", request);
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		return navigatePage(user, "_dashboard", request);
 	}
 
 	@RequestMapping("account")
 	public String account(Model model, HttpServletRequest request) {
-		return navigatePage("_account", request);
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		if (user != null) {
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				List<String> lruAccounts = Cache.getLRUAccounts(user.getIduser()+"");
+				List<AccountSearchResult> accountSearchResults = new ArrayList<>();
+				if(lruAccounts != null){
+					for(String acctNum : lruAccounts){
+						List<User> accounts = finder.findUsers(acctNum, null, null, null);
+						if(accounts.size() > 0){
+							User account = accounts.get(0);
+							AccountSearchResult accountSearchResult = new AccountSearchResult();
+							accountSearchResult.setAccountName(account.getName());
+							accountSearchResult.setAccountNumber(account.getAccountNumber());
+							accountSearchResult.setMobileNumber(account.getMobileNumber());
+							accountSearchResult.setEmail(account.getEmail());
+							accountSearchResults.add(accountSearchResult);
+						}
+					}	
+				}
+				model.addAttribute("recentAccounts", accountSearchResults);
+				break;
+			case CLIENT:
+				break;
+			}
+		}
+		
+		return navigatePage(user, "_account", request);
 	}
 
 	@RequestMapping("project")
 	public String project(Model model, HttpServletRequest request) {
-		return navigatePage("_project", request);
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		return navigatePage(user, "_project", request);
+	}
+	
+	@RequestMapping("retrieveAccount")
+	public String retrieveAccount(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "accountdetail";
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				Cache.addToLRUAccounts(user.getIduser()+"", num);
+				break;
+			case CLIENT:
+				break;
+			}
+		}
+		return nextPage;
 	}
 
-	private String navigatePage(String pageSuffix, HttpServletRequest request) {
-		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+	private String navigatePage(User user, String pageSuffix,
+			HttpServletRequest request) {
 		String nextPage = "redirect:/";
 		if (user != null) {
 			Login login = user.getLogin();
