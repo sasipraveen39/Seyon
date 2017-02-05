@@ -162,7 +162,7 @@
 									</table>
 								</div>
 
-								<a href="#" class="btn btn-primary" role="button">Create New
+								<a href="newAccount" class="btn btn-primary" role="button">Create New
 									Account</a>
 							</div>
 						</div>

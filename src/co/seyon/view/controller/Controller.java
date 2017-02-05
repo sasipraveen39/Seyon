@@ -23,9 +23,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.seyon.cache.Cache;
 import co.seyon.dao.Finder;
+import co.seyon.enums.AddressType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
+import co.seyon.model.Address;
 import co.seyon.model.Login;
 import co.seyon.model.User;
 import co.seyon.service.SeyonService;
@@ -347,6 +349,34 @@ public class Controller {
 		return nextPage;
 	}
 
+	@RequestMapping("newAccount")
+	public String CreateNewAccount(Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "accountcreate";
+			Login accountLogin = new Login();
+			User account = new User();
+			Address address = new Address();
+			account.setAddress(address);
+			accountLogin.setUser(account);
+			model.addAttribute("accountLogin", accountLogin);
+			model.addAttribute("canEdit", true);
+			model.addAttribute("isNewAccount", true);
+		}
+		return nextPage;
+	}
+	
+	@RequestMapping(value="submitaccount", method = RequestMethod.POST)
+	public String submitAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			service.createNewUser(login);
+		}
+		return nextPage;
+	}
+	
 	private String navigatePage(User user, String pageSuffix,
 			HttpServletRequest request) {
 		String nextPage = "redirect:/";

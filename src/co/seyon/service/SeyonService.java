@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat;
 
 import co.seyon.dao.Bundle;
 import co.seyon.dao.Finder;
+import co.seyon.enums.AddressType;
+import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
 import co.seyon.model.Login;
 import co.seyon.model.User;
+import co.seyon.sequence.SequenceGenerator;
 import co.seyon.util.Constants;
 import co.seyon.util.DateUtil;
 import co.seyon.util.EncryptionUtil;
@@ -145,11 +148,13 @@ public class SeyonService {
 		boolean result = false;
 		Bundle bundle = new Bundle();
 
-		// login.setUser(user);
+		login.setUserType(UserType.CLIENT);
 		login.setPassword(EncryptionUtil
 				.getSecurePassword(Constants.RESET_PASSWORD));
 		login.setActive(true);
-
+		
+		login.getUser().setAccountNumber(SequenceGenerator.generateSequence(User.class));
+		login.getUser().getAddress().setAddressType(AddressType.BILLING);
 		bundle.persist(login);
 		result = true;
 
