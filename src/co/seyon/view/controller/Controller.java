@@ -333,22 +333,50 @@ public class Controller {
 	@RequestMapping("retrieveAccount")
 	public String retrieveAccount(@RequestParam String num, Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
-		String nextPage = "redirect:/";
 		if (user != null) {
-			nextPage = "accountdetail";
 			Login login = user.getLogin();
 			switch (login.getUserType()) {
 			case ADMIN:
 			case VENDOR:
 				Cache.addToLRUAccounts(user.getIduser()+"", num);
+				User account = finder.findUsers(num, null, null, null).get(0);
+				model.addAttribute("account", account);
+				model.addAttribute("canEditAccount", true);
 				break;
 			case CLIENT:
+				model.addAttribute("account", user);
+				model.addAttribute("canEditAccount", false);
+				break;
+			}
+		}
+		return navigatePage(user, "_accountdetail", request);
+	}
+
+	@RequestMapping("editAccount")
+	public String editAccount(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "accountcreate";
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				User account = finder.findUsers(num, null, null, null).get(0);
+				model.addAttribute("accountLogin", account.getLogin());
+				model.addAttribute("canEdit", true);
+				model.addAttribute("isNewAccount", false);
+				break;
+			case CLIENT:
+				model.addAttribute("accountLogin", login);
+				model.addAttribute("canEdit", true);
+				model.addAttribute("isNewAccount", false);
 				break;
 			}
 		}
 		return nextPage;
 	}
-
+	
 	@RequestMapping("newAccount")
 	public String CreateNewAccount(Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -372,7 +400,9 @@ public class Controller {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
-			service.createNewUser(login);
+			if(service.createNewUser(login)){
+				nextPage = "redirect:retrieveAccount?num="+login.getUser().getAccountNumber();
+			}
 		}
 		return nextPage;
 	}
