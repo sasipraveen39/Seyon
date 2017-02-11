@@ -9,6 +9,9 @@ html,body,.container-fluid {
 	height: 100%;
 }
 
+.img-thumbnail 
+{ min-height:10rem; height:10rem; }
+
 
 .small-font{
 	font-size: .9rem;

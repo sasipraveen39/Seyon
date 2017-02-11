@@ -1,5 +1,6 @@
 package co.seyon.view.controller;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,16 +10,23 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -33,6 +41,7 @@ import co.seyon.model.Login;
 import co.seyon.model.Project;
 import co.seyon.model.User;
 import co.seyon.service.SeyonService;
+import co.seyon.util.Constants;
 import co.seyon.view.model.AccountSearch;
 import co.seyon.view.model.AccountSearchResult;
 import co.seyon.view.model.AjaxResponse;
@@ -526,6 +535,17 @@ public class Controller {
 		}
 		return navigatePage(user, "_projectdetail", request);
 	}
+	
+	@RequestMapping(value = "images/{accountNumber}/{projectNumber}/{imageName:.+}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Resource> getImageAsResource(@PathVariable String accountNumber, @PathVariable String projectNumber, @PathVariable String imageName) {
+	    HttpHeaders headers = new HttpHeaders();
+	    Resource resource = 
+	      new FileSystemResource(Constants.SAVE_PATH + File.separator + accountNumber + File.separator + 
+	    		   projectNumber + File.separator +"Images"+ File.separator + imageName);
+	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+	
 	
 	private String navigatePage(User user, String pageSuffix,
 			HttpServletRequest request) {

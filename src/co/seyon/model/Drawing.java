@@ -30,7 +30,11 @@ public class Drawing implements Serializable {
     @Temporal( TemporalType.TIMESTAMP)
 	@Column(name="date_of_issue")
 	private Date dateOfIssue;
-
+    
+    @Temporal( TemporalType.TIMESTAMP)
+	@Column(name="estimated_date_of_issue")
+	private Date estimatedDateOfIssue;
+    
 	@Column(name="drawing_number", nullable=false, length=100)
 	private String drawingNumber;
 
@@ -115,6 +119,14 @@ public class Drawing implements Serializable {
 
 	public void setDocument(Document document) {
 		this.document = document;
+	}
+
+	public Date getEstimatedDateOfIssue() {
+		return estimatedDateOfIssue;
+	}
+
+	public void setEstimatedDateOfIssue(Date estimatedDateOfIssue) {
+		this.estimatedDateOfIssue = estimatedDateOfIssue;
 	}
 	
 }

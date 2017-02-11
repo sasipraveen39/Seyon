@@ -101,6 +101,7 @@ CREATE TABLE `drawing` (
   `drawing_document_id` int(11) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `project_id` int(11) NOT NULL,
+  `estimated_date_of_issue` datetime DEFAULT NULL,
   PRIMARY KEY (`iddrawing`),
   KEY `FK_drawing_project_id` (`project_id`),
   KEY `FK_drawing_drawing_document_id` (`drawing_document_id`),
@@ -262,4 +263,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-28 22:45:56
+-- Dump completed on 2017-02-11 21:47:52
