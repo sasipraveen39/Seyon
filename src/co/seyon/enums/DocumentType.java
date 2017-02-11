@@ -1,6 +1,6 @@
 package co.seyon.enums;
 
-public enum DocumentType {
+public enum DocumentType implements Type{
 	IMAGE("Image"), BILL("Bill"), RECEIPT("Receipt"), CONTRACT("Contract");
 
 	private String value;
@@ -9,6 +9,7 @@ public enum DocumentType {
 		this.value = value;
 	}
 
+	@Override
 	public String getValue() {
 		return this.value;
 	}

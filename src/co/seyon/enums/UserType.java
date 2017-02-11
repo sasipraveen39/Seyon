@@ -1,6 +1,6 @@
 package co.seyon.enums;
 
-public enum UserType {
+public enum UserType implements Type{
 	ADMIN("Admin"), CLIENT("Client"), VENDOR("Vendor");
 	
 	private String value;
@@ -9,6 +9,7 @@ public enum UserType {
 		this.value = value;
 	}
 	
+	@Override
 	public String getValue() {
 		return this.value;
 	}

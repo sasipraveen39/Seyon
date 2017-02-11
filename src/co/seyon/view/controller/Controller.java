@@ -366,11 +366,13 @@ public class Controller {
 				model.addAttribute("accountLogin", account.getLogin());
 				model.addAttribute("canEdit", true);
 				model.addAttribute("isNewAccount", false);
+				model.addAttribute("accountNumber",account.getAccountNumber());
 				break;
 			case CLIENT:
 				model.addAttribute("accountLogin", login);
 				model.addAttribute("canEdit", true);
 				model.addAttribute("isNewAccount", false);
+				model.addAttribute("accountNumber",login.getUser().getAccountNumber());
 				break;
 			}
 		}
@@ -401,6 +403,18 @@ public class Controller {
 		String nextPage = "redirect:/";
 		if (user != null) {
 			if(service.createNewUser(login)){
+				nextPage = "redirect:retrieveAccount?num="+login.getUser().getAccountNumber();
+			}
+		}
+		return nextPage;
+	}
+	
+	@RequestMapping(value="updateaccount", method = RequestMethod.POST)
+	public String updateAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			if(service.updateUser(login.getUser())){
 				nextPage = "redirect:retrieveAccount?num="+login.getUser().getAccountNumber();
 			}
 		}

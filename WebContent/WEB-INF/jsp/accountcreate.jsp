@@ -13,10 +13,14 @@
 	<c:when test="${IsNew}">
 		<c:set var="title" value="Create New Account"></c:set>
 		<c:set var="mainButton" value="Create"></c:set>
+		<c:set var="formAction" value="submitaccount"></c:set>
+		<c:set var="cancelPage" value="account"></c:set>
 	</c:when>
 	<c:otherwise>
 		<c:set var="title" value="Edit Account"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
+		<c:set var="formAction" value="updateaccount"></c:set>
+		<c:set var="cancelPage" value="retrieveAccount?num=${accountNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
@@ -47,7 +51,7 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						data-dismiss="modal">Close</button>
-					<a href="account" class="btn btn-primary" role="button">Yes</a>
+					<a href="${cancelPage}" class="btn btn-primary" role="button">Yes</a>
 				</div>
 			</div>
 		</div>
@@ -63,18 +67,18 @@
 			<div class="col">
 				<h3>${title}</h3>
 				<hr />
-				<form:form action="submitaccount" method="post" id="createForm"
+				<form:form action="${formAction}" method="post" id="createForm"
 					class="form-horizontal" commandName="accountLogin">
 					<div class="row">
 						<div class="col-sm-6">
 							<legend>Account details</legend>
-							<c:if test="not IsNew">
+							<c:if test="${not IsNew}">
 								<div class="form-group row">
 									<label for="accountNumber" class="col-sm-3 col-form-label">Account
 										#</label>
 									<div class="col-sm-6">
-										<form:input type="text" class="form-control"
-											id="accountNumber" path="accountLogin.user.accountNumber"
+										<form:input type="text" class="form-control" readonly="true"
+											id="accountNumber" path="user.accountNumber"
 											placeholder="ACXXXXXXXX" />
 									</div>
 								</div>
@@ -113,7 +117,7 @@
 							<div class="form-group row">
 								<label for="username" class="col-sm-3 col-form-label">Username</label>
 								<div class="col-sm-6">
-									<form:input type="text" class="form-control" path="username"
+									<form:input type="text" class="form-control" path="username" readonly="${not IsNew}"
 										id="username" placeholder="Username" />
 								</div>
 							</div>
@@ -180,7 +184,7 @@
 				</form:form>
 				<a href="#" class="btn btn-primary" id="create" role="button">${mainButton}</a>
 
-				<a href="account" class="btn btn-secondary" id="cancel"
+				<a href="${cancelPage}" class="btn btn-secondary" id="cancel"
 					data-toggle="modal" data-target="#cancelModal" role="button">Cancel</a>
 			</div>
 		</div>

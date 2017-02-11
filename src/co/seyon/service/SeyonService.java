@@ -152,8 +152,9 @@ public class SeyonService {
 		login.setPassword(EncryptionUtil
 				.getSecurePassword(Constants.RESET_PASSWORD));
 		login.setActive(true);
-		
-		login.getUser().setAccountNumber(SequenceGenerator.generateSequence(User.class));
+
+		login.getUser().setAccountNumber(
+				SequenceGenerator.generateSequence(User.class));
 		login.getUser().getAddress().setAddressType(AddressType.BILLING);
 		bundle.persist(login);
 		result = true;
@@ -163,38 +164,16 @@ public class SeyonService {
 		return result;
 	}
 
-	/*
-	 * public boolean updateUser(String username, User updateUser) { boolean
-	 * result = false; Login login = finder.findByLoginUserName(username); User
-	 * user = login.getUser();
-	 * 
-	 * if(!user.getName().equals(updateUser.getName())){
-	 * addNewChangeHistory(username, Constants.USER_NAME, user.getName(),
-	 * updateUser.getName()); user.setName(updateUser.getName()); }
-	 * 
-	 * if(!user.getRole().equals(updateUser.getRole())){
-	 * addNewChangeHistory(username, Constants.USER_ROLE, user.getRole(),
-	 * updateUser.getRole()); user.setRole(updateUser.getRole()); }
-	 * 
-	 * if(updateUser.getSupervisor() != null){ if((user.getSupervisor() ==
-	 * null)){ addNewChangeHistory(username, Constants.USER_SUPERVISOR,
-	 * Constants.NONE, updateUser.getSupervisor().toString());
-	 * user.setSupervisor(updateUser.getSupervisor()); }else
-	 * if(!user.getSupervisor().equals(updateUser.getSupervisor())){
-	 * addNewChangeHistory(username, Constants.USER_SUPERVISOR,
-	 * user.getSupervisor().toString(), updateUser.getSupervisor().toString());
-	 * user.setSupervisor(updateUser.getSupervisor()); } } else {
-	 * if(user.getSupervisor() != null){ addNewChangeHistory(username,
-	 * Constants.USER_SUPERVISOR, user.getSupervisor().toString(),
-	 * Constants.NONE); user.setSupervisor(null); } }
-	 * 
-	 * user.setAllowProfileCustomization(updateUser.isAllowProfileCustomization()
-	 * );
-	 * 
-	 * bundle = new Bundle(); bundle.update(user); result = true;
-	 * 
-	 * bundle.closeConnection(); return result; }
-	 */
+	public boolean updateUser(User user) {
+		boolean result = false;
+		Bundle bundle = new Bundle();
+		
+		bundle.update(user);
+		result = true;
+		
+		bundle.closeConnection();
+		return result; 
+	}
 
 	private boolean updateLogin(Login login) {
 		boolean result = false;

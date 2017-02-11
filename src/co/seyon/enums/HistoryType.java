@@ -1,6 +1,6 @@
 package co.seyon.enums;
 
-public enum HistoryType {
+public enum HistoryType implements Type{
 	ADD("Add"), DELETE("Delete"), UPDATE("Update");
 
 	private String value;
@@ -9,6 +9,7 @@ public enum HistoryType {
 		this.value = value;
 	}
 
+	@Override
 	public String getValue() {
 		return this.value;
 	}

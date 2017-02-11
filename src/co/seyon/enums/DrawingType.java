@@ -1,6 +1,6 @@
 package co.seyon.enums;
 
-public enum DrawingType {
+public enum DrawingType implements Type{
 	STRUCTURAL("Structural");
 
 	private String value;
@@ -9,6 +9,7 @@ public enum DrawingType {
 		this.value = value;
 	}
 
+	@Override
 	public String getValue() {
 		return this.value;
 	}

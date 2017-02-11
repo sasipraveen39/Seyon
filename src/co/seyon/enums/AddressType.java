@@ -1,6 +1,6 @@
 package co.seyon.enums;
 
-public enum AddressType {
+public enum AddressType implements Type {
 	BILLING("Billing"), PROJECT_SITE("Project Site");
 	
 	private String value;
@@ -9,6 +9,7 @@ public enum AddressType {
 		this.value = value;
 	}
 	
+	@Override
 	public String getValue() {
 		return this.value;
 	}

@@ -27,6 +27,9 @@
 					<dt class="col-sm-2">Name</dt>
 					<dd class="col-sm-10">${acct.name}</dd>
 
+					<dt class="col-sm-2">Created on</dt>
+					<dd class="col-sm-10">${acct.createTime}</dd>
+
 					<dt class="col-sm-2">Email</dt>
 					<dd class="col-sm-10">${acct.email}</dd>
 					

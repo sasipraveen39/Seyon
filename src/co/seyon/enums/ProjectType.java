@@ -1,6 +1,6 @@
 package co.seyon.enums;
 
-public enum ProjectType {
+public enum ProjectType implements Type{
 	RESEDENTIAL("Resedential"), COMMERCIAL("Commercial"), EDUCATIONAL("Educational");
 
 	private String value;
@@ -9,6 +9,7 @@ public enum ProjectType {
 		this.value = value;
 	}
 
+	@Override
 	public String getValue() {
 		return this.value;
 	}

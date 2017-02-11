@@ -23,35 +23,54 @@ public class Finder {
 
 	public Finder() {
 		emfactory = Persistence.createEntityManagerFactory("Seyon");
-		entitymanager = emfactory.createEntityManager();
 	}
 
+	private void createEntityManager(){
+		entitymanager = emfactory.createEntityManager();
+	}
+	
 	public Login findByLoginUserName(String userName) {
+		createEntityManager();
 		TypedQuery<Login> query = entitymanager.createNamedQuery(
 				"Login.findByUserName", Login.class).setParameter("username",
 				userName);
 		Login result = null;
 		try {
 			result = query.getSingleResult();
+			if(result != null){
+				this.refresh(result);
+			}
 		} catch (NoResultException e) {
 			result = null;
+		}finally{
+			closeConnection();			
 		}
+		
+		
 		return result;
 	}
 
 	public User findUserbyID(int userID) {
+		createEntityManager();
 		TypedQuery<User> query = entitymanager.createNamedQuery(
 				"User.findbyID", User.class).setParameter("iduser", userID);
 		User result = null;
 		try {
 			result = query.getSingleResult();
+			if(result != null){
+				this.refresh(result);
+			}
 		} catch (NoResultException e) {
 			result = null;
+		}finally{
+			closeConnection();			
 		}
+		
 		return result;
 	}
 
 	public List<User> findUsers(String accountNumber, String accountName, String mobileNumber, String email){
+		createEntityManager();
 		String queryString = "Select u from User u, Login l";
 		List<String> constraints = new ArrayList<>();
 		
@@ -78,10 +97,18 @@ public class Finder {
 			queryString += " where "+ StringUtils.join(constraints, " and ");	
 		}
 		TypedQuery<User> query = entitymanager.createQuery(queryString, User.class);
-		return query.getResultList(); 
+		List<User> users = query.getResultList();
+		if(users.size() > 0){
+			for(User u : users){
+				this.refresh(u);
+			}
+		}
+		closeConnection();
+		return users;
 	}
 	
 	public int findLastSequence(Class className) {
+		createEntityManager();
 		String sequence = null;
 		int seqNum = -1;
 		TypedQuery<Object> query = entitymanager.createNamedQuery(
@@ -94,6 +121,10 @@ public class Finder {
 			result = null;
 		}
 
+		if(result != null){
+			this.refresh(result);
+		}
+		
 		if (result instanceof User) {
 			sequence = ((User) result).getAccountNumber();
 		} else if (result instanceof Project) {
@@ -104,6 +135,15 @@ public class Finder {
 			seqNum = Integer.parseInt(sequence.substring(2));
 		}
 
+		closeConnection();
 		return seqNum;
+	}
+	
+	private void refresh(Object data){
+		entitymanager.refresh(data);
+	}
+	
+	private void closeConnection() {
+		entitymanager.close();
 	}
 }

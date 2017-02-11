@@ -1,6 +1,6 @@
 package co.seyon.enums;
 
-public enum BillType {
+public enum BillType implements Type{
 	ADVANCE("Advance"), FINAL("Final");
 
 	private String value;
@@ -9,6 +9,7 @@ public enum BillType {
 		this.value = value;
 	}
 
+	@Override
 	public String getValue() {
 		return this.value;
 	}
