@@ -17,6 +17,60 @@
 <title>Project# ${proj.projectNumber} - Seyon</title>
 </head>
 <body>
+	<!-- Image Upload Modal -->
+	<div class="modal fade" id="imageUploadModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Image Upload -
+						Seyon</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col">
+								<form id="accountSearchForm">
+									<div class="form-group row">
+										<label for="name" class="col-sm-3 col-form-label">Title</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" id="name"
+												placeholder="" />
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="caption" class="col-sm-3 col-form-label">Caption</label>
+										<div class="col-sm-9">
+											<textarea class="form-control" rows="3" id="caption"></textarea>
+										</div>
+									</div>
+									<div class="form-group row">
+										<label for="imageFile" class="col-sm-3 col-form-label">Image</label>
+										<div class="col-sm-9">
+											<input type="file" class="form-control-file" id="imageFile" accept="image/x-png,image/gif,image/jpeg"
+												aria-describedby="fileHelp"> <small id="fileHelp"
+												class="form-text text-muted">Upload only jpeg, png or gif
+												file.</small>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancel</button>
+					<a href="#" id="uploadImage" class="btn btn-primary" role="button">Upload</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="container-fluid page-height">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="/Seyon">Home</a></li>
@@ -278,7 +332,8 @@
 									<div class="btn-toolbar" role="toolbar"
 										aria-label="Toolbar with button groups">
 										<div class="btn-group" role="group">
-											<button type="button" id="addProject"
+											<button type="button" id="addProject" data-toggle="modal"
+												data-target="#imageUploadModal"
 												class="btn btn-primary btn-sm">Upload Images</button>
 											<button type="button" id="deleteProject"
 												class="btn btn-secondary btn-sm">Remove Images</button>
@@ -314,14 +369,19 @@
 										pageContext.setAttribute("projImagesMap", imageMap);
 									%>
 									<c:forEach items="${pageScope.projImagesMap}" var="entry">
-									<fmt:parseDate value="${entry.key}" var="imageDate" pattern="yyyyMMdd" />
-										<h4><fmt:formatDate type="date" dateStyle="long"
-															value="${imageDate}" /></h4><hr/>
+										<fmt:parseDate value="${entry.key}" var="imageDate"
+											pattern="yyyyMMdd" />
+										<h4>
+											<fmt:formatDate type="date" dateStyle="long"
+												value="${imageDate}" />
+										</h4>
+										<hr />
 										<c:forEach items="${entry.value}" var="image">
 											<img src="${image.fileLocation}" alt="${image.name}"
 												class="img-thumbnail">
 										</c:forEach>
-										<br /> <br />
+										<br />
+										<br />
 									</c:forEach>
 								</div>
 							</div>
