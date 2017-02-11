@@ -42,6 +42,7 @@ import co.seyon.model.Project;
 import co.seyon.model.User;
 import co.seyon.service.SeyonService;
 import co.seyon.util.Constants;
+import co.seyon.util.EnvironmentUtil;
 import co.seyon.view.model.AccountSearch;
 import co.seyon.view.model.AccountSearchResult;
 import co.seyon.view.model.AjaxResponse;
@@ -541,8 +542,7 @@ public class Controller {
 	public ResponseEntity<Resource> getImageAsResource(@PathVariable String accountNumber, @PathVariable String projectNumber, @PathVariable String imageName) {
 	    HttpHeaders headers = new HttpHeaders();
 	    Resource resource = 
-	      new FileSystemResource(Constants.SAVE_PATH + File.separator + accountNumber + File.separator + 
-	    		   projectNumber + File.separator +"Images"+ File.separator + imageName);
+	      new FileSystemResource(EnvironmentUtil.getImagePath(accountNumber, projectNumber, imageName, false));
 	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 	
