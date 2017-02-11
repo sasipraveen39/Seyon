@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
+import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
 import co.seyon.model.Login;
 import co.seyon.model.Project;
@@ -105,6 +106,43 @@ public class Finder {
 		}
 		closeConnection();
 		return users;
+	}
+	
+	
+	public List<Project> findProjects(String projectNumber, String title, String type, String pincode){
+		createEntityManager();
+		String queryString = "Select p from Project p, Address a";
+		List<String> constraints = new ArrayList<>();
+		constraints.add("p.address = a");
+		
+		if(StringUtils.isNotBlank(projectNumber)){
+			constraints.add( "p.projectNumber='"+projectNumber+"'");
+		}
+		
+		if(StringUtils.isNotBlank(title)){
+			constraints.add( "p.title like '"+title+"%'");
+		}
+		
+		if(StringUtils.isNotBlank(type) && !("none".equalsIgnoreCase(type))){
+			constraints.add( "p.projectType='"+ProjectType.valueOf(type).getValue()+"'");
+		}
+		
+		if(StringUtils.isNotBlank(pincode)){
+			constraints.add( "a.pincode='"+pincode+"'");
+		}
+		
+		if(constraints.size() > 0){
+			queryString += " where "+ StringUtils.join(constraints, " and ");	
+		}
+		TypedQuery<Project> query = entitymanager.createQuery(queryString, Project.class);
+		List<Project> projects = query.getResultList();
+		if(projects.size() > 0){
+			for(Project p : projects){
+				this.refresh(p);
+			}
+		}
+		closeConnection();
+		return projects;
 	}
 	
 	public int findLastSequence(Class className) {

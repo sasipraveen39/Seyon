@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,12 +30,15 @@ import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
 import co.seyon.model.Address;
 import co.seyon.model.Login;
+import co.seyon.model.Project;
 import co.seyon.model.User;
 import co.seyon.service.SeyonService;
 import co.seyon.view.model.AccountSearch;
 import co.seyon.view.model.AccountSearchResult;
 import co.seyon.view.model.AjaxResponse;
 import co.seyon.view.model.Password;
+import co.seyon.view.model.ProjectSearch;
+import co.seyon.view.model.ProjectSearchResult;
 import co.seyon.view.model.Views;
 import co.seyon.view.validator.PasswordValidator;
 
@@ -327,6 +331,34 @@ public class Controller {
 	@RequestMapping("project")
 	public String project(Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		if (user != null) {
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				List<String> lruProjects = Cache.getLRUProjects(user.getIduser()+"");
+				List<ProjectSearchResult> projectSearchResults = new ArrayList<>();
+				if(lruProjects != null){
+					for(String acctNum : lruProjects){
+						List<Project> projects = finder.findProjects(acctNum, null, null, null);
+						if(projects.size() > 0){
+							Project p = projects.get(0);
+							ProjectSearchResult projectSearchResult = new ProjectSearchResult();
+							projectSearchResult.setTitle(p.getTitle());
+							projectSearchResult.setProjectNumber(p.getProjectNumber());
+							projectSearchResult.setType(p.getProjectType().getValue());
+							projectSearchResult.setAddress(p.getAddress().getCity() +" - " + p.getAddress().getPincode());
+							projectSearchResults.add(projectSearchResult);
+						}
+					}	
+				}
+				model.addAttribute("recentProjects", projectSearchResults);
+				break;
+			case CLIENT:
+				break;
+			}
+		}
+		
 		return navigatePage(user, "_project", request);
 	}
 	
@@ -419,6 +451,80 @@ public class Controller {
 			}
 		}
 		return nextPage;
+	}
+	
+	
+	@ResponseBody
+	@JsonView(Views.Public.class)
+	@RequestMapping(value = "seacrhProject", method = RequestMethod.POST)
+	public AjaxResponse searchProject(@RequestBody ProjectSearch projectSearch,
+			HttpServletRequest request) {
+		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
+		AjaxResponse result = new AjaxResponse();
+		if (loggedIn != null) {
+			List<Project> projects = finder.findProjects(
+					projectSearch.getProjectNumber(),
+					projectSearch.getTitle(),
+					projectSearch.getType(), projectSearch.getPincode());
+			if (projects.size() > 0) {
+				List<ProjectSearchResult> searchResult = new ArrayList<>();
+				for (Project p : projects) {
+					ProjectSearchResult projectSearchResult = new ProjectSearchResult();
+					projectSearchResult.setTitle(p.getTitle());
+					projectSearchResult.setProjectNumber(p.getProjectNumber());
+					projectSearchResult.setType(p.getProjectType().getValue());
+					projectSearchResult.setAddress(p.getAddress().getCity() +" - " + p.getAddress().getPincode());
+					searchResult.add(projectSearchResult);
+				}
+				result.setResult(searchResult);
+				result.setCode("200");
+				result.setMsg(searchResult.size() + " Projects found");
+			} else {
+				result.setCode("204");
+				result.setMsg("No Project found!");
+			}
+		}
+		return result;
+	}
+
+	
+	@RequestMapping("retrieveProject")
+	public String retrieveProject(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String prevURL = request.getHeader("Referer");
+		if(StringUtils.isNotBlank(prevURL)){
+			prevURL = prevURL.substring(prevURL.lastIndexOf("/")+1, prevURL.length());
+			if(!"project".equalsIgnoreCase(prevURL)){
+				model.addAttribute("prevURL", prevURL);	
+			}
+		}
+		if (user != null) {
+			Login login = user.getLogin();
+			Project project = null;
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				Cache.addToLRUProjects(user.getIduser()+"", num);
+				project = finder.findProjects(num, null, null, null).get(0);
+				model.addAttribute("project", project);
+				model.addAttribute("canEditProject", true);
+				break;
+			case CLIENT:
+				for(Project p : user.getProjects()){
+					if(p.getProjectNumber().equalsIgnoreCase(num)){
+						project = p;
+						break;
+					}
+				}
+				if(project == null){
+					project = user.getProjects().get(0);
+				}
+				model.addAttribute("project", project);
+				model.addAttribute("canEditProject", false);
+				break;
+			}
+		}
+		return navigatePage(user, "_projectdetail", request);
 	}
 	
 	private String navigatePage(User user, String pageSuffix,

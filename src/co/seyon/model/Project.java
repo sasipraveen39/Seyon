@@ -3,6 +3,9 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import co.seyon.enums.ProjectType;
+import co.seyon.enums.UserType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -150,12 +153,12 @@ public class Project implements Serializable {
 		this.estimatedTotalAmount = estimatedTotalAmount;
 	}
 
-	public String getProjectType() {
-		return this.projectType;
+	public ProjectType getProjectType() {
+		return ProjectType.valueOf(this.projectType);
 	}
 
-	public void setProjectType(String projectType) {
-		this.projectType = projectType;
+	public void setProjectType(ProjectType projectType) {
+		this.projectType = projectType.toString();
 	}
 
 	public Date getRequestedDate() {

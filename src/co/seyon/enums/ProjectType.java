@@ -1,7 +1,7 @@
 package co.seyon.enums;
 
 public enum ProjectType implements Type{
-	RESEDENTIAL("Resedential"), COMMERCIAL("Commercial"), EDUCATIONAL("Educational");
+	COMMERCIAL("Commercial"), EDUCATIONAL("Educational"), RESEDENTIAL("Resedential");
 
 	private String value;
 

@@ -7,8 +7,10 @@ import co.seyon.dao.Bundle;
 import co.seyon.enums.AddressType;
 import co.seyon.enums.BillType;
 import co.seyon.enums.DocumentType;
+import co.seyon.enums.DrawingStatus;
 import co.seyon.enums.DrawingType;
 import co.seyon.enums.HistoryType;
+import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
 import co.seyon.model.*;
 import co.seyon.sequence.SequenceGenerator;
@@ -47,7 +49,7 @@ public class ScratchPad {
 		
 		Project project = new Project();
 		project.setTitle("Sample Project1");
-		project.setProjectType("COMMERCIAL");
+		project.setProjectType(ProjectType.RESEDENTIAL);
 		project.setCode("1234");
 		project.setClientName("Sasi Praveen");
 		project.setAddress(address);
@@ -78,7 +80,7 @@ public class ScratchPad {
 		drawing.setDrawingNumber("1234");
 		drawing.setTypeOfDrawing(DrawingType.STRUCTURAL);
 		drawing.setDocument(document);
-		drawing.setStatus("FINAL");
+		drawing.setStatus(DrawingStatus.DRAFT);
 		drawing.setProject(project);
 		
 		Bill bill = new Bill();
