@@ -1,10 +1,28 @@
 package co.seyon.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
 import java.sql.Timestamp;
 import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.UserCustomizer;
 
 /**
  * The persistent class for the user database table.
@@ -12,6 +30,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value=UserCustomizer.class)
 @NamedQueries({
 		@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
 		@NamedQuery(name = "User.findAllByReverseNumber", query = "SELECT u FROM User u order by u.accountNumber desc") })
@@ -41,17 +61,20 @@ public class User implements Serializable {
 	@Column(nullable = false, length = 100)
 	private String name;
 
+	@Basic
+	private boolean retired;
+	
 	// bi-directional one-to-one association to Login
-	@OneToOne(mappedBy = "user", cascade = { CascadeType.ALL })
+	@OneToOne(mappedBy = "user")
 	private Login login;
 
 	// bi-directional one-to-one association to Address
-	@OneToOne(cascade = { CascadeType.ALL })
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "address_id", nullable = false)
 	private Address address;
 
 	// bi-directional many-to-one association to Project
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Project> projects;
 
 	public User() {
@@ -137,4 +160,11 @@ public class User implements Serializable {
 		this.projects = projects;
 	}
 
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
+	}
 }

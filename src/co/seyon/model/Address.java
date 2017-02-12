@@ -3,6 +3,10 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.AddressCustomizer;
 import co.seyon.enums.AddressType;
 
 import java.sql.Timestamp;
@@ -14,6 +18,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="address")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value=AddressCustomizer.class)
 public class Address implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -49,12 +55,14 @@ public class Address implements Serializable {
 	@Column(nullable=false, length=100)
 	private String state;
 
+	@Basic
+	private boolean retired;
 	//bi-directional one-to-one association to User
-	@OneToOne(mappedBy="address", cascade={CascadeType.ALL})
+	@OneToOne(mappedBy="address")
 	private User user;
 
 	//bi-directional one-to-one association to Project
-	@OneToOne(mappedBy="address", cascade={CascadeType.ALL})
+	@OneToOne(mappedBy="address")
 	private Project project;
 
     public Address() {
@@ -155,5 +163,15 @@ public class Address implements Serializable {
 	public void setProject(Project project) {
 		this.project = project;
 	}
+
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
+	}
+	
+	
 	
 }

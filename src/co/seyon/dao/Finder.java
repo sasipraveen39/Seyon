@@ -76,7 +76,7 @@ public class Finder {
 		List<String> constraints = new ArrayList<>();
 		
 		constraints.add("l = u.login");
-		constraints.add("l.userType='"+UserType.CLIENT+"'");
+		//constraints.add("l.userType='"+UserType.CLIENT+"'");
 		
 		if(StringUtils.isNotBlank(accountNumber)){
 			constraints.add( "u.accountNumber='"+accountNumber+"'");

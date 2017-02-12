@@ -3,6 +3,10 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.DocumentCustomizer;
 import co.seyon.enums.DocumentType;
 
 import java.sql.Timestamp;
@@ -14,6 +18,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="document")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value = DocumentCustomizer.class)
 public class Document implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -37,21 +43,24 @@ public class Document implements Serializable {
 	@Column(nullable=false, length=100)
 	private String name;
 
+	@Basic
+	private boolean retired;
+	
 	//bi-directional many-to-one association to Project
     @ManyToOne
 	@JoinColumn(name="project_id", nullable=false)
 	private Project project;
 
 	//bi-directional one-to-one association to Drawing
-    @OneToOne(mappedBy="document", cascade={CascadeType.ALL})
+    @OneToOne(mappedBy="document")
 	private Drawing drawing;
 
 	//bi-directional one-to-one association to Bill
-	@OneToOne(mappedBy="document", cascade={CascadeType.ALL})
+	@OneToOne(mappedBy="document")
 	private Bill bill;
 
 	//bi-directional one-to-one association to Payment
-	@OneToOne(mappedBy="document", cascade={CascadeType.ALL})
+	@OneToOne(mappedBy="document")
 	private Payment payment;
 
     public Document() {
@@ -135,6 +144,14 @@ public class Document implements Serializable {
 
 	public void setPayment(Payment payment) {
 		this.payment = payment;
+	}
+	
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
 	}
 	
 }

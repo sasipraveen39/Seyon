@@ -3,6 +3,10 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.LoginCustomizer;
 import co.seyon.enums.UserType;
 
 import java.util.Date;
@@ -14,6 +18,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "login")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value = LoginCustomizer.class)
 @NamedQueries({
 		@NamedQuery(name = "Login.findAll", query = "SELECT l FROM Login l"),
 		@NamedQuery(name = "Login.findByUserName", query = "SELECT l FROM Login l WHERE l.username = :username") })
@@ -51,8 +57,11 @@ public class Login implements Serializable {
 	@Column(nullable = false, length = 45)
 	private String username;
 
+	@Basic
+	private boolean retired;
+	
 	// bi-directional one-to-one association to User
-	@OneToOne(cascade = { CascadeType.ALL })
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
@@ -139,6 +148,14 @@ public class Login implements Serializable {
 		this.currentLogin = currentLogin;
 	}
 
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
+	}
+	
 	public boolean isActiveAndNotExpired() {
 		boolean result = false;
 		switch (this.getUserType()) {

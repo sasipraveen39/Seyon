@@ -3,6 +3,10 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.BillCustomizer;
 import co.seyon.enums.BillType;
 
 import java.math.BigDecimal;
@@ -17,6 +21,8 @@ import java.util.List;
  */
 @Entity
 @Table(name="bill")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value=BillCustomizer.class)
 public class Bill implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -44,17 +50,20 @@ public class Bill implements Serializable {
 	@Column(name="total_bill_amount", precision=10, scale=2)
 	private BigDecimal totalBillAmount;
 
+	@Basic
+	private boolean retired;
+	
 	//bi-directional many-to-one association to Project
     @ManyToOne
 	@JoinColumn(name="project_id", nullable=false)
 	private Project project;
 
 	//bi-directional many-to-one association to Payment
-	@OneToMany(mappedBy="bill")
+	@OneToMany(mappedBy="bill", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Payment> payments;
 
 	//bi-directional one-to-one association to Document
-	@OneToOne(cascade={CascadeType.ALL})
+	@OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JoinColumn(name="bill_document_id", nullable=false)
 	private Document document;
 
@@ -141,4 +150,11 @@ public class Bill implements Serializable {
 		this.document = document;
 	}
 	
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
+	}
 }

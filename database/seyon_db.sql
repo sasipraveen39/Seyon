@@ -35,6 +35,7 @@ CREATE TABLE `address` (
   `country` varchar(100) NOT NULL,
   `pincode` varchar(45) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idaddress`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -56,6 +57,7 @@ CREATE TABLE `bill` (
   `total_bill_amount` decimal(12,2) DEFAULT NULL,
   `project_id` int(11) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idbill`),
   KEY `FK_bill_project_id` (`project_id`),
   KEY `FK_bill_bill_document_id` (`bill_document_id`),
@@ -79,6 +81,7 @@ CREATE TABLE `document` (
   `document_type` varchar(45) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `project_id` int(11) NOT NULL,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`iddocument`),
   KEY `FK_document_project_id` (`project_id`),
   CONSTRAINT `FK_document_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`idproject`)
@@ -102,6 +105,7 @@ CREATE TABLE `drawing` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `project_id` int(11) NOT NULL,
   `estimated_date_of_issue` datetime DEFAULT NULL,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`iddrawing`),
   KEY `FK_drawing_project_id` (`project_id`),
   KEY `FK_drawing_drawing_document_id` (`drawing_document_id`),
@@ -126,6 +130,7 @@ CREATE TABLE `history` (
   `change_reason` varchar(300) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `project_id` int(11) NOT NULL,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idhistory`),
   KEY `FK_history_project_id` (`project_id`),
   CONSTRAINT `FK_history_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`idproject`)
@@ -150,6 +155,7 @@ CREATE TABLE `login` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `user_id` int(11) NOT NULL,
   `current_login` datetime DEFAULT NULL,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idlogin`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   KEY `FK_login_user_id` (`user_id`),
@@ -177,6 +183,7 @@ CREATE TABLE `payment` (
   `amount_payable` decimal(12,2) NOT NULL,
   `bill_id` int(11) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idpayment`),
   KEY `FK_payment_bill_id` (`bill_id`),
   KEY `FK_payment_receipt_document_id` (`receipt_document_id`),
@@ -208,6 +215,7 @@ CREATE TABLE `project` (
   `user_id` int(11) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `project_number` varchar(10) NOT NULL,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idproject`),
   UNIQUE KEY `project_number_UNIQUE` (`project_number`),
   KEY `FK_project_user_id` (`user_id`),
@@ -247,6 +255,7 @@ CREATE TABLE `user` (
   `address_id` int(11) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `account_number` varchar(10) NOT NULL,
+  `retired` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`iduser`),
   UNIQUE KEY `account_number_UNIQUE` (`account_number`),
   KEY `FK_user_address_id` (`address_id`),
@@ -263,4 +272,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-11 21:47:52
+-- Dump completed on 2017-02-12 19:25:34

@@ -1,15 +1,33 @@
 package co.seyon.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
-
-import co.seyon.enums.ProjectType;
-import co.seyon.enums.UserType;
-
 import java.math.BigDecimal;
-import java.util.Date;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.ProjectCustomizer;
+import co.seyon.enums.ProjectType;
 
 /**
  * The persistent class for the project database table.
@@ -17,6 +35,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "project")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value = ProjectCustomizer.class)
 @NamedQueries({
 		@NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p"),
 		@NamedQuery(name = "Project.findAllByReverseNumber", query = "SELECT p FROM Project p order by p.projectNumber desc") })
@@ -68,30 +88,33 @@ public class Project implements Serializable {
 	@Column(name = "total_area_of_project")
 	private int totalAreaOfProject;
 
+	@Basic
+	private boolean retired;
+	
 	// bi-directional many-to-one association to User
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	// bi-directional one-to-one association to Address
-	@OneToOne(cascade = { CascadeType.ALL })
+	@OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JoinColumn(name = "address_id", nullable = false)
 	private Address address;
 
 	// bi-directional many-to-one association to Bill
-	@OneToMany(mappedBy = "project")
+	@OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Bill> bills;
 
 	// bi-directional many-to-one association to Drawing
-	@OneToMany(mappedBy = "project")
+	@OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Drawing> drawings;
 
 	// bi-directional many-to-one association to Document
-	@OneToMany(mappedBy = "project")
+	@OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Document> documents;
 
 	// bi-directional many-to-one association to History
-	@OneToMany(mappedBy = "project")
+	@OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<History> histories;
 
 	public Project() {
@@ -249,4 +272,11 @@ public class Project implements Serializable {
 		this.histories = histories;
 	}
 
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
+	}
 }

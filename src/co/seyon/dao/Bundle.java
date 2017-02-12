@@ -38,6 +38,17 @@ public class Bundle {
 		return result;
 	}
 	
+	public boolean remove(Object object) {
+		boolean result = false;
+		entitymanager.getTransaction().begin();
+		if (!entitymanager.contains(object)) {
+			object = entitymanager.merge(object);
+		}
+		entitymanager.remove(object);
+		entitymanager.getTransaction().commit();
+		result = true;
+		return result;
+	}
 	
 	public boolean persistAll(Object object[]) {
 		boolean result = false;

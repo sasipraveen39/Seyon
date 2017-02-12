@@ -199,7 +199,8 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<div class="modal-body" style="background-color: var(--header-color);">
+				<div class="modal-body"
+					style="background-color: var(--header-color);">
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col">
@@ -212,20 +213,20 @@
 													<img src="${image.fileLocation}" alt="${image.name}"
 														class="d-block img-fluid" />
 													<div class="carousel-caption d-none d-md-block">
-														<h3>${image.name}</h3>
-														<p class="font-italic">${image.description}</p>
+															<h3>${image.name}</h3>
+															<p class="font-italic">${image.description}</p>
 													</div>
 												</div>
 											</c:forEach>
 										</c:forEach>
 									</div>
-									<a class="carousel-control-prev carousel-control-bg" href="#imageSlideControls"
-										role="button" data-slide="prev"> <span
-										class="carousel-control-prev-icon" aria-hidden="true"></span>
+									<a class="carousel-control-prev carousel-control-bg"
+										href="#imageSlideControls" role="button" data-slide="prev">
+										<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 										<span class="sr-only">Previous</span>
-									</a> <a class="carousel-control-next carousel-control-bg" href="#imageSlideControls"
-										role="button" data-slide="next"> <span
-										class="carousel-control-next-icon" aria-hidden="true"></span>
+									</a> <a class="carousel-control-next carousel-control-bg"
+										href="#imageSlideControls" role="button" data-slide="next">
+										<span class="carousel-control-next-icon" aria-hidden="true"></span>
 										<span class="sr-only">Next</span>
 									</a>
 								</div>

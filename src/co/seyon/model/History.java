@@ -3,6 +3,10 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.HistoryCustomizer;
 import co.seyon.enums.HistoryType;
 
 import java.sql.Timestamp;
@@ -14,6 +18,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="history")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value = HistoryCustomizer.class)
 public class History implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -40,6 +46,9 @@ public class History implements Serializable {
 	@Column(name="previous_value", nullable=false, length=1000)
 	private String previousValue;
 
+	@Basic
+	private boolean retired;
+	
 	//bi-directional many-to-one association to Project
     @ManyToOne
 	@JoinColumn(name="project_id", nullable=false)
@@ -112,4 +121,11 @@ public class History implements Serializable {
 		this.project = project;
 	}
 	
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
+	}
 }

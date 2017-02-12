@@ -3,6 +3,10 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.PaymentCustomizer;
 import co.seyon.enums.ModeOfPayment;
 
 import java.math.BigDecimal;
@@ -16,6 +20,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="payment")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value = PaymentCustomizer.class)
 public class Payment implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -52,6 +58,9 @@ public class Payment implements Serializable {
 
 	@Column(nullable=false, length=45)
 	private String status;
+	
+	@Basic
+	private boolean retired;
 
 	//bi-directional many-to-one association to Bill
     @ManyToOne
@@ -59,7 +68,7 @@ public class Payment implements Serializable {
 	private Bill bill;
 
 	//bi-directional one-to-one association to Document
-    @OneToOne(cascade={CascadeType.ALL})
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JoinColumn(name="receipt_document_id")
 	private Document document;
 
@@ -160,6 +169,14 @@ public class Payment implements Serializable {
 
 	public void setDocument(Document document) {
 		this.document = document;
+	}
+	
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
 	}
 	
 }

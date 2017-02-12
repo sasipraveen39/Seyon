@@ -3,6 +3,10 @@ package co.seyon.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.eclipse.persistence.annotations.AdditionalCriteria;
+import org.eclipse.persistence.annotations.Customizer;
+
+import co.seyon.customizer.DrawingCustomizer;
 import co.seyon.enums.DrawingStatus;
 import co.seyon.enums.DrawingType;
 
@@ -16,6 +20,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="drawing")
+@AdditionalCriteria("this.retired = false")
+@Customizer(value = DrawingCustomizer.class)
 public class Drawing implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -43,6 +49,9 @@ public class Drawing implements Serializable {
 
 	@Column(name="type_of_drawing", nullable=false, length=45)
 	private String typeOfDrawing;
+	
+	@Basic
+	private boolean retired;
 
 	//bi-directional many-to-one association to Project
     @ManyToOne
@@ -50,7 +59,7 @@ public class Drawing implements Serializable {
 	private Project project;
 
 	//bi-directional one-to-one association to Document
-    @OneToOne(cascade={CascadeType.ALL})
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JoinColumn(name="drawing_document_id", nullable=false)
 	private Document document;
 
@@ -129,4 +138,11 @@ public class Drawing implements Serializable {
 		this.estimatedDateOfIssue = estimatedDateOfIssue;
 	}
 	
+	public boolean isRetired() {
+		return retired;
+	}
+
+	public void setRetired(boolean retired) {
+		this.retired = retired;
+	}
 }
