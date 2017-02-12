@@ -1,6 +1,7 @@
 package co.seyon.view.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.core.io.FileSystemResource;
@@ -25,23 +27,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.support.ServletContextResource;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.seyon.cache.Cache;
 import co.seyon.dao.Finder;
-import co.seyon.enums.AddressType;
+import co.seyon.enums.DocumentType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
 import co.seyon.model.Address;
+import co.seyon.model.Document;
 import co.seyon.model.Login;
 import co.seyon.model.Project;
 import co.seyon.model.User;
 import co.seyon.service.SeyonService;
-import co.seyon.util.Constants;
 import co.seyon.util.EnvironmentUtil;
 import co.seyon.view.model.AccountSearch;
 import co.seyon.view.model.AccountSearchResult;
@@ -53,6 +56,9 @@ import co.seyon.view.model.Views;
 import co.seyon.view.validator.PasswordValidator;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @org.springframework.stereotype.Controller
 public class Controller {
@@ -546,6 +552,38 @@ public class Controller {
 	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 	
+	
+	@ResponseBody
+	@RequestMapping(value = "uploadImage", method = RequestMethod.POST)
+	public String uploadImage(@RequestParam("imageInfo") String imageInfo, 
+			@RequestParam("imageFile") MultipartFile imageFile,
+			HttpServletRequest request) {
+		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
+		String fileSaved = "Image not uploaded";
+		if (loggedIn != null) {
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				co.seyon.view.model.Document info =  mapper.readValue(imageInfo, co.seyon.view.model.Document.class);
+				String imageFileName = EnvironmentUtil.getImagePath(info.getAccountNumber(), 
+						info.getProjectNumber(), imageFile.getOriginalFilename(), true);
+				File serverImageFile = new File(imageFileName);
+				if(!serverImageFile.getParentFile().exists()){
+					serverImageFile.getParentFile().mkdirs();
+				}
+				FileUtils.copyInputStreamToFile(imageFile.getInputStream(), serverImageFile);
+				Document document = new Document();
+				document.setName(info.getName());
+				document.setDescription(info.getDescription());
+				document.setDocumentType(DocumentType.IMAGE);
+				document.setFileLocation(EnvironmentUtil.getExposedImagePath(info.getAccountNumber(), info.getProjectNumber(), serverImageFile.getName()));
+				service.createNewDocument(info.getProjectNumber(), document);
+				fileSaved = "Image uploaded";
+			} catch (IOException e) {
+				fileSaved = e.getMessage();
+			}
+		}
+		return fileSaved;
+	}
 	
 	private String navigatePage(User user, String pageSuffix,
 			HttpServletRequest request) {

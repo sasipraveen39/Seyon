@@ -39,4 +39,8 @@ public class EnvironmentUtil {
 	    		   projNum + File.separator +"Documents"+ File.separator + docName;
 		return path;
 	}
+	
+	public static String getExposedImagePath(String acctNum, String projNum, String imageName){
+		return "images/"+acctNum+"/"+projNum+"/"+imageName;
+	}
 }

@@ -8,7 +8,9 @@ import co.seyon.enums.AddressType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
+import co.seyon.model.Document;
 import co.seyon.model.Login;
+import co.seyon.model.Project;
 import co.seyon.model.User;
 import co.seyon.sequence.SequenceGenerator;
 import co.seyon.util.Constants;
@@ -186,4 +188,14 @@ public class SeyonService {
 		return result;
 	}
 
+	public boolean createNewDocument(String projectNumber, Document document){
+		boolean result = false;
+		Project project = finder.findProjects(projectNumber, null, null, null).get(0);
+		document.setProject(project);
+		Bundle bundle = new Bundle();
+		bundle.persist(document);
+		bundle.closeConnection();
+		result = true;
+		return result;
+	}
 }

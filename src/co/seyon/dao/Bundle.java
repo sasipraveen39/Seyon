@@ -33,6 +33,7 @@ public class Bundle {
 		entitymanager.getTransaction().begin();
 		entitymanager.persist(object);
 		entitymanager.getTransaction().commit();
+		this.refresh(object);
 		result = true;
 		return result;
 	}
