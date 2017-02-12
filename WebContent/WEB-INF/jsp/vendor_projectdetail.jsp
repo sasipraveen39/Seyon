@@ -15,16 +15,74 @@
 <c:set var="proj" value="${project}"></c:set>
 <c:set var="canEdit" value="${canEditProject}"></c:set>
 <title>Project# ${proj.projectNumber} - Seyon</title>
+<script>
+	$(document).ready(
+			function() {
+				$('.img-thumbnail').click(
+						function(e) {
+							var elementID = $(e.target).attr('id');
+							$("#imageSlideControls>.carousel-inner>div.active")
+									.removeClass("active");
+							$("#CR" + elementID).addClass("active");
+							$('#imageSlideModal').modal('show');
+						});
+
+				$('#uploadImage').click(function(e) {
+					var imageInfo = {};
+					imageInfo["name"] = $('#title').val();
+					imageInfo["description"] = $('#caption').val();
+					imageInfo["projectNumber"] = "${proj.projectNumber}";
+					imageInfo["accountNumber"] = "${proj.user.accountNumber}";
+					var file = $('#imageFile').prop("files")[0];
+
+					var formData = new FormData();
+					formData.append("imageFile", file);
+					formData.append("imageInfo", JSON.stringify(imageInfo));
+
+					$.ajax({
+						type : "POST",
+						url : "uploadImage",
+						data : formData,
+						dataType : 'text',
+						processData : false,
+						contentType : false,
+						timeout : 100000,
+						success : function(data) {
+							console.log("SUCCESS: ", data);
+							if (data == "Image uploaded") {
+								location.reload(true);
+							} else {
+								imageUploadFailed();
+							}
+						},
+						error : function(e) {
+							console.log("ERROR: ", e);
+							imageUploadFailed();
+						},
+						done : function(e) {
+							console.log("DONE");
+						}
+					});
+					e.preventDefault();
+				});
+			});
+
+	function imageUploadFailed() {
+		$('#imageUploadModal').modal('hide');
+		$('#imageUploadFailedModal').modal('show');
+	}
+</script>
 </head>
 <body>
 	<!-- Image Upload Modal -->
 	<div class="modal fade" id="imageUploadModal" tabindex="-1"
-		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		role="dialog" aria-labelledby="imageUploadModalLabel"
+		aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Image Upload -
-						Seyon</h5>
+					<h5 class="modal-title" id="imageUploadModalLabel">Image
+						Upload - Seyon</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -36,9 +94,9 @@
 							<div class="col">
 								<form id="accountSearchForm">
 									<div class="form-group row">
-										<label for="name" class="col-sm-3 col-form-label">Title</label>
+										<label for="title" class="col-sm-3 col-form-label">Title</label>
 										<div class="col-sm-9">
-											<input type="text" class="form-control" id="name"
+											<input type="text" class="form-control" id="title"
 												placeholder="" />
 										</div>
 									</div>
@@ -51,10 +109,11 @@
 									<div class="form-group row">
 										<label for="imageFile" class="col-sm-3 col-form-label">Image</label>
 										<div class="col-sm-9">
-											<input type="file" class="form-control-file" id="imageFile" accept="image/x-png,image/gif,image/jpeg"
+											<input type="file" class="form-control-file" id="imageFile"
+												accept="image/x-png,image/gif,image/jpeg"
 												aria-describedby="fileHelp"> <small id="fileHelp"
-												class="form-text text-muted">Upload only jpeg, png or gif
-												file.</small>
+												class="form-text text-muted">Upload only jpeg, png
+												or gif file.</small>
 										</div>
 									</div>
 								</form>
@@ -64,8 +123,115 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">Cancel</button>
+						id="imageUploadCancel" data-dismiss="modal">Cancel</button>
 					<a href="#" id="uploadImage" class="btn btn-primary" role="button">Upload</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Image Upload Failed Modal -->
+	<div class="modal fade" id="imageUploadFailedModal" tabindex="-1"
+		role="dialog" aria-labelledby="imageUploadFailedModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="imageUploadFailedModalLabel">Image
+						Upload Failed - Seyon</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="alert alert-danger" role="alert">
+						<strong>Image upload Failed!!</strong> Please try again later.
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" data-dismiss="modal" class="btn btn-primary"
+						role="button">OK</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<%	Map<String, List<Document>> imageMap = new LinkedHashMap<String, List<Document>>();
+		Project projt = (Project)pageContext.getAttribute("proj");
+		List<Document> docs = projt.getDocuments();
+		Collections.sort(docs, new Comparator<Document>(){
+			@Override
+			public int compare(Document o1, Document o2){
+				if(o1.getCreateTime().after(o2.getCreateTime())){
+					return -1;
+				} else if (o1.getCreateTime().before(o2.getCreateTime())){
+					return 1;
+				}
+					return 0;
+			}
+		});
+		for(Document doc : docs){
+			if(doc.getDocumentType() == DocumentType.IMAGE){
+				String date = co.seyon.util.DateUtil.getDayString(doc.getCreateTime());
+				List<Document> images = imageMap.get(date);
+				if(images == null){
+					imageMap.put(date, new ArrayList<Document>());
+					images = imageMap.get(date);
+				}
+				images.add(doc);	
+			}
+		}
+		pageContext.setAttribute("projImagesMap", imageMap);
+	%>
+
+	<!-- Image Slide Modal -->
+	<div class="modal fade" id="imageSlideModal" tabindex="-1"
+		role="dialog" aria-labelledby="imageSlideModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="imageSlideModalLabel">Image
+						Slideshow - Seyon</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" style="background-color: var(--header-color);">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col">
+								<div id="imageSlideControls" class="carousel slide"
+									data-ride="carousel">
+									<div class="carousel-inner" role="listbox">
+										<c:forEach items="${pageScope.projImagesMap}" var="entry">
+											<c:forEach items="${entry.value}" var="image">
+												<div class="carousel-item" id="CR${image.iddocument}">
+													<img src="${image.fileLocation}" alt="${image.name}"
+														class="d-block img-fluid" />
+													<div class="carousel-caption d-none d-md-block">
+														<h3>${image.name}</h3>
+														<p class="font-italic">${image.description}</p>
+													</div>
+												</div>
+											</c:forEach>
+										</c:forEach>
+									</div>
+									<a class="carousel-control-prev carousel-control-bg" href="#imageSlideControls"
+										role="button" data-slide="prev"> <span
+										class="carousel-control-prev-icon" aria-hidden="true"></span>
+										<span class="sr-only">Previous</span>
+									</a> <a class="carousel-control-next carousel-control-bg" href="#imageSlideControls"
+										role="button" data-slide="next"> <span
+										class="carousel-control-next-icon" aria-hidden="true"></span>
+										<span class="sr-only">Next</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -332,42 +498,16 @@
 									<div class="btn-toolbar" role="toolbar"
 										aria-label="Toolbar with button groups">
 										<div class="btn-group" role="group">
-											<button type="button" id="addProject" data-toggle="modal"
+											<button type="button" id="addImage" data-toggle="modal"
 												data-target="#imageUploadModal"
 												class="btn btn-primary btn-sm">Upload Images</button>
-											<button type="button" id="deleteProject"
+											<button type="button" id="deleteImage"
 												class="btn btn-secondary btn-sm">Remove Images</button>
 										</div>
 									</div>
 									<br />
 
-									<%	Map<String, List<Document>> imageMap = new LinkedHashMap<String, List<Document>>();
-										Project projt = (Project)pageContext.getAttribute("proj");
-										List<Document> docs = projt.getDocuments();
-										Collections.sort(docs, new Comparator<Document>(){
-											@Override
-											public int compare(Document o1, Document o2){
-												if(o1.getCreateTime().after(o2.getCreateTime())){
-													return -1;
-												} else if (o1.getCreateTime().before(o2.getCreateTime())){
-													return 1;
-												}
-												return 0;
-											}
-										});
-										for(Document doc : docs){
-											if(doc.getDocumentType() == DocumentType.IMAGE){
-												String date = co.seyon.util.DateUtil.getDayString(doc.getCreateTime());
-												List<Document> images = imageMap.get(date);
-												if(images == null){
-													imageMap.put(date, new ArrayList<Document>());
-													images = imageMap.get(date);
-												}
-												images.add(doc);	
-											}
-										}
-										pageContext.setAttribute("projImagesMap", imageMap);
-									%>
+
 									<c:forEach items="${pageScope.projImagesMap}" var="entry">
 										<fmt:parseDate value="${entry.key}" var="imageDate"
 											pattern="yyyyMMdd" />
@@ -378,7 +518,7 @@
 										<hr />
 										<c:forEach items="${entry.value}" var="image">
 											<img src="${image.fileLocation}" alt="${image.name}"
-												class="img-thumbnail">
+												id="${image.iddocument}" class="img-thumbnail">
 										</c:forEach>
 										<br />
 										<br />
