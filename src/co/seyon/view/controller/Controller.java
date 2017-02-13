@@ -585,6 +585,19 @@ public class Controller {
 		return fileSaved;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "deleteImage", method = RequestMethod.POST)
+	public String deleteImage(@RequestBody ArrayList<Long> docIDs, HttpServletRequest request) {
+		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
+		String fileDeleted = "Images not deleted";
+		if (loggedIn != null) {
+			if(service.deleteDocuments(docIDs)){
+				fileDeleted = "Images deleted";
+			}
+		}
+		return fileDeleted;
+	}
+	
 	private String navigatePage(User user, String pageSuffix,
 			HttpServletRequest request) {
 		String nextPage = "redirect:/";

@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
+import co.seyon.model.Document;
 import co.seyon.model.Login;
 import co.seyon.model.Project;
 import co.seyon.model.User;
@@ -143,6 +144,16 @@ public class Finder {
 		}
 		closeConnection();
 		return projects;
+	}
+	
+	public List<Document> findDocumentsByID(List<Long> docIDs){
+		createEntityManager();
+		TypedQuery<Document> query = entitymanager
+				.createQuery("SELECT d from Document d WHERE d.iddocument IN :ids", Document.class);
+		query.setParameter("ids", docIDs);
+		List<Document> documents = query.getResultList();
+		closeConnection();
+		return documents;
 	}
 	
 	public int findLastSequence(Class className) {

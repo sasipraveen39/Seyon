@@ -50,6 +50,20 @@ public class Bundle {
 		return result;
 	}
 	
+	public boolean removeAll(List<? extends Object> objects) {
+		boolean result = false;
+		entitymanager.getTransaction().begin();
+		for(Object object : objects){
+			if (!entitymanager.contains(object)) {
+				object = entitymanager.merge(object);
+			}
+			entitymanager.remove(object);	
+		}
+		entitymanager.getTransaction().commit();
+		result = true;
+		return result;
+	}
+	
 	public boolean persistAll(Object object[]) {
 		boolean result = false;
 		entitymanager.getTransaction().begin();

@@ -1,6 +1,7 @@
 package co.seyon.service;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import co.seyon.dao.Bundle;
 import co.seyon.dao.Finder;
@@ -195,6 +196,18 @@ public class SeyonService {
 		Bundle bundle = new Bundle();
 		bundle.persist(document);
 		bundle.closeConnection();
+		result = true;
+		return result;
+	}
+	
+	public boolean deleteDocuments(List<Long> docIDs){
+		boolean result = false;
+		List<Document> documents = finder.findDocumentsByID(docIDs);
+		if(documents != null){
+			Bundle bundle = new Bundle();
+			bundle.removeAll(documents);
+			bundle.closeConnection();
+		}
 		result = true;
 		return result;
 	}

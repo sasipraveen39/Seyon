@@ -40,16 +40,43 @@
 						$('#deleteImage').removeClass('invisible');
 					}else{
 						$('#deleteImage').addClass('invisible');
+						$(".img-thumbnail-delete").removeClass("img-thumbnail-delete");
 					}
 				});
 
 				$('#deleteImage').click(function(e){
+					$('#imageConfirmDeleteModal').modal('show');
+				});
+				
+				$('#confirmImageDelete').click(function(e){
 					var imagesToDelete = [];
 					$('#imagePanel').find('.img-thumbnail-delete').each(function (){
 						imagesToDelete.push($(this).attr('id'));
 					});
-					alert(JSON.stringify(imagesToDelete));
 
+					$.ajax({
+						type : "POST",
+						url : "deleteImage",
+						data : JSON.stringify(imagesToDelete),
+						dataType : 'text',
+						async: false,
+						contentType : 'application/json',
+						timeout : 100000,
+						success : function(data) {
+							console.log("SUCCESS: ", data);
+							if (data == "Image deleted") {
+								location.reload(true);
+							} else {
+								
+							}
+						},
+						error : function(e) {
+							console.log("ERROR: ", e);
+						},
+						done : function(e) {
+							console.log("DONE");
+						}
+					});
 					e.preventDefault();
 					location.reload();
 				});
@@ -71,6 +98,7 @@
 						url : "uploadImage",
 						data : formData,
 						dataType : 'text',
+						async: false,
 						processData : false,
 						contentType : false,
 						timeout : 100000,
@@ -264,6 +292,32 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Image Confirm delete Modal -->
+	<div class="modal fade" id="imageConfirmDeleteModal" tabindex="-1"
+		role="dialog" aria-labelledby="imageConfirmDeleteModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="imageConfirmDeleteModalLabel">Image
+						Delete - Seyon</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Are you sure you want to delete the selected images?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<a href="#" id="confirmImageDelete" class="btn btn-primary" role="button">Yes</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<div class="container-fluid page-height">
 		<ol class="breadcrumb">
