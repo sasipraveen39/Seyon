@@ -3,6 +3,7 @@
 :root{
 	--main-color:#f8b02a;
 	--header-color:#292b2c;
+	--delete-color:red;
 }
 
 html,body,.container-fluid {
@@ -18,7 +19,12 @@ html,body,.container-fluid {
 
 .img-thumbnail:hover {
 	cursor: pointer;
-	background-color: var(--main-color) !important;
+	background-color: var(--main-color);
+}
+
+.img-thumbnail-delete{
+	background-color: var(--delete-color) !important;
+	opacity: 0.5;
 }
 
 .carousel-item>img{

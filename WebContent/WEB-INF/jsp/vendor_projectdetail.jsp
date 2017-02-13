@@ -21,12 +21,39 @@
 				$('.img-thumbnail').click(
 						function(e) {
 							var elementID = $(e.target).attr('id');
-							$("#imageSlideControls>.carousel-inner>div.active")
+							if(!$("#deleteImage").hasClass('invisible')){
+								if($(e.target).hasClass("img-thumbnail-delete")){
+									$(e.target).removeClass("img-thumbnail-delete");
+								}else{
+									$(e.target).addClass("img-thumbnail-delete");	
+								}
+							}else{
+								$("#imageSlideControls>.carousel-inner>div.active")
 									.removeClass("active");
-							$("#CR" + elementID).addClass("active");
-							$('#imageSlideModal').modal('show');
+								$("#CR" + elementID).addClass("active");
+								$('#imageSlideModal').modal('show');
+							}
 						});
+				
+				$('#removeImage').click(function(e){
+					if(!$(e.target).hasClass('active')){
+						$('#deleteImage').removeClass('invisible');
+					}else{
+						$('#deleteImage').addClass('invisible');
+					}
+				});
 
+				$('#deleteImage').click(function(e){
+					var imagesToDelete = [];
+					$('#imagePanel').find('.img-thumbnail-delete').each(function (){
+						imagesToDelete.push($(this).attr('id'));
+					});
+					alert(JSON.stringify(imagesToDelete));
+
+					e.preventDefault();
+					location.reload();
+				});
+				
 				$('#uploadImage').click(function(e) {
 					var imageInfo = {};
 					imageInfo["name"] = $('#title').val();
@@ -496,14 +523,19 @@
 							</div>
 							<div class="card-block">
 								<div class="card-text">
-									<div class="btn-toolbar" role="toolbar"
+									<div class="btn-toolbar justify-content-between" role="toolbar"
 										aria-label="Toolbar with button groups">
 										<div class="btn-group" role="group">
 											<button type="button" id="addImage" data-toggle="modal"
 												data-target="#imageUploadModal"
 												class="btn btn-primary btn-sm">Upload Images</button>
-											<button type="button" id="deleteImage"
+											<button type="button" id="removeImage" data-toggle="button" aria-pressed="false" autocomplete="off"
 												class="btn btn-secondary btn-sm">Remove Images</button>
+										</div>
+										<div class="btn-group" role="group">
+											<button type="button" id="deleteImage" data-toggle="modal"
+												data-target="#imageDeleteModal"
+												class="btn btn-danger btn-sm invisible">Delete Selected Images</button>
 										</div>
 									</div>
 									<br />
