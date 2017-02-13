@@ -39,8 +39,8 @@
 					if(!$(e.target).hasClass('active')){
 						$('#deleteImage').removeClass('invisible');
 					}else{
-						$('#deleteImage').addClass('invisible');
 						$(".img-thumbnail-delete").removeClass("img-thumbnail-delete");
+						$('#deleteImage').addClass('invisible');
 					}
 				});
 
@@ -64,7 +64,7 @@
 						timeout : 100000,
 						success : function(data) {
 							console.log("SUCCESS: ", data);
-							if (data == "Image deleted") {
+							if (data == "Images deleted") {
 								location.reload(true);
 							} else {
 								
@@ -78,7 +78,6 @@
 						}
 					});
 					e.preventDefault();
-					location.reload();
 				});
 				
 				$('#uploadImage').click(function(e) {
