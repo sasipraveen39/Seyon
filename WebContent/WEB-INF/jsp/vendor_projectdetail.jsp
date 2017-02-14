@@ -442,17 +442,22 @@
 							</div>
 							<div class="card-block">
 								<div class="card-text">
-									<div class="btn-toolbar" role="toolbar"
+									<div class="btn-toolbar justify-content-between" role="toolbar"
 										aria-label="Toolbar with button groups">
 										<div class="btn-group" role="group">
-											<button type="button" id="addProject"
+											<button type="button" id="addDocument"
 												class="btn btn-primary btn-sm">Add Document</button>
-											<button type="button" id="deleteProject"
-												class="btn btn-secondary btn-sm">Remove Document</button>
+											<button type="button" id="deleteDocument" data-toggle="button" aria-pressed="false" autocomplete="off"
+												class="btn btn-secondary btn-sm remove-button">Remove Document</button>
+										</div>
+										<div class="btn-group" role="group">
+											<button type="button" data-toggle="modal"
+												data-target="#itemDeleteModal"
+												class="btn btn-danger btn-sm delete-button invisible">Delete Selected Documents</button>
 										</div>
 									</div>
 									<br />
-									<table class="table table-striped">
+									<table class="table table-striped delete-table">
 										<thead>
 											<tr>
 												<th>Document #</th>
