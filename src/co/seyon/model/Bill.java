@@ -7,6 +7,7 @@ import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Customizer;
 
 import co.seyon.customizer.BillCustomizer;
+import co.seyon.enums.BillStatus;
 import co.seyon.enums.BillType;
 
 import java.math.BigDecimal;
@@ -23,6 +24,9 @@ import java.util.List;
 @Table(name="bill")
 @AdditionalCriteria("this.retired = false")
 @Customizer(value=BillCustomizer.class)
+@NamedQueries({
+	@NamedQuery(name = "Bill.findAll", query = "SELECT b FROM Bill b"),
+	@NamedQuery(name = "Bill.findAllByReverseNumber", query = "SELECT b FROM Bill b order by b.billNumber desc") })
 public class Bill implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -63,7 +67,7 @@ public class Bill implements Serializable {
 	private List<Payment> payments;
 
 	//bi-directional one-to-one association to Document
-	@OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="bill_document_id", nullable=false)
 	private Document document;
 
@@ -94,16 +98,22 @@ public class Bill implements Serializable {
 		this.billNumber = billNumber;
 	}
 
-	public String getBillStatus() {
-		return this.billStatus;
+	public BillStatus getBillStatus() {
+		if(this.billStatus != null){
+			return BillStatus.valueOf(this.billStatus);	
+		}
+		return null;
 	}
 
-	public void setBillStatus(String billStatus) {
-		this.billStatus = billStatus;
+	public void setBillStatus(BillStatus billStatus) {
+		this.billStatus = billStatus.toString();
 	}
 
 	public BillType getBillType() {
-		return BillType.valueOf(this.billType);
+		if(this.billType != null){
+			return BillType.valueOf(this.billType);	
+		}
+		return null;
 	}
 
 	public void setBillType(BillType billType) {

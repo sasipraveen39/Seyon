@@ -5,6 +5,7 @@ import java.util.Date;
 
 import co.seyon.dao.Bundle;
 import co.seyon.enums.AddressType;
+import co.seyon.enums.BillStatus;
 import co.seyon.enums.BillType;
 import co.seyon.enums.DocumentType;
 import co.seyon.enums.DrawingStatus;
@@ -89,7 +90,7 @@ public class ScratchPad {
 		bill.setBillNumber("12345");
 		bill.setTotalBillAmount(new BigDecimal(2000.33));
 		bill.setDocument(document);
-		bill.setBillStatus("Pending");
+		bill.setBillStatus(BillStatus.DRAFT);
 		bill.setProject(project);
 		
 		Payment payment = new Payment();

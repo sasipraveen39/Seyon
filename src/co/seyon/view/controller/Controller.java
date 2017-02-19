@@ -35,6 +35,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.seyon.cache.Cache;
 import co.seyon.dao.Finder;
+import co.seyon.enums.BillStatus;
+import co.seyon.enums.BillType;
 import co.seyon.enums.DocumentType;
 import co.seyon.enums.DrawingStatus;
 import co.seyon.enums.DrawingType;
@@ -42,6 +44,7 @@ import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
 import co.seyon.model.Address;
+import co.seyon.model.Bill;
 import co.seyon.model.Document;
 import co.seyon.model.Drawing;
 import co.seyon.model.Login;
@@ -483,6 +486,26 @@ public class Controller {
 		return nextPage;
 	}
 	
+	@RequestMapping("newBill")
+	public String CreateNewBill(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "billcreate";
+			Bill bill = new Bill();
+			bill.setBillStatus(BillStatus.DRAFT);
+			bill.setBillDate(new Date());
+			bill.setDocument(new Document());
+			model.addAttribute("canEdit", true);
+			model.addAttribute("isNew", true);
+			model.addAttribute("projectNumber", num);
+			model.addAttribute("bill", bill);
+			model.addAttribute("billTypes",BillType.values());
+			model.addAttribute("statuses",BillStatus.values());
+		}
+		return nextPage;
+	}
+	
 	@RequestMapping(value="submitaccount", method = RequestMethod.POST)
 	public String submitAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -557,6 +580,42 @@ public class Controller {
 				drawing.getDocument().setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
 						project.getProjectNumber(), serverDocFile.getName()));
 				if(service.createDrawing(drawing)){
+					nextPage = "redirect:retrieveProject?num=" + num;	
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return nextPage;
+	}
+	
+	@RequestMapping(value="submitbill", method = RequestMethod.POST)
+	public String submitBill(@ModelAttribute("bill") Bill bill,
+			@RequestParam(value = "projNumber") String num,
+			@RequestParam(value = "billFile", required = false) MultipartFile billFile,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			try {
+				Project project = finder.findProjects(num, null, null, null)
+						.get(0);
+				String docFileName = EnvironmentUtil.getDocumentPath(project
+						.getUser().getAccountNumber(), project
+						.getProjectNumber(), billFile.getOriginalFilename(),
+						true);
+				File serverDocFile = new File(docFileName);
+				if (!serverDocFile.getParentFile().exists()) {
+					serverDocFile.getParentFile().mkdirs();
+				}
+				FileUtils.copyInputStreamToFile(billFile.getInputStream(),
+						serverDocFile);
+				bill.setProject(project);
+				bill.getDocument().setProject(project);
+				bill.getDocument().setDocumentType(DocumentType.BILL);
+				bill.getDocument().setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
+						project.getProjectNumber(), serverDocFile.getName()));
+				if(service.createBill(bill)){
 					nextPage = "redirect:retrieveProject?num=" + num;	
 				}
 			} catch (IOException e) {

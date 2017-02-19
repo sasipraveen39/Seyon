@@ -507,10 +507,11 @@
 									<div class="btn-toolbar justify-content-between" role="toolbar"
 										aria-label="Toolbar with button groups">
 										<div class="btn-group" role="group">
-											<button type="button" id="addProject"
+											<button type="button" id="addBill" onclick="window.location.href='newBill?num=${proj.projectNumber}'"
 												class="btn btn-primary btn-sm">Add Bill</button>
-											<button type="button" id="deleteProject"
-												class="btn btn-secondary btn-sm remove-button">Remove Bill</button>
+											<button type="button" id="deleteBill"
+												class="btn btn-secondary btn-sm remove-button">Remove
+												Bill</button>
 										</div>
 										<div class="btn-group" role="group">
 											<button type="button" data-toggle="modal"
@@ -526,7 +527,8 @@
 												<th>Date</th>
 												<th>Type</th>
 												<th>Status</th>
-												<th>Amount</th>
+												<th>Total Amount</th>
+												<th>Document Link</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -536,8 +538,10 @@
 													<td><fmt:formatDate type="date" dateStyle="long"
 															value="${bill.billDate}" /></td>
 													<td>${bill.billType.value}</td>
-													<td>${bill.billStatus}</td>
+													<td>${bill.billStatus.value}</td>
 													<td>&#x20b9; ${bill.totalBillAmount}</td>
+													<td><a target="_blank" href="${bill.document.fileLocation}" class="btn btn-primary btn-sm"
+														role="button">Open Drawing</a></td>
 												</tr>
 											</c:forEach>
 										</tbody>

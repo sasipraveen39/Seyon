@@ -224,6 +224,18 @@ public class SeyonService {
 		return result;
 	}
 	
+	public boolean createBill(Bill bill){
+		boolean result = false;
+		bill.setBillNumber(SequenceGenerator.generateSequence(Bill.class));
+		if(bill != null){
+			Bundle bundle = new Bundle();
+			bundle.persist(bill);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
+	
 	public boolean deleteDocuments(List<Long> docIDs){
 		boolean result = false;
 		List<Document> documents = finder.findDocumentsByID(docIDs);

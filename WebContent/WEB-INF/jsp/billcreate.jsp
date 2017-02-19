@@ -12,15 +12,15 @@
 <c:set var="IsNew" value="${isNew}"></c:set>
 <c:choose>
 	<c:when test="${IsNew}">
-		<c:set var="title" value="Create New Legal Document"></c:set>
+		<c:set var="title" value="Create New Bill"></c:set>
 		<c:set var="mainButton" value="Create"></c:set>
-		<c:set var="formAction" value="submitlegaldocument"></c:set>
+		<c:set var="formAction" value="submitbill"></c:set>
 		<c:set var="cancelPage" value="retrieveProject?num=${projectNumber}"></c:set>
 	</c:when>
 	<c:otherwise>
-		<c:set var="title" value="Edit Legal Document"></c:set>
+		<c:set var="title" value="Edit Bill"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
-		<c:set var="formAction" value="updatelegaldocument"></c:set>
+		<c:set var="formAction" value="updatebill"></c:set>
 		<c:set var="cancelPage" value="retrieveProject?num=${projectNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
@@ -80,37 +80,86 @@
 			<div class="col">
 				<h3>${title}</h3>
 				<hr />
-				<form:form action="${formAction}" method="post" id="createForm" enctype="multipart/form-data"
-					class="form-horizontal" commandName="legalDocument">
+				<form:form action="${formAction}" method="post" id="createForm"
+					enctype="multipart/form-data" class="form-horizontal"
+					commandName="bill">
 					<div class="row">
 						<div class="col-sm-6">
-							<legend>Document details</legend>
+							<legend>Bill details</legend>
+							<c:if test="${not IsNew}">
+								<div class="form-group row">
+									<label for="billNumber" class="col-sm-3 col-form-label">Bill
+										#</label>
+									<div class="col-sm-6">
+										<form:input type="text" class="form-control" readonly="true"
+											id="billNumber" path="billNumber" placeholder="XXXXXXXXXX" />
+									</div>
+								</div>
+							</c:if>
+							<div class="form-group row">
+								<label for="type" class="col-sm-3 col-form-label">Type</label>
+								<div class="col-sm-6">
+									<form:select class="form-control" path="billType"
+										id="type">
+										<form:option value="" label="<none>" />
+										<form:options items="${billTypes}" itemLabel="value" />
+									</form:select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="billDate" class="col-sm-3 col-form-label">Date</label>
+								<div class="col-sm-6">
+									<form:input type="date" class="form-control" id="billDate"
+										path="billDate" placeholder="" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="status" class="col-sm-3 col-form-label">Status</label>
+								<div class="col-sm-6">
+									<form:select class="form-control" path="billStatus" id="status">
+										<form:option value="" label="<none>" />
+										<form:options items="${statuses}" itemLabel="value" />
+									</form:select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="totalBillAmount" class="col-sm-3 col-form-label">Total Amount</label>
+								<div class="col-sm-6 input-group">
+									<span class="input-group-addon" id="ruppee-addon1">&#8377;</span>
+									<form:input type="number" class="form-control" id="totalBillAmount"
+										path="totalBillAmount" placeholder="" aria-describedby="ruppee-addon1"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<legend>Document</legend>
 							<div class="form-group row">
 								<label for="name" class="col-sm-3 col-form-label">Name</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="name" id="name" placeholder="Document Name" />
+										path="document.name" id="name" placeholder="Document Name" />
 								</div>
 							</div>
 							<div class="form-group row">
 								<label for="description" class="col-sm-3 col-form-label">Description</label>
 								<div class="col-sm-6">
 									<form:textarea class="form-control" rows="3" id="description"
-										path="description"></form:textarea>
+										path="document.description"></form:textarea>
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="documentFile" class="col-sm-3 col-form-label">Document File</label>
+								<label for="billFile" class="col-sm-3 col-form-label">Bill
+									File</label>
 								<div class="col-sm-6">
-									<input type="file" class="form-control-file" id="documentFile" name="documentFile"
-										accept="application/pdf"
+									<input type="file" class="form-control-file" id="billFile"
+										name="billFile" accept="application/pdf"
 										aria-describedby="fileHelp"> <small id="fileHelp"
 										class="form-text text-muted">Upload only pdf file.</small>
 								</div>
 							</div>
 						</div>
 					</div>
-					<input type="hidden" name="projNumber" value="${projectNumber}"/>
+					<input type="hidden" name="projNumber" value="${projectNumber}" />
 				</form:form>
 				<a href="#" class="btn btn-primary" id="create" role="button">${mainButton}</a>
 

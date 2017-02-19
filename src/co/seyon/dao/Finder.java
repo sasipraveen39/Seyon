@@ -200,6 +200,8 @@ public class Finder {
 			sequence = ((User) result).getAccountNumber();
 		} else if (result instanceof Project) {
 			sequence = ((Project) result).getProjectNumber();
+		} else if (result instanceof Bill) {
+			sequence = ((Bill) result).getBillNumber();
 		}
 		
 		if(sequence != null){
