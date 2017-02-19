@@ -45,6 +45,8 @@
 				});
 
 				$('#uploadImage').click(function(e) {
+					var progressBarDiv = $("#imageUploadModal>.modal-dialog>.modal-content>.modal-body>.container-fluid>.row>.col");
+					
 					var imageInfo = {};
 					imageInfo["name"] = $('#title').val();
 					imageInfo["description"] = $('#caption').val();
@@ -57,14 +59,30 @@
 					formData.append("imageInfo", JSON.stringify(imageInfo));
 
 					$.ajax({
+						xhr: function(){
+						    var xhr = new window.XMLHttpRequest();
+						    xhr.upload.addEventListener("progress", function(evt){
+						      if (evt.lengthComputable) {
+						        var percentComplete = evt.loaded / evt.total * 100;
+						        $(".progress-bar").width(percentComplete+"%");
+						      }
+						    }, false);
+						    return xhr;
+						  },
 						type : "POST",
 						url : "uploadImage",
 						data : formData,
 						dataType : 'text',
-						async: false,
+						async: true,
 						processData : false,
 						contentType : false,
 						timeout : 100000,
+						beforeSend : function(){
+							progressBarDiv.append($("#fileUploadProgressTemplate").tmpl());
+							$("#uploadImage").prop("disabled", true);
+					        $("#imageUploadCancel").prop("disabled", true);
+					        $("#imageUplodForm :input").attr("disabled", true);
+						},
 						success : function(data) {
 							console.log("SUCCESS: ", data);
 							if (data == "Image uploaded") {
@@ -77,8 +95,12 @@
 							console.log("ERROR: ", e);
 							imageUploadFailed();
 						},
-						done : function(e) {
+						complete : function(e) {
 							console.log("DONE");
+							$(".progress").remove();
+							$("#uploadImage").prop("disabled", false);
+					        $("#imageUploadCancel").prop("disabled", false);
+					        $("#imageUplodForm :input").attr("disabled", false);
 						}
 					});
 					e.preventDefault();
@@ -110,7 +132,7 @@
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col">
-								<form id="accountSearchForm">
+								<form id="imageUplodForm">
 									<div class="form-group row">
 										<label for="title" class="col-sm-3 col-form-label">Title</label>
 										<div class="col-sm-9">
@@ -142,7 +164,7 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
 						id="imageUploadCancel" data-dismiss="modal">Cancel</button>
-					<a href="#" id="uploadImage" class="btn btn-primary" role="button">Upload</a>
+					<button href="#" id="uploadImage" class="btn btn-primary">Upload</button>
 				</div>
 			</div>
 		</div>
