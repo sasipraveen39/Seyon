@@ -36,11 +36,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import co.seyon.cache.Cache;
 import co.seyon.dao.Finder;
 import co.seyon.enums.DocumentType;
+import co.seyon.enums.DrawingStatus;
+import co.seyon.enums.DrawingType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
 import co.seyon.model.Address;
 import co.seyon.model.Document;
+import co.seyon.model.Drawing;
 import co.seyon.model.Login;
 import co.seyon.model.Project;
 import co.seyon.model.User;
@@ -446,6 +449,25 @@ public class Controller {
 		return nextPage;
 	}
 	
+	@RequestMapping("newDrawing")
+	public String CreateNewDrawing(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "drawingcreate";
+			Drawing drawing = new Drawing();
+			drawing.setStatus(DrawingStatus.DRAFT);
+			drawing.setDocument(new Document());
+			model.addAttribute("canEdit", true);
+			model.addAttribute("isNew", true);
+			model.addAttribute("projectNumber", num);
+			model.addAttribute("drawing", drawing);
+			model.addAttribute("drawingTypes", DrawingType.values());
+			model.addAttribute("statuses", DrawingStatus.values());
+		}
+		return nextPage;
+	}
+	
 	@RequestMapping(value="submitaccount", method = RequestMethod.POST)
 	public String submitAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -457,6 +479,43 @@ public class Controller {
 		}
 		return nextPage;
 	}
+	
+	@RequestMapping(value="submitdrawing", method = RequestMethod.POST)
+	public String submitDrawing(@ModelAttribute("drawing") Drawing drawing,
+			@RequestParam(value = "projNumber") String num,
+			@RequestParam(value = "drawingFile", required = false) MultipartFile drawingFile,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			try {
+				Project project = finder.findProjects(num, null, null, null)
+						.get(0);
+				String docFileName = EnvironmentUtil.getDocumentPath(project
+						.getUser().getAccountNumber(), project
+						.getProjectNumber(), drawingFile.getOriginalFilename(),
+						true);
+				File serverDocFile = new File(docFileName);
+				if (!serverDocFile.getParentFile().exists()) {
+					serverDocFile.getParentFile().mkdirs();
+				}
+				FileUtils.copyInputStreamToFile(drawingFile.getInputStream(),
+						serverDocFile);
+				drawing.setProject(project);
+				drawing.getDocument().setProject(project);
+				drawing.getDocument().setDocumentType(DocumentType.DRAWING);
+				drawing.getDocument().setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
+						project.getProjectNumber(), serverDocFile.getName()));
+				if(service.createDrawing(drawing)){
+					nextPage = "redirect:retrieveProject?num=" + num;	
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return nextPage;
+	}
+	
 	
 	@RequestMapping(value="updateaccount", method = RequestMethod.POST)
 	public String updateAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
@@ -550,6 +609,15 @@ public class Controller {
 	    HttpHeaders headers = new HttpHeaders();
 	    Resource resource = 
 	      new FileSystemResource(EnvironmentUtil.getImagePath(accountNumber, projectNumber, imageName, false));
+	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "documents/{accountNumber}/{projectNumber}/{documentName:.+}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<Resource> getDocumentAsResource(@PathVariable String accountNumber, @PathVariable String projectNumber, @PathVariable String documentName) {
+	    HttpHeaders headers = new HttpHeaders();
+	    Resource resource = 
+	      new FileSystemResource(EnvironmentUtil.getDocumentPath(accountNumber, projectNumber, documentName, false));
 	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 	

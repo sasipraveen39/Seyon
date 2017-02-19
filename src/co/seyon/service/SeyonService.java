@@ -202,6 +202,17 @@ public class SeyonService {
 		return result;
 	}
 	
+	public boolean createDrawing(Drawing drawing){
+		boolean result = false;
+		if(drawing != null){
+			Bundle bundle = new Bundle();
+			bundle.persist(drawing);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
+	
 	public boolean deleteDocuments(List<Long> docIDs){
 		boolean result = false;
 		List<Document> documents = finder.findDocumentsByID(docIDs);

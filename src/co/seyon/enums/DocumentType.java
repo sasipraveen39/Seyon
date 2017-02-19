@@ -1,7 +1,7 @@
 package co.seyon.enums;
 
 public enum DocumentType implements Type{
-	IMAGE("Image"), BILL("Bill"), RECEIPT("Receipt"), CONTRACT("Contract");
+	IMAGE("Image"), DRAWING("Drawing"), BILL("Bill"), RECEIPT("Receipt"), CONTRACT("Contract");
 
 	private String value;
 

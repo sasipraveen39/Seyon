@@ -59,7 +59,7 @@ public class Drawing implements Serializable {
 	private Project project;
 
 	//bi-directional one-to-one association to Document
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="drawing_document_id", nullable=false)
 	private Document document;
 
@@ -99,7 +99,10 @@ public class Drawing implements Serializable {
 	}
 
 	public DrawingStatus getStatus() {
-		return DrawingStatus.valueOf(this.status);
+		if(this.status != null){
+			return DrawingStatus.valueOf(this.status);	
+		}
+		return null;
 	}
 
 	public void setStatus(DrawingStatus status) {
@@ -107,7 +110,10 @@ public class Drawing implements Serializable {
 	}
 
 	public DrawingType getTypeOfDrawing() {
-		return DrawingType.valueOf(this.typeOfDrawing);
+		if(this.typeOfDrawing != null){
+			return DrawingType.valueOf(this.typeOfDrawing);	
+		}
+		return null;
 	}
 
 	public void setTypeOfDrawing(DrawingType typeOfDrawing) {

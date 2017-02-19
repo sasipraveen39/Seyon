@@ -452,7 +452,7 @@
 									<div class="btn-toolbar justify-content-between" role="toolbar"
 										aria-label="Toolbar with button groups">
 										<div class="btn-group" role="group">
-											<button type="button" id="addDrawing"
+											<button type="button" id="addDrawing" onclick="window.location.href='newDrawing?num=${proj.projectNumber}'"
 												class="btn btn-primary btn-sm">Add Drawing</button>
 											<button type="button" id="deleteDrawing" data-toggle="button" aria-pressed="false" autocomplete="off"
 												class="btn btn-secondary btn-sm remove-button">Remove Drawing</button>
@@ -472,7 +472,7 @@
 												<th>Status</th>
 												<th>Est. Date of Issue</th>
 												<th>Date of Issue</th>
-												<th>Link</th>
+												<th>Document Link</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -485,7 +485,7 @@
 															value="${drawing.estimatedDateOfIssue}" /></td>
 													<td><fmt:formatDate type="date" dateStyle="long"
 															value="${drawing.dateOfIssue}" /></td>
-													<td><a href="#" class="btn btn-primary btn-sm"
+													<td><a target="_blank" href="${drawing.document.fileLocation}" class="btn btn-primary btn-sm"
 														role="button">Open Drawing</a></td>
 												</tr>
 											</c:forEach>
