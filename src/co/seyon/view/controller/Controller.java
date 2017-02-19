@@ -49,6 +49,7 @@ import co.seyon.util.EnvironmentUtil;
 import co.seyon.view.model.AccountSearch;
 import co.seyon.view.model.AccountSearchResult;
 import co.seyon.view.model.AjaxResponse;
+import co.seyon.view.model.Item;
 import co.seyon.view.model.Password;
 import co.seyon.view.model.ProjectSearch;
 import co.seyon.view.model.ProjectSearchResult;
@@ -586,14 +587,30 @@ public class Controller {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "deleteImage", method = RequestMethod.POST)
-	public String deleteImage(@RequestBody ArrayList<Long> docIDs, HttpServletRequest request) {
+	@RequestMapping(value = "deleteItems", method = RequestMethod.POST)
+	public String deleteImage(@RequestBody Item item, HttpServletRequest request) {
 		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
-		String fileDeleted = "Images not deleted";
+		String fileDeleted = "Unable to delete";
 		if (loggedIn != null) {
-			if(service.deleteDocuments(docIDs)){
-				fileDeleted = "Images deleted";
+			String type = item.getType();
+			if(type.equalsIgnoreCase("Image")){
+				if(service.deleteDocuments(item.getIds())){
+					fileDeleted = "Delete successful";
+				}	
+			} else if(type.equalsIgnoreCase("Document")){
+				if(service.deleteDocuments(item.getIds())){
+					fileDeleted = "Delete successful";
+				}
+			} else if(type.equalsIgnoreCase("Bill")){
+				if(service.deleteBills(item.getIds())){
+					fileDeleted = "Delete successful";
+				}
+			} else if(type.equalsIgnoreCase("Drawing")){
+				if(service.deleteDrawings(item.getIds())){
+					fileDeleted = "Delete successful";
+				}
 			}
+			
 		}
 		return fileDeleted;
 	}

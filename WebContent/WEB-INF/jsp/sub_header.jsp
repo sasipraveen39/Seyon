@@ -47,6 +47,65 @@
 
 </head>
 <body>
+	<!-- Item delete Modal -->
+	<div class="modal fade" id="itemDeleteModal" tabindex="-1"
+		role="dialog" aria-labelledby="itemDeleteModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="itemDeleteModalLabel">
+						<span class="itemDeleteName"></span> Delete - Seyon
+					</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Are you sure you want to delete the selected <span
+						class="itemDeleteName"></span>s?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cancel</button>
+					<a href="#" id="confirmDelete" class="btn btn-primary"
+						role="button">Yes</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Item Delete Failed Modal -->
+	<div class="modal fade" id="itemDeleteFailedModal" tabindex="-1"
+		role="dialog" aria-labelledby="itemDeleteFailedModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="itemDeleteFailedModalLabel">
+						<span class="itemDeleteName"></span> Delete Failed - Seyon
+					</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="alert alert-danger" role="alert">
+						<strong><span class="itemDeleteName"></span> delete
+							Failed!!</strong> Please try again later.
+					</div>
+				</div>
+				<div class="modal-footer">
+					<a href="#" data-dismiss="modal" class="btn btn-primary"
+						role="button">OK</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 	<!-- Header -->
 
 	<nav

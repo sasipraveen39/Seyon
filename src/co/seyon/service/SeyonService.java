@@ -9,7 +9,9 @@ import co.seyon.enums.AddressType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
+import co.seyon.model.Bill;
 import co.seyon.model.Document;
+import co.seyon.model.Drawing;
 import co.seyon.model.Login;
 import co.seyon.model.Project;
 import co.seyon.model.User;
@@ -211,4 +213,29 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
+	
+	public boolean deleteBills(List<Long> billIDs){
+		boolean result = false;
+		List<Bill> bills = finder.findBillsByID(billIDs);
+		if(bills != null){
+			Bundle bundle = new Bundle();
+			bundle.removeAll(bills);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
+	
+	public boolean deleteDrawings(List<Long> drawingIDs){
+		boolean result = false;
+		List<Drawing> drawings = finder.findDrawingsByID(drawingIDs);
+		if(drawings != null){
+			Bundle bundle = new Bundle();
+			bundle.removeAll(drawings);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
+	
 }

@@ -13,7 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
+import co.seyon.model.Bill;
 import co.seyon.model.Document;
+import co.seyon.model.Drawing;
 import co.seyon.model.Login;
 import co.seyon.model.Project;
 import co.seyon.model.User;
@@ -156,6 +158,26 @@ public class Finder {
 		return documents;
 	}
 	
+	public List<Bill> findBillsByID(List<Long> billIDs){
+		createEntityManager();
+		TypedQuery<Bill> query = entitymanager
+				.createQuery("SELECT b from Bill b WHERE b.idbill IN :ids", Bill.class);
+		query.setParameter("ids", billIDs);
+		List<Bill> bills = query.getResultList();
+		closeConnection();
+		return bills;
+	}
+	
+	
+	public List<Drawing> findDrawingsByID(List<Long> drawingIDs){
+		createEntityManager();
+		TypedQuery<Drawing> query = entitymanager
+				.createQuery("SELECT d from Drawing d WHERE d.iddrawing IN :ids", Drawing.class);
+		query.setParameter("ids", drawingIDs);
+		List<Drawing> drawings = query.getResultList();
+		closeConnection();
+		return drawings;
+	}
 	public int findLastSequence(Class className) {
 		createEntityManager();
 		String sequence = null;
