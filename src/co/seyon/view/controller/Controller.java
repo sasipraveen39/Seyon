@@ -711,6 +711,35 @@ public class Controller {
 		return navigatePage(user, "_projectdetail", request);
 	}
 	
+	@RequestMapping("retrieveLegalDocument")
+	public String retrieveLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		if (user != null) {
+			Login login = user.getLogin();
+			Document document = null;
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				document = finder.findProjects(num, null, null, null).get(0).getDocuments().get(0);
+				break;
+			case CLIENT:
+				for(Project p : user.getProjects()){
+					for(Document d : p.getDocuments()){
+						document = d;
+						break;		
+					}
+				}
+				if(document == null){
+					document = user.getProjects().get(0).getDocuments().get(0);
+				}
+				break;
+			}
+			model.addAttribute("document", document);
+			model.addAttribute("canEdit", true);
+		}
+		return navigatePage(user, "_legaldocumentdetail", request);
+	}
+	
 	@RequestMapping(value = "images/{accountNumber}/{projectNumber}/{imageName:.+}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<Resource> getImageAsResource(@PathVariable String accountNumber, @PathVariable String projectNumber, @PathVariable String imageName) {

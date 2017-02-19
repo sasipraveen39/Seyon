@@ -430,7 +430,7 @@
 											<c:forEach items="${proj.documents}" var="document">
 												<c:if test="${document.documentType == 'CONTRACT'}">
 													<tr id="${document.iddocument}">
-														<th scope="row">DT00000001</th>
+														<th scope="row"><a href="retrieveLegalDocument?num=${proj.projectNumber}">DT00000001</a></th>
 														<td>${document.name}</td>
 														<td>${document.description}</td>
 														<td><a target="_blank"
