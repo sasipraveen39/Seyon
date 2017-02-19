@@ -405,7 +405,7 @@
 									<div class="btn-toolbar justify-content-between" role="toolbar"
 										aria-label="Toolbar with button groups">
 										<div class="btn-group" role="group">
-											<button type="button" id="addDocument"
+											<button type="button" id="addDocument" onclick="window.location.href='newLegalDocument?num=${proj.projectNumber}'"
 												class="btn btn-primary btn-sm">Add Document</button>
 											<button type="button" id="deleteDocument" data-toggle="button" aria-pressed="false" autocomplete="off"
 												class="btn btn-secondary btn-sm remove-button">Remove Document</button>
@@ -420,19 +420,21 @@
 									<table class="table table-striped delete-table">
 										<thead>
 											<tr>
-												<th>Document #</th>
 												<th>Name</th>
-												<th>Link</th>
+												<th>Description</th>
+												<th>Document Link</th>
 											</tr>
 										</thead>
 										<tbody>
 											<c:forEach items="${proj.documents}" var="document">
 												<c:if test="${document.documentType == 'CONTRACT'}">
 													<tr id="${document.iddocument}">
-														<th scope="row">DC00000001</th>
-														<td>${document.name}</td>
-														<td><a href="#" class="btn btn-primary btn-sm"
-															role="button">Open Document</a></td>
+														<th scope="row">${document.name}</th>
+														<td>${document.description}</td>
+														<td><a target="_blank"
+															href="${document.fileLocation}"
+															class="btn btn-primary btn-sm" role="button">Open
+																Document</a></td>
 													</tr>
 												</c:if>
 											</c:forEach>

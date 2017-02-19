@@ -468,6 +468,21 @@ public class Controller {
 		return nextPage;
 	}
 	
+	@RequestMapping("newLegalDocument")
+	public String CreateNewLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "legaldocumentcreate";
+			Document document = new Document();
+			model.addAttribute("canEdit", true);
+			model.addAttribute("isNew", true);
+			model.addAttribute("projectNumber", num);
+			model.addAttribute("legalDocument", document);
+		}
+		return nextPage;
+	}
+	
 	@RequestMapping(value="submitaccount", method = RequestMethod.POST)
 	public String submitAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -475,6 +490,41 @@ public class Controller {
 		if (user != null) {
 			if(service.createNewUser(login)){
 				nextPage = "redirect:retrieveAccount?num="+login.getUser().getAccountNumber();
+			}
+		}
+		return nextPage;
+	}
+	
+	@RequestMapping(value="submitlegaldocument", method = RequestMethod.POST)
+	public String submitLegalDocument(@ModelAttribute("legalDocument") Document document,
+			@RequestParam(value = "projNumber") String num,
+			@RequestParam(value = "documentFile", required = false) MultipartFile documentFile,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			try {
+				Project project = finder.findProjects(num, null, null, null)
+						.get(0);
+				String docFileName = EnvironmentUtil.getDocumentPath(project
+						.getUser().getAccountNumber(), project
+						.getProjectNumber(), documentFile.getOriginalFilename(),
+						true);
+				File serverDocFile = new File(docFileName);
+				if (!serverDocFile.getParentFile().exists()) {
+					serverDocFile.getParentFile().mkdirs();
+				}
+				FileUtils.copyInputStreamToFile(documentFile.getInputStream(),
+						serverDocFile);
+				document.setProject(project);
+				document.setDocumentType(DocumentType.CONTRACT);
+				document.setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
+						project.getProjectNumber(), serverDocFile.getName()));
+				if(service.createDocument(document)){
+					nextPage = "redirect:retrieveProject?num=" + num;	
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		return nextPage;
@@ -515,7 +565,6 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
 	
 	@RequestMapping(value="updateaccount", method = RequestMethod.POST)
 	public String updateAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {

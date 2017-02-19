@@ -213,6 +213,17 @@ public class SeyonService {
 		return result;
 	}
 	
+	public boolean createDocument(Document document){
+		boolean result = false;
+		if(document != null){
+			Bundle bundle = new Bundle();
+			bundle.persist(document);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
+	
 	public boolean deleteDocuments(List<Long> docIDs){
 		boolean result = false;
 		List<Document> documents = finder.findDocumentsByID(docIDs);
