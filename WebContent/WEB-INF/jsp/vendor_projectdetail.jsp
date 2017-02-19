@@ -420,6 +420,7 @@
 									<table class="table table-striped delete-table">
 										<thead>
 											<tr>
+												<th>Document #</th>
 												<th>Name</th>
 												<th>Description</th>
 												<th>Document Link</th>
@@ -429,7 +430,8 @@
 											<c:forEach items="${proj.documents}" var="document">
 												<c:if test="${document.documentType == 'CONTRACT'}">
 													<tr id="${document.iddocument}">
-														<th scope="row">${document.name}</th>
+														<th scope="row">DT00000001</th>
+														<td>${document.name}</td>
 														<td>${document.description}</td>
 														<td><a target="_blank"
 															href="${document.fileLocation}"
@@ -524,7 +526,7 @@
 										<thead>
 											<tr>
 												<th>Bill #</th>
-												<th>Date</th>
+												<th>Bill Date</th>
 												<th>Type</th>
 												<th>Status</th>
 												<th>Total Amount</th>

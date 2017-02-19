@@ -107,7 +107,7 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="billDate" class="col-sm-3 col-form-label">Date</label>
+								<label for="billDate" class="col-sm-3 col-form-label">Bill Date</label>
 								<div class="col-sm-6">
 									<form:input type="date" class="form-control" id="billDate"
 										path="billDate" placeholder="" />
