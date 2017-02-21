@@ -11,6 +11,7 @@
 <script src="resources/js/jquery-3.1.1.min.js"></script>
 <script src="resources/js/jquery.validate.min.js"></script>
 <script src="resources/js/jquery.tmpl.min.js"></script>
+<script src="resources/js/jquery.form.js"></script>
 <script src="resources/js/tether.min.js"></script>
 <script src="resources/js/bootstrap.min.js"></script>
 <script src="resources/js/main.js"></script>
@@ -54,6 +55,17 @@
 	aria-valuemin="0" aria-valuemax="100"></div>
 </div>
 </div>
+</script>
+
+<script id="fileUploadProgressMainTemplate" type="text/x-jquery-tmpl">
+<div class="progress">
+	<div
+	class="progress-bar progress-bar-striped bg-warning progress-bar-animated"
+	role="progressbar" style="width: 0%" aria-valuenow="0"	
+	aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+</div>
+<br/>
 </script>
 
 </head>

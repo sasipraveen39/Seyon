@@ -26,12 +26,32 @@
 </c:choose>
 <title>${title} - Seyon</title>
 <script>
-	$(document).ready(function() {
-		$('#create').click(function(e) {
-			$('#createForm').submit();
-			e.preventDefault();
-		});
+$(document).ready(function() {
+	$('#create').click(function(e) {
+		$('#createForm').submit();
+		e.preventDefault();
 	});
+	$('#createForm').ajaxForm({
+	    beforeSend: function() {
+	    	var formDiv = $("#createForm");
+	    	formDiv.after($("#fileUploadProgressMainTemplate").tmpl());
+			$("#create").prop("disabled", true);
+	        $("#cancel").prop("disabled", true);
+	        $("#createForm :input").attr("disabled", true);
+	    },
+	    uploadProgress: function(event, position, total, percentComplete) {
+	        var percentVal = percentComplete + '%';
+	        $(".progress-bar").width(percentVal);
+	    },
+	    success: function() {
+	    	window.location.href = "${cancelPage}";
+	    },
+	    error: function(){
+	    },
+		complete: function() {
+		}
+	}); 
+});
 </script>
 </head>
 <body>
@@ -160,10 +180,10 @@
 					</div>
 					<input type="hidden" name="projNumber" value="${projectNumber}"/>
 				</form:form>
-				<a href="#" class="btn btn-primary" id="create" role="button">${mainButton}</a>
+				<button class="btn btn-primary" id="create" >${mainButton}</button>
 
-				<a href="${cancelPage}" class="btn btn-secondary" id="cancel"
-					data-toggle="modal" data-target="#cancelModal" role="button">Cancel</a>
+				<button class="btn btn-secondary" id="cancel"
+					data-toggle="modal" data-target="#cancelModal" >Cancel</button>
 			</div>
 		</div>
 	</div>

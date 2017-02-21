@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import co.seyon.dao.Finder;
 import co.seyon.model.Bill;
+import co.seyon.model.Document;
 import co.seyon.model.Project;
 import co.seyon.model.User;
 
@@ -27,6 +28,8 @@ public class SequenceGenerator {
 			prefix = "PR";
 		} else if(className == Bill.class){
 			prefix = "BL";
+		} else if(className == Document.class){
+			prefix = "DT";
 		}
 		return prefix+String.format("%08d", atomicInteger.getAndIncrement());
 	}

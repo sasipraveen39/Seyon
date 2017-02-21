@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
+import co.seyon.enums.DocumentType;
 import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
 import co.seyon.model.Bill;
@@ -148,6 +149,33 @@ public class Finder {
 		return projects;
 	}
 	
+	public List<Document> findDocuments(String documentNumber, DocumentType type){
+		createEntityManager();
+		String queryString = "Select d from Document d";
+		List<String> constraints = new ArrayList<>();
+		
+		if(StringUtils.isNotBlank(documentNumber)){
+			constraints.add( "d.documentNumber='"+documentNumber+"'");
+		}
+		
+		if(type != null){
+			constraints.add( "d.documentType like '"+type.toString()+"'");
+		}
+		
+		if(constraints.size() > 0){
+			queryString += " where "+ StringUtils.join(constraints, " and ");	
+		}
+		TypedQuery<Document> query = entitymanager.createQuery(queryString, Document.class);
+		List<Document> documents = query.getResultList();
+		if(documents.size() > 0){
+			for(Document d : documents){
+				this.refresh(d);
+			}
+		}
+		closeConnection();
+		return documents;
+	}
+	
 	public List<Document> findDocumentsByID(List<Long> docIDs){
 		createEntityManager();
 		TypedQuery<Document> query = entitymanager
@@ -202,6 +230,8 @@ public class Finder {
 			sequence = ((Project) result).getProjectNumber();
 		} else if (result instanceof Bill) {
 			sequence = ((Bill) result).getBillNumber();
+		} else if (result instanceof Document) {
+			sequence = ((Document) result).getDocumentNumber();
 		}
 		
 		if(sequence != null){

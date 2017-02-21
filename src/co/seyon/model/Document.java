@@ -20,6 +20,9 @@ import java.sql.Timestamp;
 @Table(name="document")
 @AdditionalCriteria("this.retired = false")
 @Customizer(value = DocumentCustomizer.class)
+@NamedQueries({
+	@NamedQuery(name = "Document.findAll", query = "SELECT b FROM Document b"),
+	@NamedQuery(name = "Document.findAllByReverseNumber", query = "SELECT b FROM Document b order by b.documentNumber desc") })
 public class Document implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -45,6 +48,9 @@ public class Document implements Serializable {
 
 	@Basic
 	private boolean retired;
+	
+	@Column(name="document_number", nullable=false, length=100)
+	private String documentNumber;
 	
 	//bi-directional many-to-one association to Project
     @ManyToOne
@@ -153,5 +159,15 @@ public class Document implements Serializable {
 	public void setRetired(boolean retired) {
 		this.retired = retired;
 	}
+
+	public String getDocumentNumber() {
+		return documentNumber;
+	}
+
+	public void setDocumentNumber(String documentNumber) {
+		this.documentNumber = documentNumber;
+	}
+	
+	
 	
 }

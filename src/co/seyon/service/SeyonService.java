@@ -195,6 +195,7 @@ public class SeyonService {
 		boolean result = false;
 		Project project = finder.findProjects(projectNumber, null, null, null).get(0);
 		document.setProject(project);
+		document.setDocumentNumber(SequenceGenerator.generateSequence(Document.class));
 		Bundle bundle = new Bundle();
 		bundle.persist(document);
 		bundle.closeConnection();
@@ -205,6 +206,7 @@ public class SeyonService {
 	public boolean createDrawing(Drawing drawing){
 		boolean result = false;
 		if(drawing != null){
+			drawing.getDocument().setDocumentNumber(SequenceGenerator.generateSequence(Document.class));
 			Bundle bundle = new Bundle();
 			bundle.persist(drawing);
 			bundle.closeConnection();
@@ -216,6 +218,7 @@ public class SeyonService {
 	public boolean createDocument(Document document){
 		boolean result = false;
 		if(document != null){
+			document.setDocumentNumber(SequenceGenerator.generateSequence(Document.class));
 			Bundle bundle = new Bundle();
 			bundle.persist(document);
 			bundle.closeConnection();
@@ -226,8 +229,9 @@ public class SeyonService {
 	
 	public boolean createBill(Bill bill){
 		boolean result = false;
-		bill.setBillNumber(SequenceGenerator.generateSequence(Bill.class));
 		if(bill != null){
+			bill.setBillNumber(SequenceGenerator.generateSequence(Bill.class));
+			bill.getDocument().setDocumentNumber(SequenceGenerator.generateSequence(Document.class));
 			Bundle bundle = new Bundle();
 			bundle.persist(bill);
 			bundle.closeConnection();

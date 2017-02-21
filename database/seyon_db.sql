@@ -82,7 +82,9 @@ CREATE TABLE `document` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `project_id` int(11) NOT NULL,
   `retired` tinyint(1) NOT NULL DEFAULT '0',
+  `document_number` varchar(100) NOT NULL,
   PRIMARY KEY (`iddocument`),
+  UNIQUE KEY `document_number_UNIQUE` (`document_number`),
   KEY `FK_document_project_id` (`project_id`),
   CONSTRAINT `FK_document_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`idproject`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -272,4 +274,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-12 19:25:34
+-- Dump completed on 2017-02-20  9:32:15

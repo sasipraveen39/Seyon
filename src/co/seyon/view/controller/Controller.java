@@ -720,13 +720,15 @@ public class Controller {
 			switch (login.getUserType()) {
 			case ADMIN:
 			case VENDOR:
-				document = finder.findProjects(num, null, null, null).get(0).getDocuments().get(0);
+				document = finder.findDocuments(num, null).get(0);
 				break;
 			case CLIENT:
 				for(Project p : user.getProjects()){
 					for(Document d : p.getDocuments()){
-						document = d;
-						break;		
+						if(num.equalsIgnoreCase(d.getDocumentNumber())){
+							document = d;
+							break;	
+						}		
 					}
 				}
 				if(document == null){
