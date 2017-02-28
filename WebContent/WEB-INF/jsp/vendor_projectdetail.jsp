@@ -482,7 +482,7 @@
 										<tbody>
 											<c:forEach items="${proj.drawings}" var="drawing">
 												<tr id="${drawing.iddrawing}">
-													<th scope="row">${drawing.drawingNumber}</th>
+													<th scope="row"><a href="retrieveDrawing?num=${drawing.drawingNumber}">${drawing.drawingNumber}</a></th>
 													<td>${drawing.typeOfDrawing.value}</td>
 													<td>${drawing.status.value}</td>
 													<td><fmt:formatDate type="date" dateStyle="long"
@@ -536,7 +536,7 @@
 										<tbody>
 											<c:forEach items="${proj.bills}" var="bill">
 												<tr id="${bill.idbill}">
-													<th scope="row">${bill.billNumber}</th>
+													<th scope="row"><a href="retrieveBill?num=${bill.billNumber}">${bill.billNumber}</a></th>
 													<td><fmt:formatDate type="date" dateStyle="long"
 															value="${bill.billDate}" /></td>
 													<td>${bill.billType.value}</td>

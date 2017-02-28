@@ -11,6 +11,8 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
+import co.seyon.enums.BillStatus;
+import co.seyon.enums.BillType;
 import co.seyon.enums.DocumentType;
 import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
@@ -174,6 +176,56 @@ public class Finder {
 		}
 		closeConnection();
 		return documents;
+	}
+	
+	public List<Bill> findBills(String billNumber, BillType type){
+		createEntityManager();
+		String queryString = "Select b from Bill b";
+		List<String> constraints = new ArrayList<>();
+		
+		if(StringUtils.isNotBlank(billNumber)){
+			constraints.add( "b.billNumber='"+billNumber+"'");
+		}
+		
+		if(type != null){
+			constraints.add( "b.billType like '"+type.toString()+"'");
+		}
+		
+		if(constraints.size() > 0){
+			queryString += " where "+ StringUtils.join(constraints, " and ");	
+		}
+		TypedQuery<Bill> query = entitymanager.createQuery(queryString, Bill.class);
+		List<Bill> bills = query.getResultList();
+		if(bills.size() > 0){
+			for(Bill d : bills){
+				this.refresh(d);
+			}
+		}
+		closeConnection();
+		return bills;
+	}
+	
+	public List<Drawing> findDrawings(String drawingNumber){
+		createEntityManager();
+		String queryString = "Select d from Drawing d";
+		List<String> constraints = new ArrayList<>();
+		
+		if(StringUtils.isNotBlank(drawingNumber)){
+			constraints.add( "d.drawingNumber='"+drawingNumber+"'");
+		}
+		
+		if(constraints.size() > 0){
+			queryString += " where "+ StringUtils.join(constraints, " and ");	
+		}
+		TypedQuery<Drawing> query = entitymanager.createQuery(queryString, Drawing.class);
+		List<Drawing> drawings = query.getResultList();
+		if(drawings.size() > 0){
+			for(Drawing d : drawings){
+				this.refresh(d);
+			}
+		}
+		closeConnection();
+		return drawings;
 	}
 	
 	public List<Document> findDocumentsByID(List<Long> docIDs){

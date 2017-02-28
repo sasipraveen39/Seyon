@@ -168,6 +168,24 @@ public class SeyonService {
 
 		return result;
 	}
+	
+	public boolean createNewProject(Project project) {
+		boolean result = false;
+		Bundle bundle = new Bundle();
+
+		User user = finder.findUsers(project.getUser().getAccountNumber(), null, null, null).get(0);
+		project.setUser(user);
+		project.setProjectNumber(SequenceGenerator.generateSequence(Project.class));
+		project.setCode(project.getProjectNumber());
+		project.getAddress().setAddressType(AddressType.PROJECT_SITE);
+		
+		bundle.persist(project);
+		result = true;
+
+		bundle.closeConnection();
+
+		return result;
+	}
 
 	public boolean updateUser(User user) {
 		boolean result = false;

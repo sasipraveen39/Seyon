@@ -9,9 +9,9 @@
 <html lang="en">
 <head>
 <jsp:directive.include file="sub_header.jsp" />
-<c:set var="doc" value="${document}"></c:set>
+<c:set var="draw" value="${drawing}"></c:set>
 <c:set var="InEditMode" value="${canEdit}"></c:set>
-<c:set var="title" value="Document# ${doc.documentNumber}"></c:set>
+<c:set var="title" value="Drawing# ${draw.drawingNumber}"></c:set>
 <title>${title} - Seyon</title>
 </head>
 <body>
@@ -29,8 +29,8 @@
 				</c:otherwise>
 			</c:choose>
 			<li class="breadcrumb-item"><a
-				href="retrieveProject?num=${doc.project.projectNumber}">Project#
-					${doc.project.projectNumber}</a></li>
+				href="retrieveProject?num=${draw.project.projectNumber}">Project#
+					${draw.project.projectNumber}</a></li>
 			<li class="breadcrumb-item active">${title}</li>
 		</ol>
 		<div class="row">
@@ -38,8 +38,8 @@
 				<h3>
 					${title}
 					<c:if test="${InEditMode}">
-						<a href="editLegalDocument?num=${doc.documentNumber}"
-							data-toggle="tooltip" data-placement="top" title="Edit Document"><i
+						<a href="editDrawing?num=${draw.drawingNumber}"
+							data-toggle="tooltip" data-placement="top" title="Edit Drawing"><i
 							class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 					</c:if>
 				</h3>
@@ -47,27 +47,43 @@
 				<dl class="row">
 					<dt class="col-sm-2">Project #</dt>
 					<dd class="col-sm-10">
-						<b><a href="retrieveProject?num=${doc.project.projectNumber}">${doc.project.projectNumber}</a></b>
+						<b><a href="retrieveProject?num=${draw.project.projectNumber}">${draw.project.projectNumber}</a></b>
 					</dd>
 
-					<dt class="col-sm-2">Name</dt>
-					<dd class="col-sm-10">${doc.name}</dd>
-
 					<dt class="col-sm-2">Type</dt>
-					<dd class="col-sm-10">${doc.documentType.value}</dd>
+					<dd class="col-sm-10">${draw.typeOfDrawing.value}</dd>
+
+					<dt class="col-sm-2">Status</dt>
+					<dd class="col-sm-10">${draw.status.value}</dd>
+
+					<dt class="col-sm-2">Estd. Date of Issue</dt>
+					<dd class="col-sm-10">
+						<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
+							value="${draw.estimatedDateOfIssue}" />
+					</dd>
+
+					<dt class="col-sm-2">Date of Issue</dt>
+					<dd class="col-sm-10">
+						<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
+							value="${draw.dateOfIssue}" />
+					</dd>
+
+					<dt class="col-sm-2">Document Name</dt>
+					<dd class="col-sm-10">${draw.document.name}</dd>
 
 					<dt class="col-sm-2">Description</dt>
-					<dd class="col-sm-10">${doc.description}</dd>
+					<dd class="col-sm-10">${draw.document.description}</dd>
 
 					<dt class="col-sm-2">File Link</dt>
 					<dd class="col-sm-10">
-						<b><a target="_blank" href="${doc.fileLocation}">Open Document</a></b>
+						<b><a target="_blank" href="${draw.document.fileLocation}">Open
+							Document</a></b>
 					</dd>
 
 					<dt class="col-sm-2">Created On</dt>
 					<dd class="col-sm-10">
 						<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
-							value="${doc.createTime}" />
+							value="${draw.createTime}" />
 					</dd>
 				</dl>
 			</div>

@@ -40,6 +40,7 @@ import co.seyon.enums.BillType;
 import co.seyon.enums.DocumentType;
 import co.seyon.enums.DrawingStatus;
 import co.seyon.enums.DrawingType;
+import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
@@ -506,6 +507,26 @@ public class Controller {
 		return nextPage;
 	}
 	
+	
+	@RequestMapping("newProject")
+	public String CreateNewProject(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "projectcreate";
+			User accUser = finder.findUsers(num, null, null, null).get(0);
+			Project project = new Project();
+			project.setUser(accUser);
+			project.setAddress(new Address());
+			model.addAttribute("canEdit", true);
+			model.addAttribute("isNew", true);
+			model.addAttribute("accountNumber", num);
+			model.addAttribute("project", project);
+			model.addAttribute("projectTypes",ProjectType.values());
+		}
+		return nextPage;
+	}
+	
 	@RequestMapping(value="submitaccount", method = RequestMethod.POST)
 	public String submitAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -513,6 +534,18 @@ public class Controller {
 		if (user != null) {
 			if(service.createNewUser(login)){
 				nextPage = "redirect:retrieveAccount?num="+login.getUser().getAccountNumber();
+			}
+		}
+		return nextPage;
+	}
+	
+	@RequestMapping(value="submitproject", method = RequestMethod.POST)
+	public String submitProject(@ModelAttribute("project") Project project, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			if(service.createNewProject(project)){
+				nextPage = "redirect:retrieveProject?num="+project.getProjectNumber();
 			}
 		}
 		return nextPage;
@@ -740,6 +773,69 @@ public class Controller {
 			model.addAttribute("canEdit", true);
 		}
 		return navigatePage(user, "_legaldocumentdetail", request);
+	}
+	
+	@RequestMapping("retrieveBill")
+	public String retrieveBill(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		if (user != null) {
+			Login login = user.getLogin();
+			Bill bill = null;
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				bill = finder.findBills(num, null).get(0);
+				break;
+			case CLIENT:
+				for(Project p : user.getProjects()){
+					for(Bill b : p.getBills()){
+						if(num.equalsIgnoreCase(b.getBillNumber())){
+							bill = b;
+							break;	
+						}		
+					}
+				}
+				if(bill == null){
+					bill = user.getProjects().get(0).getBills().get(0);
+				}
+				break;
+			}
+			model.addAttribute("billDetail", bill);
+			model.addAttribute("canEdit", true);
+		}
+		return navigatePage(user, "_billdetail", request);
+	}
+	
+	
+	@RequestMapping("retrieveDrawing")
+	public String retrieveDrawing(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		if (user != null) {
+			Login login = user.getLogin();
+			Drawing drawing = null;
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				drawing = finder.findDrawings(num).get(0);
+				break;
+			case CLIENT:
+				for(Project p : user.getProjects()){
+					for(Drawing d : p.getDrawings()){
+						if(num.equalsIgnoreCase(d.getDrawingNumber())){
+							drawing = d;
+							break;	
+						}		
+					}
+				}
+				if(drawing == null){
+					drawing = user.getProjects().get(0).getDrawings().get(0);
+				}
+				break;
+			}
+			model.addAttribute("drawing", drawing);
+			model.addAttribute("canEdit", true);
+		}
+		return navigatePage(user, "_drawingdetail", request);
 	}
 	
 	@RequestMapping(value = "images/{accountNumber}/{projectNumber}/{imageName:.+}", method = RequestMethod.GET)

@@ -35,12 +35,6 @@
 					<dt class="col-sm-2">Name</dt>
 					<dd class="col-sm-10">${acct.name}</dd>
 
-					<dt class="col-sm-2">Created On</dt>
-					<dd class="col-sm-10">
-						<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
-							value="${acct.createTime}" />
-					</dd>
-
 					<dt class="col-sm-2">Email</dt>
 					<dd class="col-sm-10">${acct.email}</dd>
 
@@ -62,52 +56,71 @@
 						${acct.address.pincode}</dd>
 					<dd class="col-sm-10 offset-sm-2">${acct.address.state},
 						${acct.address.country}</dd>
+
+					<dt class="col-sm-2">Created On</dt>
+					<dd class="col-sm-10">
+						<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
+							value="${acct.createTime}" />
+					</dd>
 				</dl>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col">
-			<div class="card">
+				<div class="card">
 					<div class="card-header">
 						<h5>Project details</h5>
 					</div>
 					<div class="card-block">
-				<div class="btn-toolbar" role="toolbar"
-					aria-label="Toolbar with button groups">
-					<div class="btn-group" role="group">
-						<button type="button" id="addProject"
-							class="btn btn-primary btn-sm">Add Project</button>
-						<button type="button" id="deleteProject"
-							class="btn btn-secondary btn-sm">Remove Project</button>
+						<div class="card-text">
+							<div class="btn-toolbar justify-content-between" role="toolbar"
+								aria-label="Toolbar with button groups">
+								<div class="btn-group" role="group">
+									<button type="button" id="addProject"
+										onclick="window.location.href='newProject?num=${acct.accountNumber}'"
+										class="btn btn-primary btn-sm">Add Project</button>
+									<button type="button" id="deleteProject" data-toggle="button"
+										aria-pressed="false" autocomplete="off"
+										class="btn btn-secondary btn-sm remove-button">Remove
+										Project</button>
+								</div>
+								<div class="btn-group" role="group">
+									<button type="button" data-toggle="modal"
+										data-target="#itemDeleteModal" name="Project"
+										class="btn btn-danger btn-sm delete-button invisible">Delete
+										Selected Projects</button>
+								</div>
+							</div>
+							<br />
+							<table class="table table-striped delete-table">
+								<thead>
+									<tr>
+										<th>Project #</th>
+										<th>Title</th>
+										<th>Type</th>
+										<th>Address</th>
+										<th>Estimated Amount</th>
+										<th>Estimated End Date</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${acct.projects}" var="project">
+										<tr id="${project.idproject}">
+											<th scope="row"><a
+												href="retrieveProject?num=${project.projectNumber}">${project.projectNumber}</a></th>
+											<td>${project.title}</td>
+											<td>${project.projectType.value}</td>
+											<td>${project.address.city} - ${project.address.pincode}</td>
+											<td>&#x20b9; ${project.estimatedTotalAmount}</td>
+											<td><fmt:formatDate type="date" dateStyle="long"
+													value="${project.estimatedEndDate}" /></td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
-				<br />
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>Project #</th>
-							<th>Title</th>
-							<th>Type</th>
-							<th>Address</th>
-							<th>Estimated Amount</th>
-							<th>Estimated End Date</th>
-						</tr>
-					</thead>
-					<tbody>
-					<c:forEach items="${acct.projects}" var="project">
-							<tr>
-								<th scope="row"><a href="retrieveProject?num=${project.projectNumber}">${project.projectNumber}</a></th>
-								<td>${project.title}</td>
-								<td>${project.projectType.value}</td>
-								<td>Address</td>
-								<td>&#x20b9; ${project.estimatedTotalAmount}</td>
-								<td><fmt:formatDate type="date" dateStyle="long"
-										value="${project.estimatedEndDate}" /></td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
-				</div></div>
 			</div>
 		</div>
 	</div>

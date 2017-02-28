@@ -76,7 +76,7 @@ public class Project implements Serializable {
 	private Date requestedDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "start_date", nullable = false)
+	@Column(name = "start_date")
 	private Date startDate;
 
 	@Column(nullable = false, length = 100)
@@ -97,7 +97,7 @@ public class Project implements Serializable {
 	private User user;
 
 	// bi-directional one-to-one association to Address
-	@OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "address_id", nullable = false)
 	private Address address;
 
@@ -177,7 +177,10 @@ public class Project implements Serializable {
 	}
 
 	public ProjectType getProjectType() {
-		return ProjectType.valueOf(this.projectType);
+		if(this.projectType != null){
+			return ProjectType.valueOf(this.projectType);	
+		}
+		return null;
 	}
 
 	public void setProjectType(ProjectType projectType) {
