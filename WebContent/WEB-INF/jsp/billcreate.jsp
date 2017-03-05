@@ -26,32 +26,36 @@
 </c:choose>
 <title>${title} - Seyon</title>
 <script>
-$(document).ready(function() {
-	$('#create').click(function(e) {
-		$('#createForm').submit();
-		e.preventDefault();
+	$(document).ready(function() {
+		$(document).ready(function() {
+			$('#create').click(function(e) {
+				if (validateFields($('#createForm'))) {
+					$('#createForm').submit();
+				}
+				e.preventDefault();
+			});
+		});
+		$('#createForm').ajaxForm({
+			beforeSend : function() {
+				var formDiv = $("#createForm");
+				formDiv.after($("#fileUploadProgressMainTemplate").tmpl());
+				$("#create").prop("disabled", true);
+				$("#cancel").prop("disabled", true);
+				$("#createForm :input").attr("disabled", true);
+			},
+			uploadProgress : function(event, position, total, percentComplete) {
+				var percentVal = percentComplete + '%';
+				$(".progress-bar").width(percentVal);
+			},
+			success : function() {
+				window.location.href = "${cancelPage}";
+			},
+			error : function() {
+			},
+			complete : function() {
+			}
+		});
 	});
-	$('#createForm').ajaxForm({
-	    beforeSend: function() {
-	    	var formDiv = $("#createForm");
-	    	formDiv.after($("#fileUploadProgressMainTemplate").tmpl());
-			$("#create").prop("disabled", true);
-	        $("#cancel").prop("disabled", true);
-	        $("#createForm :input").attr("disabled", true);
-	    },
-	    uploadProgress: function(event, position, total, percentComplete) {
-	        var percentVal = percentComplete + '%';
-	        $(".progress-bar").width(percentVal);
-	    },
-	    success: function() {
-	    	window.location.href = "${cancelPage}";
-	    },
-	    error: function(){
-	    },
-		complete: function() {
-		}
-	}); 
-});
 </script>
 </head>
 <body>
@@ -116,24 +120,24 @@ $(document).ready(function() {
 									</div>
 								</div>
 							</c:if>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="type" class="col-sm-3 col-form-label">Type</label>
 								<div class="col-sm-6">
-									<form:select class="form-control" path="billType"
-										id="type">
+									<form:select class="form-control" path="billType" id="type">
 										<form:option value="" label="<none>" />
 										<form:options items="${billTypes}" itemLabel="value" />
 									</form:select>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label for="billDate" class="col-sm-3 col-form-label">Bill Date</label>
+							<div class="form-group required row">
+								<label for="billDate" class="col-sm-3 col-form-label">Bill
+									Date</label>
 								<div class="col-sm-6">
 									<form:input type="date" class="form-control" id="billDate"
 										path="billDate" placeholder="" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="status" class="col-sm-3 col-form-label">Status</label>
 								<div class="col-sm-6">
 									<form:select class="form-control" path="billStatus" id="status">
@@ -142,51 +146,58 @@ $(document).ready(function() {
 									</form:select>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label for="totalBillAmount" class="col-sm-3 col-form-label">Total Amount</label>
+							<div class="form-group required row">
+								<label for="totalBillAmount" class="col-sm-3 col-form-label">Total
+									Amount</label>
 								<div class="col-sm-6 input-group">
 									<span class="input-group-addon" id="ruppee-addon1">&#8377;</span>
-									<form:input type="number" class="form-control" id="totalBillAmount"
-										path="totalBillAmount" placeholder="" aria-describedby="ruppee-addon1"/>
+									<form:input type="number" class="form-control"
+										id="totalBillAmount" path="totalBillAmount" placeholder=""
+										aria-describedby="ruppee-addon1" />
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<legend>Document</legend>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="name" class="col-sm-3 col-form-label">Name</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="document.name" id="name" placeholder="Document Name" />
+										error-regex="^[a-zA-Z0-9 ]{2,}$" path="document.name"
+										id="name" placeholder="Document Name" />
 								</div>
 							</div>
 							<div class="form-group row">
 								<label for="description" class="col-sm-3 col-form-label">Description</label>
 								<div class="col-sm-6">
 									<form:textarea class="form-control" rows="3" id="description"
-										path="document.description"></form:textarea>
+										error-regex="^[\w\., ]{2,}$" path="document.description"></form:textarea>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group ${isNew?'required':'' } row">
 								<label for="billFile" class="col-sm-3 col-form-label">Bill
 									File</label>
 								<div class="col-sm-6">
 									<input type="file" class="form-control-file" id="billFile"
 										name="billFile" accept="application/pdf"
 										aria-describedby="fileHelp"> <small id="fileHelp"
-										class="form-text text-muted">Upload only pdf file. <c:if test="${not isNew}"><b><a target="_blank" href="${bill.document.fileLocation}">Open Document</a></b></c:if></small>
+										class="form-text text-muted">Upload only pdf file. <c:if
+											test="${not isNew}">
+											<b><a target="_blank"
+												href="${bill.document.fileLocation}">Open Document</a></b>
+										</c:if></small>
 								</div>
 							</div>
 						</div>
 					</div>
-					<form:hidden path="document.fileLocation"/>
-					<form:hidden path="document.documentNumber"/>
+					<form:hidden path="document.fileLocation" />
+					<form:hidden path="document.documentNumber" />
 					<input type="hidden" name="projNumber" value="${projectNumber}" />
 				</form:form>
-				<button class="btn btn-primary" id="create" >${mainButton}</button>
+				<button class="btn btn-primary" id="create">${mainButton}</button>
 
-				<button class="btn btn-secondary" id="cancel"
-					data-toggle="modal" data-target="#cancelModal" >Cancel</button>
+				<button class="btn btn-secondary" id="cancel" data-toggle="modal"
+					data-target="#cancelModal">Cancel</button>
 			</div>
 		</div>
 	</div>
