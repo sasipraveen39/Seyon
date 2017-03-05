@@ -137,7 +137,11 @@ function removeAllErrors(){
 	$(".form-control-danger").removeClass("form-control-danger");
 }
 
-function validateFields(element) {
+function validateFields(element){
+	validateFields(element, false);
+}
+
+function validateFields(element, showBelow) {
 	removeAllErrors();
 	var flag = true;
 	$(element).find('input, select, textarea').each(
@@ -168,7 +172,11 @@ function validateFields(element) {
 					$(this).addClass("form-control-danger");
 					var content = '<div class="form-control-feedback">'
 							+ errorText + '</div>';
-					parent.append(content);
+					if(showBelow){
+						$(this).parent().append(content);
+					}else{
+						parent.append(content);	
+					}
 					parent.addClass("has-danger");
 					if (flag) {
 						flag = false;

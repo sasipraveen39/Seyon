@@ -45,64 +45,66 @@
 				});
 
 				$('#uploadImage').click(function(e) {
-					var progressBarDiv = $("#imageUploadModal>.modal-dialog>.modal-content>.modal-body>.container-fluid>.row>.col");
-					
-					var imageInfo = {};
-					imageInfo["name"] = $('#title').val();
-					imageInfo["description"] = $('#caption').val();
-					imageInfo["projectNumber"] = "${proj.projectNumber}";
-					imageInfo["accountNumber"] = "${proj.user.accountNumber}";
-					var file = $('#imageFile').prop("files")[0];
-
-					var formData = new FormData();
-					formData.append("imageFile", file);
-					formData.append("imageInfo", JSON.stringify(imageInfo));
-
-					$.ajax({
-						xhr: function(){
-						    var xhr = new window.XMLHttpRequest();
-						    xhr.upload.addEventListener("progress", function(evt){
-						      if (evt.lengthComputable) {
-						        var percentComplete = evt.loaded / evt.total * 100;
-						        $(".progress-bar").width(percentComplete+"%");
-						      }
-						    }, false);
-						    return xhr;
-						  },
-						type : "POST",
-						url : "uploadImage",
-						data : formData,
-						dataType : 'text',
-						async: true,
-						processData : false,
-						contentType : false,
-						timeout : 100000,
-						beforeSend : function(){
-							progressBarDiv.append($("#fileUploadProgressTemplate").tmpl());
-							$("#uploadImage").prop("disabled", true);
-					        $("#imageUploadCancel").prop("disabled", true);
-					        $("#imageUplodForm :input").attr("disabled", true);
-						},
-						success : function(data) {
-							console.log("SUCCESS: ", data);
-							if (data == "Image uploaded") {
-								location.reload(true);
-							} else {
+					if (validateFields($('#imageUplodForm'), true)) {
+						var progressBarDiv = $("#imageUploadModal>.modal-dialog>.modal-content>.modal-body>.container-fluid>.row>.col");
+						
+						var imageInfo = {};
+						imageInfo["name"] = $('#title').val();
+						imageInfo["description"] = $('#caption').val();
+						imageInfo["projectNumber"] = "${proj.projectNumber}";
+						imageInfo["accountNumber"] = "${proj.user.accountNumber}";
+						var file = $('#imageFile').prop("files")[0];
+	
+						var formData = new FormData();
+						formData.append("imageFile", file);
+						formData.append("imageInfo", JSON.stringify(imageInfo));
+	
+						$.ajax({
+							xhr: function(){
+							    var xhr = new window.XMLHttpRequest();
+							    xhr.upload.addEventListener("progress", function(evt){
+							      if (evt.lengthComputable) {
+							        var percentComplete = evt.loaded / evt.total * 100;
+							        $(".progress-bar").width(percentComplete+"%");
+							      }
+							    }, false);
+							    return xhr;
+							  },
+							type : "POST",
+							url : "uploadImage",
+							data : formData,
+							dataType : 'text',
+							async: true,
+							processData : false,
+							contentType : false,
+							timeout : 100000,
+							beforeSend : function(){
+								progressBarDiv.append($("#fileUploadProgressTemplate").tmpl());
+								$("#uploadImage").prop("disabled", true);
+						        $("#imageUploadCancel").prop("disabled", true);
+						        $("#imageUplodForm :input").attr("disabled", true);
+							},
+							success : function(data) {
+								console.log("SUCCESS: ", data);
+								if (data == "Image uploaded") {
+									location.reload(true);
+								} else {
+									imageUploadFailed();
+								}
+							},
+							error : function(e) {
+								console.log("ERROR: ", e);
 								imageUploadFailed();
+							},
+							complete : function(e) {
+								console.log("DONE");
+								$(".progress").remove();
+								$("#uploadImage").prop("disabled", false);
+						        $("#imageUploadCancel").prop("disabled", false);
+						        $("#imageUplodForm :input").attr("disabled", false);
 							}
-						},
-						error : function(e) {
-							console.log("ERROR: ", e);
-							imageUploadFailed();
-						},
-						complete : function(e) {
-							console.log("DONE");
-							$(".progress").remove();
-							$("#uploadImage").prop("disabled", false);
-					        $("#imageUploadCancel").prop("disabled", false);
-					        $("#imageUplodForm :input").attr("disabled", false);
-						}
-					});
+						});
+					}
 					e.preventDefault();
 				});
 			});
@@ -133,20 +135,20 @@
 						<div class="row">
 							<div class="col">
 								<form id="imageUplodForm">
-									<div class="form-group row">
+									<div class="form-group required row">
 										<label for="title" class="col-sm-3 col-form-label">Title</label>
 										<div class="col-sm-9">
-											<input type="text" class="form-control" id="title"
+											<input type="text" class="form-control" id="title" error-regex="^[a-zA-Z0-9 ]{2,}$"
 												placeholder="" />
 										</div>
 									</div>
-									<div class="form-group row">
+									<div class="form-group required row">
 										<label for="caption" class="col-sm-3 col-form-label">Caption</label>
 										<div class="col-sm-9">
-											<textarea class="form-control" rows="3" id="caption"></textarea>
+											<textarea class="form-control" rows="3" error-regex="^[a-zA-Z0-9 ]{2,}$" id="caption"></textarea>
 										</div>
 									</div>
-									<div class="form-group row">
+									<div class="form-group required row">
 										<label for="imageFile" class="col-sm-3 col-form-label">Image</label>
 										<div class="col-sm-9">
 											<input type="file" class="form-control-file" id="imageFile"
