@@ -553,6 +553,31 @@ public class Controller {
 		return nextPage;
 	}
 	
+	@RequestMapping("editBill")
+	public String editBill(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "billcreate";
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				Bill bill = finder.findBills(num, null).get(0);
+				model.addAttribute("canEdit", true);
+				model.addAttribute("isNew", false);
+				model.addAttribute("projectNumber", bill.getProject().getProjectNumber());
+				model.addAttribute("bill", bill);
+				model.addAttribute("billTypes",BillType.values());
+				model.addAttribute("statuses",BillStatus.values());
+				break;
+			case CLIENT:
+				break;
+			}
+		}
+		return nextPage;
+	}
+	
 	
 	@RequestMapping("newProject")
 	public String CreateNewProject(@RequestParam String num, Model model, HttpServletRequest request) {
@@ -671,6 +696,24 @@ public class Controller {
 		return nextPage;
 	}
 	
+	@RequestMapping(value="updatebill", method = RequestMethod.POST)
+	public String updatebill(@ModelAttribute("bill") Bill bill,
+			@RequestParam(value = "projNumber") String num,
+			@RequestParam(value = "billFile", required = false) MultipartFile billFile,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			try {
+				if(service.updateBill(num, bill, billFile)){
+					nextPage = "redirect:retrieveBill?num=" + bill.getBillNumber();	
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return nextPage;
+	}
 	@RequestMapping(value="submitdrawing", method = RequestMethod.POST)
 	public String submitDrawing(@ModelAttribute("drawing") Drawing drawing,
 			@RequestParam(value = "projNumber") String num,

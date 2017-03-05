@@ -229,6 +229,19 @@ public class SeyonService {
 		return result;
 	}
 
+	
+	public boolean updateBill(String projectNumber, Bill bill,
+			MultipartFile multipartFile) throws IOException {
+		boolean result = false;
+		if (updateDocument(projectNumber, bill.getDocument(), multipartFile)) {
+			Bundle bundle = new Bundle();
+			bundle.update(bill);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
+	
 	public boolean updateDocument(String projectNumber, Document document,
 			MultipartFile multipartFile) throws IOException {
 		boolean result = false;

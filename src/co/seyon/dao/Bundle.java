@@ -103,7 +103,12 @@ public class Bundle {
 			target = fin.findDrawings(src.getDrawingNumber()).get(0);
 			Drawing tgt = (Drawing)target;
 			copyProperties(src, tgt, Constants.DRAWING_PROPERTIES_TO_AVOID);
-		} 
+		} else if (object instanceof Bill){
+			Bill src = (Bill)object;
+			target = fin.findBills(src.getBillNumber(), null).get(0);
+			Bill tgt = (Bill)target;
+			copyProperties(src, tgt, Constants.BILL_PROPERTIES_TO_AVOID);
+		}
 		entitymanager.getTransaction().begin();
 		entitymanager.merge(target);
 		entitymanager.getTransaction().commit();
