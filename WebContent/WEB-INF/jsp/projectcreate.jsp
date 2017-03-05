@@ -21,7 +21,7 @@
 		<c:set var="title" value="Edit Project"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
 		<c:set var="formAction" value="updateproject"></c:set>
-		<c:set var="cancelPage" value="retrieveAccount?num=${accountNumber}"></c:set>
+		<c:set var="cancelPage" value="retrieveProject?num=${project.projectNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
@@ -212,6 +212,7 @@
 							</div>
 						</div>
 					</div>
+					<form:hidden path="code"/>
 					<form:hidden path="user.accountNumber" />
 				</form:form>
 				<button class="btn btn-primary" id="create">${mainButton}</button>

@@ -11,7 +11,6 @@ import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
 
-import co.seyon.enums.BillStatus;
 import co.seyon.enums.BillType;
 import co.seyon.enums.DocumentType;
 import co.seyon.enums.ProjectType;

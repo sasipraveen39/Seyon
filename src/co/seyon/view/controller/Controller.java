@@ -598,6 +598,30 @@ public class Controller {
 		return nextPage;
 	}
 	
+	@RequestMapping("editProject")
+	public String editProject(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "projectcreate";
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				Project proj = finder.findProjects(num, null, null, null).get(0);
+				model.addAttribute("canEdit", true);
+				model.addAttribute("isNew", false);
+				model.addAttribute("accountNumber", proj.getUser().getAccountNumber());
+				model.addAttribute("project", proj);
+				model.addAttribute("projectTypes",ProjectType.values());
+				break;
+			case CLIENT:
+				break;
+			}
+		}
+		return nextPage;
+	}
+	
 	@RequestMapping(value="submitaccount", method = RequestMethod.POST)
 	public String submitAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -616,6 +640,18 @@ public class Controller {
 		String nextPage = "redirect:/";
 		if (user != null) {
 			if(service.createNewProject(project)){
+				nextPage = "redirect:retrieveProject?num="+project.getProjectNumber();
+			}
+		}
+		return nextPage;
+	}
+	
+	@RequestMapping(value="updateproject", method = RequestMethod.POST)
+	public String updateProject(@ModelAttribute("project") Project project, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			if(service.updateProject(project)){
 				nextPage = "redirect:retrieveProject?num="+project.getProjectNumber();
 			}
 		}

@@ -2,7 +2,6 @@ package co.seyon.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -28,11 +27,9 @@ import co.seyon.util.EnvironmentUtil;
 
 public class SeyonService {
 
-	private SimpleDateFormat dateFormat;
 	private Finder finder;
 
 	public SeyonService() {
-		dateFormat = new SimpleDateFormat(Constants.DATE_FORMAT);
 		finder = new Finder();
 	}
 
@@ -195,6 +192,18 @@ public class SeyonService {
 		return result;
 	}
 
+	public boolean updateProject(Project project) {
+		boolean result = false;
+		Bundle bundle = new Bundle();
+
+		bundle.update(project);
+		result = true;
+
+		bundle.closeConnection();
+
+		return result;
+	}
+	
 	public boolean updateUser(User user) {
 		boolean result = false;
 		Bundle bundle = new Bundle();
