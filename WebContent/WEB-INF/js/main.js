@@ -140,7 +140,7 @@ function removeAllErrors(){
 function validateFields(element) {
 	removeAllErrors();
 	var flag = true;
-	$(element).find('input').each(
+	$(element).find('input, select').each(
 			function() {
 				var value = $(this).val().trim();
 				var parent = $(this).closest(".form-group");

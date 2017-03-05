@@ -21,14 +21,17 @@
 		<c:set var="title" value="Edit Project"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
 		<c:set var="formAction" value="updateproject"></c:set>
-		<c:set var="cancelPage" value="retrieveProject?num=${project.projectNumber}"></c:set>
+		<c:set var="cancelPage"
+			value="retrieveProject?num=${project.projectNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
 <script>
 	$(document).ready(function() {
 		$('#create').click(function(e) {
-			$('#createForm').submit();
+			if (validateFields($('#createForm'))) {
+				$('#createForm').submit();
+			}
 			e.preventDefault();
 		});
 	});
@@ -87,22 +90,23 @@
 									</div>
 								</div>
 							</c:if>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="title" class="col-sm-3 col-form-label">Title</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control" id="title"
-										path="title" placeholder="Title" />
+										error-regex="^[a-zA-Z ]{2,}$" path="title" placeholder="Title" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="clientName" class="col-sm-3 col-form-label">Client
 									Name</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control" id="clientName"
-										path="clientName" placeholder="Client Name" />
+										error-regex="^[a-zA-Z ]{2,}$" path="clientName"
+										placeholder="Client Name" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="projectType" class="col-sm-3 col-form-label">Project
 									Type</label>
 								<div class="col-sm-6">
@@ -124,7 +128,7 @@
 									<span class="input-group-addon" id="sqft-addon1">sqft</span>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="requestedDate" class="col-sm-3 col-form-label">Requested
 									Date</label>
 								<div class="col-sm-6">
@@ -153,28 +157,29 @@
 						</div>
 						<div class="col-sm-6">
 							<legend>Address</legend>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="country" class="col-sm-3 col-form-label">Country</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="address.country" id="country"
-										placeholder="Country" />
+										error-regex="^[a-zA-Z ]{2,}$" path="address.country"
+										id="country" placeholder="Country" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="state" class="col-sm-3 col-form-label">State</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="address.state" id="state" placeholder="State" />
+										error-regex="^[a-zA-Z ]{2,}$" path="address.state" id="state"
+										placeholder="State" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="line1" class="col-sm-3 col-form-label">Address
 									Line1</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="address.addressLine1" id="line1"
-										placeholder="Address Line1" />
+										error-regex="^[\w\., ]{2,}$" path="address.addressLine1"
+										id="line1" placeholder="Address Line1" />
 								</div>
 							</div>
 							<div class="form-group row">
@@ -182,8 +187,8 @@
 									Line2</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="address.addressLine2" id="line2"
-										placeholder="Address Line2" />
+										error-regex="^[\w\., ]{2,}$" path="address.addressLine2"
+										id="line2" placeholder="Address Line2" />
 								</div>
 							</div>
 							<div class="form-group row">
@@ -191,28 +196,29 @@
 									Line3</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="address.addressLine3" id="line3"
-										placeholder="Address Line3" />
+										error-regex="^[\w\., ]{2,}$" path="address.addressLine3"
+										id="line3" placeholder="Address Line3" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="city" class="col-sm-3 col-form-label">City</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="address.city" id="city" placeholder="City" />
+										error-regex="^[a-zA-Z ]{2,}$" path="address.city" id="city"
+										placeholder="City" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="pincode" class="col-sm-3 col-form-label">Pincode</label>
 								<div class="col-sm-6">
 									<form:input type="number" class="form-control"
-										path="address.pincode" id="pincode"
+										error-regex="^[0-9]{6}$" path="address.pincode" id="pincode"
 										placeholder="XXXXXX" />
 								</div>
 							</div>
 						</div>
 					</div>
-					<form:hidden path="code"/>
+					<form:hidden path="code" />
 					<form:hidden path="user.accountNumber" />
 				</form:form>
 				<button class="btn btn-primary" id="create">${mainButton}</button>
