@@ -131,12 +131,50 @@ function itemDeleteFailed() {
 	$('#itemDeleteFailedModal').modal('show');
 }
 
+function removeAllErrors(){
+	$(".form-control-feedback").remove();
+	$(".has-danger").removeClass("has-danger");
+	$(".form-control-danger").removeClass("form-control-danger");
+}
 
-function sleep(milliseconds) {
-	  var start = new Date().getTime();
-	  for (var i = 0; i < 1e7; i++) {
-	    if ((new Date().getTime() - start) > milliseconds){
-	      break;
-	    }
-	  }
-	}
+function validateFields(element) {
+	removeAllErrors();
+	var flag = true;
+	$(element).find('input').each(
+			function() {
+				var value = $(this).val().trim();
+				var parent = $(this).closest(".form-group");
+				var labelText = $(parent).find(".col-form-label").html();
+				var errorText = null;
+				if ($(parent).hasClass("required") && (!value)) {
+					errorText = labelText + " is required";
+				} else {
+					if (value) {
+						var errorRegex = $(this).attr("error-regex");
+						if(errorRegex){
+							var regEx = new RegExp(errorRegex);
+							if(!regEx.test(value)){
+								var erTxt = $(this).attr("error-text");
+								if(erTxt){
+									errorText = erTxt;
+								}else{
+									errorText = labelText + " is invalid";
+								}	
+							}
+						}
+					}
+				}
+				if (errorText) {
+					$(this).addClass("form-control-danger");
+					var content = '<div class="form-control-feedback">'
+							+ errorText + '</div>';
+					parent.append(content);
+					parent.addClass("has-danger");
+					if (flag) {
+						flag = false;
+					}
+				}
+
+			});
+	return flag;
+}

@@ -27,7 +27,9 @@
 <script>
 	$(document).ready(function() {
 		$('#create').click(function(e) {
-			$('#createForm').submit();
+			if (validateFields($('#createForm'))) {
+				$('#createForm').submit();
+			}
 			e.preventDefault();
 		});
 	});
@@ -41,7 +43,8 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">${title} - Seyon</h5>
+					<h5 class="modal-title" id="exampleModalLabel">${title} -
+						Seyon</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -83,26 +86,28 @@
 									</div>
 								</div>
 							</c:if>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="name" class="col-sm-3 col-form-label">Name</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control" path="user.name"
-										id="name" placeholder="Name" />
+										error-regex="^[a-zA-Z ]{2,}$" id="name" placeholder="Name" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="email" class="col-sm-3 col-form-label">Email</label>
 								<div class="col-sm-6">
 									<form:input type="email" class="form-control" path="user.email"
+										error-regex="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
 										id="email" placeholder="xxxxxxx@xxx.xxx" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="mobile" class="col-sm-3 col-form-label">Mobile
 									Number</label>
 								<div class="col-sm-6">
 									<form:input type="number" class="form-control"
-										path="user.mobileNumber" id="mobile" placeholder="XXXXXXXXXX" />
+										error-regex="^[0-9]{10}$" path="user.mobileNumber" id="mobile"
+										placeholder="XXXXXXXXXX" />
 								</div>
 							</div>
 							<div class="form-group row">
@@ -110,41 +115,44 @@
 									Number</label>
 								<div class="col-sm-6">
 									<form:input type="number" class="form-control"
-										path="user.landlineNumber" id="landline"
-										placeholder="XXXXXXXXXX" />
+										error-regex="^[0-9]{6,12}$" path="user.landlineNumber"
+										id="landline" placeholder="XXXXXXXXXX" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="username" class="col-sm-3 col-form-label">Username</label>
 								<div class="col-sm-6">
-									<form:input type="text" class="form-control" path="username" readonly="${not IsNew}"
+									<form:input type="text" class="form-control" path="username"
+										error-regex="^[a-zA-Z0-9 ]{2,}$" readonly="${not IsNew}"
 										id="username" placeholder="Username" />
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<legend>Address</legend>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="country" class="col-sm-3 col-form-label">Country</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="user.address.country" id="country" placeholder="Country" />
+										error-regex="^[a-zA-Z ]{2,}$" path="user.address.country"
+										id="country" placeholder="Country" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="state" class="col-sm-3 col-form-label">State</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="user.address.state" id="state" placeholder="State" />
+										error-regex="^[a-zA-Z ]{2,}$" path="user.address.state"
+										id="state" placeholder="State" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="line1" class="col-sm-3 col-form-label">Address
 									Line1</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="user.address.addressLine1" id="line1"
-										placeholder="Address Line1" />
+										error-regex="^[\w\., ]{2,}$" path="user.address.addressLine1"
+										id="line1" placeholder="Address Line1" />
 								</div>
 							</div>
 							<div class="form-group row">
@@ -152,8 +160,8 @@
 									Line2</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="user.address.addressLine2" id="line2"
-										placeholder="Address Line2" />
+										error-regex="^[\w\., ]{2,}$" path="user.address.addressLine2"
+										id="line2" placeholder="Address Line2" />
 								</div>
 							</div>
 							<div class="form-group row">
@@ -161,22 +169,24 @@
 									Line3</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="user.address.addressLine3" id="line3"
-										placeholder="Address Line3" />
+										error-regex="^[\w\., ]{2,}$" path="user.address.addressLine3"
+										id="line3" placeholder="Address Line3" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="city" class="col-sm-3 col-form-label">City</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="user.address.city" id="city" placeholder="City" />
+										error-regex="^[a-zA-Z ]{2,}$" path="user.address.city"
+										id="city" placeholder="City" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="pincode" class="col-sm-3 col-form-label">Pincode</label>
 								<div class="col-sm-6">
 									<form:input type="number" class="form-control"
-										path="user.address.pincode" id="pincode" placeholder="XXXXXX" />
+										error-regex="^[0-9]{6}$" path="user.address.pincode"
+										id="pincode" placeholder="XXXXXX" />
 								</div>
 							</div>
 						</div>

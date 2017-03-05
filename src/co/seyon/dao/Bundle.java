@@ -155,7 +155,6 @@ public class Bundle {
 							|| (srcValue instanceof Document)
 							|| (srcValue instanceof Project)
 							|| (srcValue instanceof Payment))) {
-						System.out.println(pd.getName()+"*****"+srcValue);
 						tgt.setPropertyValue(pd.getName(), srcValue);
 					}
 				}
