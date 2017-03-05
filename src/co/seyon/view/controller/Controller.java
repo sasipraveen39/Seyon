@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.print.Doc;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -65,8 +63,6 @@ import co.seyon.view.model.Views;
 import co.seyon.view.validator.PasswordValidator;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @org.springframework.stereotype.Controller
@@ -473,6 +469,31 @@ public class Controller {
 		return nextPage;
 	}
 	
+	@RequestMapping("editDrawing")
+	public String editDrawing(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "drawingcreate";
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				Drawing drawing = finder.findDrawings(num).get(0);
+				model.addAttribute("canEdit", true);
+				model.addAttribute("isNew", false);
+				model.addAttribute("projectNumber", drawing.getProject().getProjectNumber());
+				model.addAttribute("drawing", drawing);
+				model.addAttribute("drawingTypes", DrawingType.values());
+				model.addAttribute("statuses", DrawingStatus.values());
+				break;
+			case CLIENT:
+				break;
+			}
+		}
+		return nextPage;
+	}
+	
 	@RequestMapping("newLegalDocument")
 	public String createNewLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -623,6 +644,25 @@ public class Controller {
 			try {
 				if(service.updateDocument(num, document, documentFile)){
 					nextPage = "redirect:retrieveLegalDocument?num=" + document.getDocumentNumber();	
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return nextPage;
+	}
+	
+	@RequestMapping(value="updatedrawing", method = RequestMethod.POST)
+	public String updateDrawing(@ModelAttribute("drawing") Drawing drawing,
+			@RequestParam(value = "projNumber") String num,
+			@RequestParam(value = "drawingFile", required = false) MultipartFile drawingFile,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			try {
+				if(service.updateDrawing(num, drawing, drawingFile)){
+					nextPage = "redirect:retrieveDrawing?num=" + drawing.getDrawingNumber();	
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

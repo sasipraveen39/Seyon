@@ -174,17 +174,19 @@ public class SeyonService {
 
 		return result;
 	}
-	
+
 	public boolean createNewProject(Project project) {
 		boolean result = false;
 		Bundle bundle = new Bundle();
 
-		User user = finder.findUsers(project.getUser().getAccountNumber(), null, null, null).get(0);
+		User user = finder.findUsers(project.getUser().getAccountNumber(),
+				null, null, null).get(0);
 		project.setUser(user);
-		project.setProjectNumber(SequenceGenerator.generateSequence(Project.class));
+		project.setProjectNumber(SequenceGenerator
+				.generateSequence(Project.class));
 		project.setCode(project.getProjectNumber());
 		project.getAddress().setAddressType(AddressType.PROJECT_SITE);
-		
+
 		bundle.persist(project);
 		result = true;
 
@@ -196,12 +198,12 @@ public class SeyonService {
 	public boolean updateUser(User user) {
 		boolean result = false;
 		Bundle bundle = new Bundle();
-		
+
 		bundle.update(user);
 		result = true;
-		
+
 		bundle.closeConnection();
-		return result; 
+		return result;
 	}
 
 	private boolean updateLogin(Login login) {
@@ -215,27 +217,39 @@ public class SeyonService {
 		return result;
 	}
 
-	
-	public boolean updateDocument(String projectNumber, Document document, MultipartFile multipartFile) throws IOException {
+	public boolean updateDrawing(String projectNumber, Drawing drawing,
+			MultipartFile multipartFile) throws IOException {
 		boolean result = false;
-		
-		if((multipartFile != null) && (!multipartFile.isEmpty())){
-			Project project = finder.findProjects(projectNumber, null, null, null)
-					.get(0);
+		if (updateDocument(projectNumber, drawing.getDocument(), multipartFile)) {
+			Bundle bundle = new Bundle();
+			bundle.update(drawing);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
+
+	public boolean updateDocument(String projectNumber, Document document,
+			MultipartFile multipartFile) throws IOException {
+		boolean result = false;
+
+		if ((multipartFile != null) && (!multipartFile.isEmpty())) {
+			Project project = finder.findProjects(projectNumber, null, null,
+					null).get(0);
 			String docFileName = EnvironmentUtil.getDocumentPath(project
-					.getUser().getAccountNumber(), project
-					.getProjectNumber(), multipartFile.getOriginalFilename(),
-					true);
+					.getUser().getAccountNumber(), project.getProjectNumber(),
+					multipartFile.getOriginalFilename(), true);
 			File serverDocFile = new File(docFileName);
 			if (!serverDocFile.getParentFile().exists()) {
 				serverDocFile.getParentFile().mkdirs();
 			}
 			FileUtils.copyInputStreamToFile(multipartFile.getInputStream(),
-					serverDocFile);	
-			document.setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
+					serverDocFile);
+			document.setFileLocation(EnvironmentUtil.getExposedDocumentPath(
+					project.getUser().getAccountNumber(),
 					project.getProjectNumber(), serverDocFile.getName()));
 		}
-		
+
 		Bundle bundle = new Bundle();
 
 		bundle.update(document);
@@ -244,23 +258,26 @@ public class SeyonService {
 		bundle.closeConnection();
 		return result;
 	}
-	
-	public boolean createNewDocument(String projectNumber, Document document){
+
+	public boolean createNewDocument(String projectNumber, Document document) {
 		boolean result = false;
-		Project project = finder.findProjects(projectNumber, null, null, null).get(0);
+		Project project = finder.findProjects(projectNumber, null, null, null)
+				.get(0);
 		document.setProject(project);
-		document.setDocumentNumber(SequenceGenerator.generateSequence(Document.class));
+		document.setDocumentNumber(SequenceGenerator
+				.generateSequence(Document.class));
 		Bundle bundle = new Bundle();
 		bundle.persist(document);
 		bundle.closeConnection();
 		result = true;
 		return result;
 	}
-	
-	public boolean createDrawing(Drawing drawing){
+
+	public boolean createDrawing(Drawing drawing) {
 		boolean result = false;
-		if(drawing != null){
-			drawing.getDocument().setDocumentNumber(SequenceGenerator.generateSequence(Document.class));
+		if (drawing != null) {
+			drawing.getDocument().setDocumentNumber(
+					SequenceGenerator.generateSequence(Document.class));
 			Bundle bundle = new Bundle();
 			bundle.persist(drawing);
 			bundle.closeConnection();
@@ -268,11 +285,12 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
-	public boolean createDocument(Document document){
+
+	public boolean createDocument(Document document) {
 		boolean result = false;
-		if(document != null){
-			document.setDocumentNumber(SequenceGenerator.generateSequence(Document.class));
+		if (document != null) {
+			document.setDocumentNumber(SequenceGenerator
+					.generateSequence(Document.class));
 			Bundle bundle = new Bundle();
 			bundle.persist(document);
 			bundle.closeConnection();
@@ -280,12 +298,13 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
-	public boolean createBill(Bill bill){
+
+	public boolean createBill(Bill bill) {
 		boolean result = false;
-		if(bill != null){
+		if (bill != null) {
 			bill.setBillNumber(SequenceGenerator.generateSequence(Bill.class));
-			bill.getDocument().setDocumentNumber(SequenceGenerator.generateSequence(Document.class));
+			bill.getDocument().setDocumentNumber(
+					SequenceGenerator.generateSequence(Document.class));
 			Bundle bundle = new Bundle();
 			bundle.persist(bill);
 			bundle.closeConnection();
@@ -293,11 +312,11 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
-	public boolean deleteDocuments(List<Long> docIDs){
+
+	public boolean deleteDocuments(List<Long> docIDs) {
 		boolean result = false;
 		List<Document> documents = finder.findDocumentsByID(docIDs);
-		if(documents != null){
+		if (documents != null) {
 			Bundle bundle = new Bundle();
 			bundle.removeAll(documents);
 			bundle.closeConnection();
@@ -305,11 +324,11 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
-	public boolean deleteBills(List<Long> billIDs){
+
+	public boolean deleteBills(List<Long> billIDs) {
 		boolean result = false;
 		List<Bill> bills = finder.findBillsByID(billIDs);
-		if(bills != null){
+		if (bills != null) {
 			Bundle bundle = new Bundle();
 			bundle.removeAll(bills);
 			bundle.closeConnection();
@@ -317,11 +336,11 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
-	public boolean deleteDrawings(List<Long> drawingIDs){
+
+	public boolean deleteDrawings(List<Long> drawingIDs) {
 		boolean result = false;
 		List<Drawing> drawings = finder.findDrawingsByID(drawingIDs);
-		if(drawings != null){
+		if (drawings != null) {
 			Bundle bundle = new Bundle();
 			bundle.removeAll(drawings);
 			bundle.closeConnection();
@@ -329,11 +348,11 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
-	public boolean deleteProjects(List<Long> projectIDs){
+
+	public boolean deleteProjects(List<Long> projectIDs) {
 		boolean result = false;
 		List<Project> projects = finder.findProjectsByID(projectIDs);
-		if(projects != null){
+		if (projects != null) {
 			Bundle bundle = new Bundle();
 			bundle.removeAll(projects);
 			bundle.closeConnection();

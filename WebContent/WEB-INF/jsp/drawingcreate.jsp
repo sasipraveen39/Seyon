@@ -21,7 +21,7 @@
 		<c:set var="title" value="Edit Drawing"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
 		<c:set var="formAction" value="updatedrawing"></c:set>
-		<c:set var="cancelPage" value="retrieveProject?num=${projectNumber}"></c:set>
+		<c:set var="cancelPage" value="retrieveDrawing?num=${drawing.drawingNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
@@ -173,11 +173,13 @@ $(document).ready(function() {
 									<input type="file" class="form-control-file" id="drawingFile" name="drawingFile"
 										accept="application/pdf"
 										aria-describedby="fileHelp"> <small id="fileHelp"
-										class="form-text text-muted">Upload only pdf file.</small>
+										class="form-text text-muted">Upload only pdf file. <c:if test="${not isNew}"><b><a target="_blank" href="${drawing.document.fileLocation}">Open Document</a></b></c:if></small>
 								</div>
 							</div>
 						</div>
 					</div>
+					<form:hidden path="document.fileLocation"/>
+					<form:hidden path="document.documentNumber"/>
 					<input type="hidden" name="projNumber" value="${projectNumber}"/>
 				</form:form>
 				<button class="btn btn-primary" id="create" >${mainButton}</button>

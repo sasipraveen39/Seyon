@@ -98,7 +98,12 @@ public class Bundle {
 			target = fin.findDocuments(src.getDocumentNumber(), null).get(0);
 			Document tgt = (Document)target;
 			copyProperties(src, tgt, Constants.DOCUMENT_PROPERTIES_TO_AVOID);
-		}
+		} else if (object instanceof Drawing){
+			Drawing src = (Drawing)object;
+			target = fin.findDrawings(src.getDrawingNumber()).get(0);
+			Drawing tgt = (Drawing)target;
+			copyProperties(src, tgt, Constants.DRAWING_PROPERTIES_TO_AVOID);
+		} 
 		entitymanager.getTransaction().begin();
 		entitymanager.merge(target);
 		entitymanager.getTransaction().commit();
@@ -129,7 +134,7 @@ public class Bundle {
 						return false;
 					}
 					if(! ((srcValue instanceof Address) || (srcValue instanceof User) ||
-							(srcValue instanceof Bill) || (srcValue instanceof Drawing)
+							(srcValue instanceof Bill) || (srcValue instanceof Drawing) || (srcValue instanceof Document)
 							|| (srcValue instanceof Project) || (srcValue instanceof Payment))){
 						System.out.println(pd.getName()+"****"+srcValue);
 						tgt.setPropertyValue(pd.getName(), srcValue);
