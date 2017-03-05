@@ -21,15 +21,20 @@
 		<c:set var="title" value="Edit Legal Document"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
 		<c:set var="formAction" value="updatelegaldocument"></c:set>
-		<c:set var="cancelPage" value="retrieveLegalDocument?num=${legalDocument.documentNumber}"></c:set>
+		<c:set var="cancelPage"
+			value="retrieveLegalDocument?num=${legalDocument.documentNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
 <script>
 	$(document).ready(function() {
-		$('#create').click(function(e) {
-			$('#createForm').submit();
-			e.preventDefault();
+		$(document).ready(function() {
+			$('#create').click(function(e) {
+				if (validateFields($('#createForm'))) {
+					$('#createForm').submit();
+				}
+				e.preventDefault();
+			});
 		});
 		$('#createForm').ajaxForm({
 			beforeSend : function() {
@@ -108,40 +113,46 @@
 							<legend>Document details</legend>
 							<c:if test="${not isNew}">
 								<div class="form-group row">
-									<label for="docNumber" class="col-sm-3 col-form-label">Document #</label>
+									<label for="docNumber" class="col-sm-3 col-form-label">Document
+										#</label>
 									<div class="col-sm-6">
-										<form:input type="text" class="form-control" path="documentNumber"
-											id="docNumber" readonly="true" />
+										<form:input type="text" class="form-control"
+											path="documentNumber" id="docNumber" readonly="true" />
 									</div>
 								</div>
 							</c:if>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="name" class="col-sm-3 col-form-label">Name</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control" path="name"
-										id="name" placeholder="Document Name" />
+										error-regex="^[a-zA-Z0-9 ]{2,}$" id="name"
+										placeholder="Document Name" />
 								</div>
 							</div>
 							<div class="form-group row">
 								<label for="description" class="col-sm-3 col-form-label">Description</label>
 								<div class="col-sm-6">
 									<form:textarea class="form-control" rows="3" id="description"
-										path="description"></form:textarea>
+										error-regex="^[\w\., ]{2,}$" path="description"></form:textarea>
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group ${isNew?'required':'' } row">
 								<label for="documentFile" class="col-sm-3 col-form-label">Document
-									File</label> 
+									File</label>
 								<div class="col-sm-6">
 									<input type="file" class="form-control-file" id="documentFile"
 										name="documentFile" accept="application/pdf"
 										aria-describedby="fileHelp"> <small id="fileHelp"
-										class="form-text text-muted">Upload only pdf file. <c:if test="${not isNew}"><b><a target="_blank" href="${legalDocument.fileLocation}">Open Document</a></b></c:if></small>
+										class="form-text text-muted">Upload only pdf file. <c:if
+											test="${not isNew}">
+											<b><a target="_blank"
+												href="${legalDocument.fileLocation}">Open Document</a></b>
+										</c:if></small>
 								</div>
 							</div>
 						</div>
 					</div>
-					<form:hidden path="fileLocation"/>
+					<form:hidden path="fileLocation" />
 					<input type="hidden" name="projNumber" value="${projectNumber}" />
 				</form:form>
 				<button class="btn btn-primary" id="create">${mainButton}</button>
