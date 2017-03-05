@@ -18,7 +18,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="address")
-@AdditionalCriteria("this.retired = false")
+@AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value=AddressCustomizer.class)
 public class Address implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -59,7 +59,7 @@
 					<dt class="col-sm-2">Bill Date</dt>
 					<dd class="col-sm-10">
 						<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
-							value="${draw.billDate}" />
+							value="${bill.billDate}" />
 					</dd>
 
 					<dt class="col-sm-2">Total Amount</dt>

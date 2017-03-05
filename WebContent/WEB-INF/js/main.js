@@ -55,7 +55,14 @@ $(document).ready(function(){
 				itemsToDelete.push(parentTR);
 			});
 			break;
+		case 'Project':
+			$('#projectPanel').find('.delete-table>tbody>tr>td>input:checked').each(function (){
+				var parentTR = $(this).closest('tr').attr('id');
+				itemsToDelete.push(parentTR);
+			});
+			break;
 		}
+		
 		
 
 		if(itemsToDelete.length == 0){

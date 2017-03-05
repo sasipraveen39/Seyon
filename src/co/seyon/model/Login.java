@@ -18,7 +18,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "login")
-@AdditionalCriteria("this.retired = false")
+@AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value = LoginCustomizer.class)
 @NamedQueries({
 		@NamedQuery(name = "Login.findAll", query = "SELECT l FROM Login l"),

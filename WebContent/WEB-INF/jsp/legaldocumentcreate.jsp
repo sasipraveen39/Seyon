@@ -21,7 +21,7 @@
 		<c:set var="title" value="Edit Legal Document"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
 		<c:set var="formAction" value="updatelegaldocument"></c:set>
-		<c:set var="cancelPage" value="retrieveProject?num=${projectNumber}"></c:set>
+		<c:set var="cancelPage" value="retrieveLegalDocument?num=${legalDocument.documentNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
@@ -32,25 +32,25 @@
 			e.preventDefault();
 		});
 		$('#createForm').ajaxForm({
-		    beforeSend: function() {
-		    	var formDiv = $("#createForm");
-		    	formDiv.after($("#fileUploadProgressMainTemplate").tmpl());
+			beforeSend : function() {
+				var formDiv = $("#createForm");
+				formDiv.after($("#fileUploadProgressMainTemplate").tmpl());
 				$("#create").prop("disabled", true);
-		        $("#cancel").prop("disabled", true);
-		        $("#createForm :input").attr("disabled", true);
-		    },
-		    uploadProgress: function(event, position, total, percentComplete) {
-		        var percentVal = percentComplete + '%';
-		        $(".progress-bar").width(percentVal);
-		    },
-		    success: function() {
-		    	window.location.href = "${cancelPage}";
-		    },
-		    error: function(){
-		    },
-			complete: function() {
+				$("#cancel").prop("disabled", true);
+				$("#createForm :input").attr("disabled", true);
+			},
+			uploadProgress : function(event, position, total, percentComplete) {
+				var percentVal = percentComplete + '%';
+				$(".progress-bar").width(percentVal);
+			},
+			success : function() {
+				window.location.href = "${cancelPage}";
+			},
+			error : function() {
+			},
+			complete : function() {
 			}
-		}); 
+		});
 	});
 </script>
 </head>
@@ -100,16 +100,26 @@
 			<div class="col">
 				<h3>${title}</h3>
 				<hr />
-				<form:form action="${formAction}" method="post" id="createForm" enctype="multipart/form-data"
-					class="form-horizontal" commandName="legalDocument">
+				<form:form action="${formAction}" method="post" id="createForm"
+					enctype="multipart/form-data" class="form-horizontal"
+					commandName="legalDocument">
 					<div class="row">
 						<div class="col-sm-6">
 							<legend>Document details</legend>
+							<c:if test="${not isNew}">
+								<div class="form-group row">
+									<label for="docNumber" class="col-sm-3 col-form-label">Document #</label>
+									<div class="col-sm-6">
+										<form:input type="text" class="form-control" path="documentNumber"
+											id="docNumber" readonly="true" />
+									</div>
+								</div>
+							</c:if>
 							<div class="form-group row">
 								<label for="name" class="col-sm-3 col-form-label">Name</label>
 								<div class="col-sm-6">
-									<form:input type="text" class="form-control"
-										path="name" id="name" placeholder="Document Name" />
+									<form:input type="text" class="form-control" path="name"
+										id="name" placeholder="Document Name" />
 								</div>
 							</div>
 							<div class="form-group row">
@@ -120,22 +130,24 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label for="documentFile" class="col-sm-3 col-form-label">Document File</label>
+								<label for="documentFile" class="col-sm-3 col-form-label">Document
+									File</label> 
 								<div class="col-sm-6">
-									<input type="file" class="form-control-file" id="documentFile" name="documentFile"
-										accept="application/pdf"
+									<input type="file" class="form-control-file" id="documentFile"
+										name="documentFile" accept="application/pdf"
 										aria-describedby="fileHelp"> <small id="fileHelp"
-										class="form-text text-muted">Upload only pdf file.</small>
+										class="form-text text-muted">Upload only pdf file. <c:if test="${not isNew}"><b><a target="_blank" href="${legalDocument.fileLocation}">Open Document</a></b></c:if></small>
 								</div>
 							</div>
 						</div>
 					</div>
-					<input type="hidden" name="projNumber" value="${projectNumber}"/>
+					<form:hidden path="fileLocation"/>
+					<input type="hidden" name="projNumber" value="${projectNumber}" />
 				</form:form>
 				<button class="btn btn-primary" id="create">${mainButton}</button>
 
-				<button class="btn btn-secondary" id="cancel"
-					data-toggle="modal" data-target="#cancelModal" >Cancel</button>
+				<button class="btn btn-secondary" id="cancel" data-toggle="modal"
+					data-target="#cancelModal">Cancel</button>
 			</div>
 		</div>
 	</div>

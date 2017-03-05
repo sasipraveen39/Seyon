@@ -13,7 +13,12 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
 import co.seyon.model.Address;
+import co.seyon.model.Bill;
+import co.seyon.model.Document;
+import co.seyon.model.Drawing;
 import co.seyon.model.Login;
+import co.seyon.model.Payment;
+import co.seyon.model.Project;
 import co.seyon.model.User;
 import co.seyon.util.Constants;
 
@@ -88,6 +93,11 @@ public class Bundle {
 			User tgt = (User)target;
 			copyProperties(src, tgt, Constants.USER_PROPERTIES_TO_AVOID);
 			copyProperties(src.getAddress(),tgt.getAddress(), Constants.ADDRESS_PROPERTIES_TO_AVOID);
+		} else if (object instanceof Document){
+			Document src = (Document)object;
+			target = fin.findDocuments(src.getDocumentNumber(), null).get(0);
+			Document tgt = (Document)target;
+			copyProperties(src, tgt, Constants.DOCUMENT_PROPERTIES_TO_AVOID);
 		}
 		entitymanager.getTransaction().begin();
 		entitymanager.merge(target);
@@ -118,7 +128,10 @@ public class Bundle {
 						e.printStackTrace();
 						return false;
 					}
-					if(! ((srcValue instanceof Address) || (srcValue instanceof User))){
+					if(! ((srcValue instanceof Address) || (srcValue instanceof User) ||
+							(srcValue instanceof Bill) || (srcValue instanceof Drawing)
+							|| (srcValue instanceof Project) || (srcValue instanceof Payment))){
+						System.out.println(pd.getName()+"****"+srcValue);
 						tgt.setPropertyValue(pd.getName(), srcValue);
 					}
 				}	

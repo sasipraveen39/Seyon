@@ -8,7 +8,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,7 +29,7 @@ import co.seyon.customizer.UserCustomizer;
  */
 @Entity
 @Table(name = "user")
-@AdditionalCriteria("this.retired = false")
+@AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value=UserCustomizer.class)
 @NamedQueries({
 		@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),

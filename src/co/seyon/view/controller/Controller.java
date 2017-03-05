@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.print.Doc;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
@@ -473,7 +474,7 @@ public class Controller {
 	}
 	
 	@RequestMapping("newLegalDocument")
-	public String CreateNewLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String createNewLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -483,6 +484,30 @@ public class Controller {
 			model.addAttribute("isNew", true);
 			model.addAttribute("projectNumber", num);
 			model.addAttribute("legalDocument", document);
+		}
+		return nextPage;
+	}
+	
+	
+	@RequestMapping("editLegalDocument")
+	public String editLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "legaldocumentcreate";
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				Document doc = finder.findDocuments(num, null).get(0);
+				model.addAttribute("canEdit", true);
+				model.addAttribute("isNew", false);
+				model.addAttribute("projectNumber", doc.getProject().getProjectNumber());
+				model.addAttribute("legalDocument", doc);
+				break;
+			case CLIENT:
+				break;
+			}
 		}
 		return nextPage;
 	}
@@ -578,6 +603,26 @@ public class Controller {
 						project.getProjectNumber(), serverDocFile.getName()));
 				if(service.createDocument(document)){
 					nextPage = "redirect:retrieveProject?num=" + num;	
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return nextPage;
+	}
+	
+	
+	@RequestMapping(value="updatelegaldocument", method = RequestMethod.POST)
+	public String updateLegalDocument(@ModelAttribute("legalDocument") Document document,
+			@RequestParam(value = "projNumber") String num,
+			@RequestParam(value = "documentFile", required = false) MultipartFile documentFile,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			try {
+				if(service.updateDocument(num, document, documentFile)){
+					nextPage = "redirect:retrieveLegalDocument?num=" + document.getDocumentNumber();	
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -910,6 +955,10 @@ public class Controller {
 				}
 			} else if(type.equalsIgnoreCase("Drawing")){
 				if(service.deleteDrawings(item.getIds())){
+					fileDeleted = "Delete successful";
+				}
+			} else if(type.equalsIgnoreCase("Project")){
+				if(service.deleteProjects(item.getIds())){
 					fileDeleted = "Delete successful";
 				}
 			}

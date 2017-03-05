@@ -258,12 +258,24 @@ public class Finder {
 		closeConnection();
 		return drawings;
 	}
+	
+	public List<Project> findProjectsByID(List<Long> projectIDs){
+		createEntityManager();
+		TypedQuery<Project> query = entitymanager
+				.createQuery("SELECT d from Project d WHERE d.idproject IN :ids", Project.class);
+		query.setParameter("ids", projectIDs);
+		List<Project> projects = query.getResultList();
+		closeConnection();
+		return projects;
+	}
+	
 	public int findLastSequence(Class className) {
 		createEntityManager();
 		String sequence = null;
 		int seqNum = -1;
 		TypedQuery<Object> query = entitymanager.createNamedQuery(
 				className.getSimpleName() + ".findAllByReverseNumber", className);
+		entitymanager.setProperty("disableRetiredFeature", 1);
 		query.setMaxResults(1);
 		Object result = null;
 		try{

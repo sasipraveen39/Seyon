@@ -20,7 +20,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="payment")
-@AdditionalCriteria("this.retired = false")
+@AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value = PaymentCustomizer.class)
 public class Payment implements Serializable {
 	private static final long serialVersionUID = 1L;

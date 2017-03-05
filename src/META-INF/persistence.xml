@@ -20,6 +20,7 @@
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 			<property name="eclipselink.logging.level" value="FINE" />
 			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+			<property name="disableRetiredFeature" value="0"/>
 		</properties>
 	</persistence-unit>
 </persistence>

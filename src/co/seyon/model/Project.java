@@ -35,7 +35,7 @@ import co.seyon.enums.ProjectType;
  */
 @Entity
 @Table(name = "project")
-@AdditionalCriteria("this.retired = false")
+@AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value = ProjectCustomizer.class)
 @NamedQueries({
 		@NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p"),

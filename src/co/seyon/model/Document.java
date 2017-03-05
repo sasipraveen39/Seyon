@@ -18,7 +18,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="document")
-@AdditionalCriteria("this.retired = false")
+@AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value = DocumentCustomizer.class)
 @NamedQueries({
 	@NamedQuery(name = "Document.findAll", query = "SELECT b FROM Document b"),
@@ -97,7 +97,10 @@ public class Document implements Serializable {
 	}
 
 	public DocumentType getDocumentType() {
-		return DocumentType.valueOf(this.documentType);
+		if(this.documentType != null){
+			return DocumentType.valueOf(this.documentType);	
+		}
+		return null;
 	}
 
 	public void setDocumentType(DocumentType documentType) {

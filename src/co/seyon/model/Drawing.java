@@ -20,7 +20,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name="drawing")
-@AdditionalCriteria("this.retired = false")
+@AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value = DrawingCustomizer.class)
 public class Drawing implements Serializable {
 	private static final long serialVersionUID = 1L;

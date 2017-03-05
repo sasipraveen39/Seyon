@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="bill")
-@AdditionalCriteria("this.retired = false")
+@AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value=BillCustomizer.class)
 @NamedQueries({
 	@NamedQuery(name = "Bill.findAll", query = "SELECT b FROM Bill b"),

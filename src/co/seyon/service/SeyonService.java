@@ -1,7 +1,12 @@
 package co.seyon.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.seyon.dao.Bundle;
 import co.seyon.dao.Finder;
@@ -19,6 +24,7 @@ import co.seyon.sequence.SequenceGenerator;
 import co.seyon.util.Constants;
 import co.seyon.util.DateUtil;
 import co.seyon.util.EncryptionUtil;
+import co.seyon.util.EnvironmentUtil;
 
 public class SeyonService {
 
@@ -209,6 +215,36 @@ public class SeyonService {
 		return result;
 	}
 
+	
+	public boolean updateDocument(String projectNumber, Document document, MultipartFile multipartFile) throws IOException {
+		boolean result = false;
+		
+		if((multipartFile != null) && (!multipartFile.isEmpty())){
+			Project project = finder.findProjects(projectNumber, null, null, null)
+					.get(0);
+			String docFileName = EnvironmentUtil.getDocumentPath(project
+					.getUser().getAccountNumber(), project
+					.getProjectNumber(), multipartFile.getOriginalFilename(),
+					true);
+			File serverDocFile = new File(docFileName);
+			if (!serverDocFile.getParentFile().exists()) {
+				serverDocFile.getParentFile().mkdirs();
+			}
+			FileUtils.copyInputStreamToFile(multipartFile.getInputStream(),
+					serverDocFile);	
+			document.setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
+					project.getProjectNumber(), serverDocFile.getName()));
+		}
+		
+		Bundle bundle = new Bundle();
+
+		bundle.update(document);
+		result = true;
+
+		bundle.closeConnection();
+		return result;
+	}
+	
 	public boolean createNewDocument(String projectNumber, Document document){
 		boolean result = false;
 		Project project = finder.findProjects(projectNumber, null, null, null).get(0);
@@ -294,4 +330,15 @@ public class SeyonService {
 		return result;
 	}
 	
+	public boolean deleteProjects(List<Long> projectIDs){
+		boolean result = false;
+		List<Project> projects = finder.findProjectsByID(projectIDs);
+		if(projects != null){
+			Bundle bundle = new Bundle();
+			bundle.removeAll(projects);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
 }
