@@ -21,37 +21,42 @@
 		<c:set var="title" value="Edit Drawing"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
 		<c:set var="formAction" value="updatedrawing"></c:set>
-		<c:set var="cancelPage" value="retrieveDrawing?num=${drawing.drawingNumber}"></c:set>
+		<c:set var="cancelPage"
+			value="retrieveDrawing?num=${drawing.drawingNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
 <script>
-$(document).ready(function() {
-	$('#create').click(function(e) {
-		$('#createForm').submit();
-		e.preventDefault();
+	$(document).ready(function() {
+		$(document).ready(function() {
+			$('#create').click(function(e) {
+				if (validateFields($('#createForm'))) {
+					$('#createForm').submit();
+				}
+				e.preventDefault();
+			});
+		});
+		$('#createForm').ajaxForm({
+			beforeSend : function() {
+				var formDiv = $("#createForm");
+				formDiv.after($("#fileUploadProgressMainTemplate").tmpl());
+				$("#create").prop("disabled", true);
+				$("#cancel").prop("disabled", true);
+				$("#createForm :input").attr("disabled", true);
+			},
+			uploadProgress : function(event, position, total, percentComplete) {
+				var percentVal = percentComplete + '%';
+				$(".progress-bar").width(percentVal);
+			},
+			success : function() {
+				window.location.href = "${cancelPage}";
+			},
+			error : function() {
+			},
+			complete : function() {
+			}
+		});
 	});
-	$('#createForm').ajaxForm({
-	    beforeSend: function() {
-	    	var formDiv = $("#createForm");
-	    	formDiv.after($("#fileUploadProgressMainTemplate").tmpl());
-			$("#create").prop("disabled", true);
-	        $("#cancel").prop("disabled", true);
-	        $("#createForm :input").attr("disabled", true);
-	    },
-	    uploadProgress: function(event, position, total, percentComplete) {
-	        var percentVal = percentComplete + '%';
-	        $(".progress-bar").width(percentVal);
-	    },
-	    success: function() {
-	    	window.location.href = "${cancelPage}";
-	    },
-	    error: function(){
-	    },
-		complete: function() {
-		}
-	}); 
-});
 </script>
 </head>
 <body>
@@ -100,21 +105,23 @@ $(document).ready(function() {
 			<div class="col">
 				<h3>${title}</h3>
 				<hr />
-				<form:form action="${formAction}" method="post" id="createForm" enctype="multipart/form-data"
-					class="form-horizontal" commandName="drawing">
+				<form:form action="${formAction}" method="post" id="createForm"
+					enctype="multipart/form-data" class="form-horizontal"
+					commandName="drawing">
 					<div class="row">
 						<div class="col-sm-6">
 							<legend>Drawing details</legend>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="drawingNumber" class="col-sm-3 col-form-label">Drawing
 									#</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
 										readonly="${not IsNew}" id="drawingNumber"
-										path="drawingNumber" placeholder="XXXXXXXXXX" />
+										error-regex="^[a-zA-Z0-9 ]{6,}$" path="drawingNumber"
+										placeholder="XXXXXXXXXX" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="type" class="col-sm-3 col-form-label">Type</label>
 								<div class="col-sm-6">
 									<form:select class="form-control" path="typeOfDrawing"
@@ -132,7 +139,7 @@ $(document).ready(function() {
 										path="dateOfIssue" placeholder="" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="estimatedDateOfIssue"
 									class="col-sm-3 col-form-label">Estd. Date of Issue</label>
 								<div class="col-sm-6">
@@ -141,7 +148,7 @@ $(document).ready(function() {
 										placeholder="" />
 								</div>
 							</div>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="status" class="col-sm-3 col-form-label">Status</label>
 								<div class="col-sm-6">
 									<form:select class="form-control" path="status" id="status">
@@ -153,39 +160,45 @@ $(document).ready(function() {
 						</div>
 						<div class="col-sm-6">
 							<legend>Document</legend>
-							<div class="form-group row">
+							<div class="form-group required row">
 								<label for="name" class="col-sm-3 col-form-label">Name</label>
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
-										path="document.name" id="name" placeholder="Document Name" />
+										error-regex="^[a-zA-Z0-9 ]{2,}$" path="document.name"
+										id="name" placeholder="Document Name" />
 								</div>
 							</div>
 							<div class="form-group row">
 								<label for="description" class="col-sm-3 col-form-label">Description</label>
 								<div class="col-sm-6">
 									<form:textarea class="form-control" rows="3" id="description"
-										path="document.description"></form:textarea>
+										error-regex="^[\w\., ]{2,}$" path="document.description"></form:textarea>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label for="drawingFile" class="col-sm-3 col-form-label">Drawing File</label>
+							<div class="form-group ${isNew?'required':'' } row">
+								<label for="drawingFile" class="col-sm-3 col-form-label">Drawing
+									File</label>
 								<div class="col-sm-6">
-									<input type="file" class="form-control-file" id="drawingFile" name="drawingFile"
-										accept="application/pdf"
+									<input type="file" class="form-control-file" id="drawingFile"
+										name="drawingFile" accept="application/pdf"
 										aria-describedby="fileHelp"> <small id="fileHelp"
-										class="form-text text-muted">Upload only pdf file. <c:if test="${not isNew}"><b><a target="_blank" href="${drawing.document.fileLocation}">Open Document</a></b></c:if></small>
+										class="form-text text-muted">Upload only pdf file. <c:if
+											test="${not isNew}">
+											<b><a target="_blank"
+												href="${drawing.document.fileLocation}">Open Document</a></b>
+										</c:if></small>
 								</div>
 							</div>
 						</div>
 					</div>
-					<form:hidden path="document.fileLocation"/>
-					<form:hidden path="document.documentNumber"/>
-					<input type="hidden" name="projNumber" value="${projectNumber}"/>
+					<form:hidden path="document.fileLocation" />
+					<form:hidden path="document.documentNumber" />
+					<input type="hidden" name="projNumber" value="${projectNumber}" />
 				</form:form>
-				<button class="btn btn-primary" id="create" >${mainButton}</button>
+				<button class="btn btn-primary" id="create">${mainButton}</button>
 
-				<button class="btn btn-secondary" id="cancel"
-					data-toggle="modal" data-target="#cancelModal" >Cancel</button>
+				<button class="btn btn-secondary" id="cancel" data-toggle="modal"
+					data-target="#cancelModal">Cancel</button>
 			</div>
 		</div>
 	</div>
