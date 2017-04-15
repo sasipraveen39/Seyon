@@ -15,13 +15,14 @@
 		<c:set var="title" value="Create New Payment"></c:set>
 		<c:set var="mainButton" value="Create"></c:set>
 		<c:set var="formAction" value="submitpayment"></c:set>
-		<c:set var="cancelPage" value="retrieveBill?num=${projectNumber}"></c:set>
+		<c:set var="cancelPage" value="retrieveBill?num=${billNumber}"></c:set>
 	</c:when>
 	<c:otherwise>
 		<c:set var="title" value="Edit Payment"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
 		<c:set var="formAction" value="updatepayment"></c:set>
-		<c:set var="cancelPage" value="retrievePayment?num=${bill.billNumber}"></c:set>
+		<c:set var="cancelPage"
+			value="retrievePayment?num=${payment.paymentNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
@@ -35,26 +36,16 @@
 				e.preventDefault();
 			});
 		});
-		$('#createForm').ajaxForm({
-			beforeSend : function() {
-				var formDiv = $("#createForm");
-				formDiv.after($("#fileUploadProgressMainTemplate").tmpl());
-				$("#create").prop("disabled", true);
-				$("#cancel").prop("disabled", true);
-				$("#createForm :input").attr("disabled", true);
-			},
-			uploadProgress : function(event, position, total, percentComplete) {
-				var percentVal = percentComplete + '%';
-				$(".progress-bar").width(percentVal);
-			},
-			success : function() {
-				window.location.href = "${cancelPage}";
-			},
-			error : function() {
-			},
-			complete : function() {
+		
+		$('#status').on('change', function(){
+			if($('#status').val() == 'PAID'){
+				$('.conditional').removeClass('hidden');
+			}else{
+				$('.conditional').addClass('hidden');
 			}
 		});
+
+		$('#status').trigger('change');
 	});
 </script>
 </head>
@@ -105,94 +96,84 @@
 				<h3>${title}</h3>
 				<hr />
 				<form:form action="${formAction}" method="post" id="createForm"
-					enctype="multipart/form-data" class="form-horizontal"
-					commandName="bill">
+					class="form-horizontal" commandName="payment"> <!-- enctype="multipart/form-data"  -->
 					<div class="row">
 						<div class="col-sm-6">
-							<legend>Bill details</legend>
+							<legend>Payment details</legend>
 							<c:if test="${not IsNew}">
 								<div class="form-group row">
-									<label for="billNumber" class="col-sm-3 col-form-label">Bill
+									<label for="paymentNumber" class="col-sm-3 col-form-label">Payment
 										#</label>
 									<div class="col-sm-6">
 										<form:input type="text" class="form-control" readonly="true"
-											id="billNumber" path="billNumber" placeholder="XXXXXXXXXX" />
+											id="paymentNumber" path="paymentNumber"
+											placeholder="XXXXXXXXXX" />
 									</div>
 								</div>
 							</c:if>
 							<div class="form-group required row">
-								<label for="type" class="col-sm-3 col-form-label">Type</label>
-								<div class="col-sm-6">
-									<form:select class="form-control" path="billType" id="type">
-										<form:option value="" label="<none>" />
-										<form:options items="${billTypes}" itemLabel="value" />
-									</form:select>
-								</div>
-							</div>
-							<div class="form-group required row">
-								<label for="billDate" class="col-sm-3 col-form-label">Bill
-									Date</label>
-								<div class="col-sm-6">
-									<form:input type="date" class="form-control" id="billDate"
-										path="billDate" placeholder="" />
-								</div>
-							</div>
-							<div class="form-group required row">
 								<label for="status" class="col-sm-3 col-form-label">Status</label>
 								<div class="col-sm-6">
-									<form:select class="form-control" path="billStatus" id="status">
+									<form:select class="form-control" path="status" id="status">
 										<form:option value="" label="<none>" />
-										<form:options items="${statuses}" itemLabel="value" />
+										<form:options items="${paymentStatuses}" itemLabel="value" />
 									</form:select>
 								</div>
 							</div>
 							<div class="form-group required row">
-								<label for="totalBillAmount" class="col-sm-3 col-form-label">Total
-									Amount</label>
+								<label for="dueDate" class="col-sm-3 col-form-label">Due
+									Date</label>
+								<div class="col-sm-6">
+									<form:input type="date" class="form-control" id="dueDate"
+										path="dueDate" placeholder="" />
+								</div>
+							</div>
+							<div class="form-group required row">
+								<label for="amountPayable" class="col-sm-3 col-form-label">Amount
+									Payable</label>
 								<div class="col-sm-6 input-group">
 									<span class="input-group-addon" id="ruppee-addon1">&#8377;</span>
 									<form:input type="number" class="form-control"
-										id="totalBillAmount" path="totalBillAmount" placeholder=""
+										id="amountPayable" path="amountPayable" placeholder=""
 										aria-describedby="ruppee-addon1" />
+								</div>
+							</div>
+							<div class="form-group required conditional row">
+								<label for="paymentDate" class="col-sm-3 col-form-label">Paid
+									Date</label>
+								<div class="col-sm-6">
+									<form:input type="date" class="form-control" id="paymentDate"
+										path="paymentDate" placeholder="" />
+								</div>
+							</div>
+							<div class="form-group required conditional row">
+								<label for="modeOfPayment" class="col-sm-3 col-form-label">Mode
+									of Payment</label>
+								<div class="col-sm-6">
+									<form:select class="form-control" path="modeOfPayment"
+										id="modeOfPayment">
+										<form:option value="" label="<none>" />
+										<form:options items="${modeOfPayments}" itemLabel="value" />
+									</form:select>
+								</div>
+							</div>
+							<div class="form-group required conditional row">
+								<label for="referenceNumber" class="col-sm-3 col-form-label">Reference
+									#</label>
+								<div class="col-sm-6">
+									<form:input type="text" class="form-control"
+										error-regex="^[a-zA-Z0-9 ]{2,}$" path="referenceNumber"
+										id="referenceNumber" placeholder="XX" />
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-6">
-							<legend>Document</legend>
-							<div class="form-group required row">
-								<label for="name" class="col-sm-3 col-form-label">Name</label>
-								<div class="col-sm-6">
-									<form:input type="text" class="form-control"
-										error-regex="^[a-zA-Z0-9 ]{2,}$" path="document.name"
-										id="name" placeholder="Document Name" />
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="description" class="col-sm-3 col-form-label">Description</label>
-								<div class="col-sm-6">
-									<form:textarea class="form-control" rows="3" id="description"
-										error-regex="^[\w\., ]{2,}$" path="document.description"></form:textarea>
-								</div>
-							</div>
-							<div class="form-group ${isNew?'required':'' } row">
-								<label for="billFile" class="col-sm-3 col-form-label">Bill
-									File</label>
-								<div class="col-sm-6">
-									<input type="file" class="form-control-file" id="billFile"
-										name="billFile" accept="application/pdf"
-										aria-describedby="fileHelp"> <small id="fileHelp"
-										class="form-text text-muted">Upload only pdf file. <c:if
-											test="${not isNew}">
-											<b><a target="_blank"
-												href="${bill.document.fileLocation}">Open Document</a></b>
-										</c:if></small>
-								</div>
-							</div>
+						
 						</div>
 					</div>
 					<form:hidden path="document.fileLocation" />
 					<form:hidden path="document.documentNumber" />
-					<input type="hidden" name="projNumber" value="${projectNumber}" />
+					<input type="hidden" name="bNumber" value="${billNumber}" />
 				</form:form>
 				<button class="btn btn-primary" id="create">${mainButton}</button>
 

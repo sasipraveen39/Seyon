@@ -139,48 +139,65 @@
 		</div>
 		<div class="row">
 			<div class="col">
-				<div class="card">
-					<div class="card-header">
-						<h5>Payment details</h5>
-					</div>
-					<div class="card-block">
-						<div class="btn-toolbar" role="toolbar"
-							aria-label="Toolbar with button groups">
-							<div class="btn-group" role="group">
-								<button type="button" id="addProject"
-									class="btn btn-primary btn-sm">Add Payment</button>
-								<button type="button" id="deleteProject"
-									class="btn btn-secondary btn-sm">Remove Payment</button>
+				<div id="paymentPanel">
+					<div class="card">
+						<div class="card-header">
+							<h5>Payment details</h5>
+						</div>
+						<div class="card-block">
+							<div class="card-text">
+								<div class="btn-toolbar justify-content-between" role="toolbar"
+									aria-label="Toolbar with button groups">
+									<div class="btn-group" role="group">
+										<button type="button" id="addPayment"
+											onclick="window.location.href='newPayment?num=${bill.billNumber}'"
+											class="btn btn-primary btn-sm">Add Payment</button>
+										<button type="button" id="deletePayment" data-toggle="button"
+											aria-pressed="false" autocomplete="off"
+											class="btn btn-secondary btn-sm remove-button">Remove
+											Payment</button>
+									</div>
+									<div class="btn-group" role="group">
+										<button type="button" data-toggle="modal"
+											data-target="#itemDeleteModal" name="Payment"
+											class="btn btn-danger btn-sm delete-button invisible">Delete
+											Selected Payments</button>
+									</div>
+								</div>
+								<br />
+								<table class="table table-striped delete-table">
+									<thead>
+										<tr>
+											<th>Payment #</th>
+											<th>Amount Payable</th>
+											<th>Due Date</th>
+											<th>Status</th>
+											<th>Mode of Payment</th>
+											<th>Link</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${bill.payments}" var="payment">
+											<tr id="${payment.idpayment}">
+												<th scope="row"><a
+													href="retrievePayment?num=${payment.paymentNumber}">${payment.paymentNumber}</a></th>
+												<td>&#x20b9; ${payment.amountPayable}</td>
+												<td><fmt:formatDate type="date" dateStyle="long"
+														value="${payment.dueDate}" /></td>
+												<td>${payment.status.value}</td>
+												<td>${payment.modeOfPayment.value}</td>
+												<td><c:if
+														test="${not empty payment.document.fileLocation}">
+														<a target="_blank" href="${payment.document.fileLocation}"
+															class="btn btn-primary btn-sm" role="button">Open
+															Receipt</a>
+													</c:if></td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
 							</div>
 						</div>
-						<br />
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th>Payment #</th>
-									<th>Amount Payable</th>
-									<th>Due Date</th>
-									<th>Status</th>
-									<th>Mode of Payment</th>
-									<th>Link</th>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach items="${bill.payments}" var="payment">
-									<tr>
-										<th scope="row"><a href="retrievePayment?num=${'001'}">PY00000001</a></th>
-										<td>&#x20b9; ${payment.amountPayable}</td>
-										<td><fmt:formatDate type="date" dateStyle="long"
-												value="${payment.dueDate}" /></td>
-										<td>&#x20b9; ${payment.status}</td>
-										<td>&#x20b9; ${payment.modeOfPayment.value}</td>
-										<td><a target="_blank"
-											href="${payment.document.fileLocation}"
-											class="btn btn-primary btn-sm" role="button">Open Receipt</a></td>
-									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
 					</div>
 				</div>
 			</div>

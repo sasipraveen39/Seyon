@@ -327,21 +327,26 @@ public class Controller {
 			switch (login.getUserType()) {
 			case ADMIN:
 			case VENDOR:
-				List<String> lruAccounts = Cache.getLRUAccounts(user.getIduser()+"");
+				List<String> lruAccounts = Cache.getLRUAccounts(user
+						.getIduser() + "");
 				List<AccountSearchResult> accountSearchResults = new ArrayList<>();
-				if(lruAccounts != null){
-					for(String acctNum : lruAccounts){
-						List<User> accounts = finder.findUsers(acctNum, null, null, null);
-						if(accounts.size() > 0){
+				if (lruAccounts != null) {
+					for (String acctNum : lruAccounts) {
+						List<User> accounts = finder.findUsers(acctNum, null,
+								null, null);
+						if (accounts.size() > 0) {
 							User account = accounts.get(0);
 							AccountSearchResult accountSearchResult = new AccountSearchResult();
-							accountSearchResult.setAccountName(account.getName());
-							accountSearchResult.setAccountNumber(account.getAccountNumber());
-							accountSearchResult.setMobileNumber(account.getMobileNumber());
+							accountSearchResult.setAccountName(account
+									.getName());
+							accountSearchResult.setAccountNumber(account
+									.getAccountNumber());
+							accountSearchResult.setMobileNumber(account
+									.getMobileNumber());
 							accountSearchResult.setEmail(account.getEmail());
 							accountSearchResults.add(accountSearchResult);
 						}
-					}	
+					}
 				}
 				model.addAttribute("recentAccounts", accountSearchResults);
 				break;
@@ -349,7 +354,7 @@ public class Controller {
 				break;
 			}
 		}
-		
+
 		return navigatePage(user, "_account", request);
 	}
 
@@ -361,21 +366,28 @@ public class Controller {
 			switch (login.getUserType()) {
 			case ADMIN:
 			case VENDOR:
-				List<String> lruProjects = Cache.getLRUProjects(user.getIduser()+"");
+				List<String> lruProjects = Cache.getLRUProjects(user
+						.getIduser() + "");
 				List<ProjectSearchResult> projectSearchResults = new ArrayList<>();
-				if(lruProjects != null){
-					for(String acctNum : lruProjects){
-						List<Project> projects = finder.findProjects(acctNum, null, null, null);
-						if(projects.size() > 0){
+				if (lruProjects != null) {
+					for (String acctNum : lruProjects) {
+						List<Project> projects = finder.findProjects(acctNum,
+								null, null, null);
+						if (projects.size() > 0) {
 							Project p = projects.get(0);
 							ProjectSearchResult projectSearchResult = new ProjectSearchResult();
 							projectSearchResult.setTitle(p.getTitle());
-							projectSearchResult.setProjectNumber(p.getProjectNumber());
-							projectSearchResult.setType(p.getProjectType().getValue());
-							projectSearchResult.setAddress(p.getAddress().getCity() +" - " + p.getAddress().getPincode());
+							projectSearchResult.setProjectNumber(p
+									.getProjectNumber());
+							projectSearchResult.setType(p.getProjectType()
+									.getValue());
+							projectSearchResult.setAddress(p.getAddress()
+									.getCity()
+									+ " - "
+									+ p.getAddress().getPincode());
 							projectSearchResults.add(projectSearchResult);
 						}
-					}	
+					}
 				}
 				model.addAttribute("recentProjects", projectSearchResults);
 				break;
@@ -383,19 +395,20 @@ public class Controller {
 				break;
 			}
 		}
-		
+
 		return navigatePage(user, "_project", request);
 	}
-	
+
 	@RequestMapping("retrieveAccount")
-	public String retrieveAccount(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String retrieveAccount(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		if (user != null) {
 			Login login = user.getLogin();
 			switch (login.getUserType()) {
 			case ADMIN:
 			case VENDOR:
-				Cache.addToLRUAccounts(user.getIduser()+"", num);
+				Cache.addToLRUAccounts(user.getIduser() + "", num);
 				User account = finder.findUsers(num, null, null, null).get(0);
 				model.addAttribute("account", account);
 				model.addAttribute("canEditAccount", true);
@@ -410,7 +423,8 @@ public class Controller {
 	}
 
 	@RequestMapping("editAccount")
-	public String editAccount(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String editAccount(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -423,19 +437,20 @@ public class Controller {
 				model.addAttribute("accountLogin", account.getLogin());
 				model.addAttribute("canEdit", true);
 				model.addAttribute("isNewAccount", false);
-				model.addAttribute("accountNumber",account.getAccountNumber());
+				model.addAttribute("accountNumber", account.getAccountNumber());
 				break;
 			case CLIENT:
 				model.addAttribute("accountLogin", login);
 				model.addAttribute("canEdit", true);
 				model.addAttribute("isNewAccount", false);
-				model.addAttribute("accountNumber",login.getUser().getAccountNumber());
+				model.addAttribute("accountNumber", login.getUser()
+						.getAccountNumber());
 				break;
 			}
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("newAccount")
 	public String CreateNewAccount(Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -453,9 +468,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("newDrawing")
-	public String CreateNewDrawing(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String CreateNewDrawing(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -472,9 +488,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("editDrawing")
-	public String editDrawing(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String editDrawing(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -486,7 +503,8 @@ public class Controller {
 				Drawing drawing = finder.findDrawings(num).get(0);
 				model.addAttribute("canEdit", true);
 				model.addAttribute("isNew", false);
-				model.addAttribute("projectNumber", drawing.getProject().getProjectNumber());
+				model.addAttribute("projectNumber", drawing.getProject()
+						.getProjectNumber());
 				model.addAttribute("drawing", drawing);
 				model.addAttribute("drawingTypes", DrawingType.values());
 				model.addAttribute("statuses", DrawingStatus.values());
@@ -497,9 +515,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("newLegalDocument")
-	public String createNewLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String createNewLegalDocument(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -512,10 +531,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
-	
+
 	@RequestMapping("editLegalDocument")
-	public String editLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String editLegalDocument(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -527,7 +546,8 @@ public class Controller {
 				Document doc = finder.findDocuments(num, null).get(0);
 				model.addAttribute("canEdit", true);
 				model.addAttribute("isNew", false);
-				model.addAttribute("projectNumber", doc.getProject().getProjectNumber());
+				model.addAttribute("projectNumber", doc.getProject()
+						.getProjectNumber());
 				model.addAttribute("legalDocument", doc);
 				break;
 			case CLIENT:
@@ -536,9 +556,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("newBill")
-	public String CreateNewBill(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String CreateNewBill(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -551,15 +572,17 @@ public class Controller {
 			model.addAttribute("isNew", true);
 			model.addAttribute("projectNumber", num);
 			model.addAttribute("bill", bill);
-			model.addAttribute("billTypes",BillType.values());
-			model.addAttribute("statuses",BillStatus.values());
-			model.addAttribute("paymentInstallementTypes", PaymentInstallementType.values());
+			model.addAttribute("billTypes", BillType.values());
+			model.addAttribute("statuses", BillStatus.values());
+			model.addAttribute("paymentInstallementTypes",
+					PaymentInstallementType.values());
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("newPayment")
-	public String CreateNewPayment(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String CreateNewPayment(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -567,20 +590,21 @@ public class Controller {
 			Bill bill = finder.findBills(num, null).get(0);
 			Payment payment = new Payment();
 			payment.setStatus(PaymentStatus.NOT_PAID);
-			payment.setDocument(new Document());
 			model.addAttribute("canEdit", true);
 			model.addAttribute("isNew", true);
 			model.addAttribute("billNumber", num);
-			model.addAttribute("projectNumber", bill.getProject().getProjectNumber());
+			model.addAttribute("projectNumber", bill.getProject()
+					.getProjectNumber());
 			model.addAttribute("payment", payment);
-			model.addAttribute("paymentStatuses",PaymentStatus.values());
-			model.addAttribute("modeOfPayments",ModeOfPayment.values());
+			model.addAttribute("paymentStatuses", PaymentStatus.values());
+			model.addAttribute("modeOfPayments", ModeOfPayment.values());
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("editBill")
-	public String editBill(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String editBill(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -592,10 +616,11 @@ public class Controller {
 				Bill bill = finder.findBills(num, null).get(0);
 				model.addAttribute("canEdit", true);
 				model.addAttribute("isNew", false);
-				model.addAttribute("projectNumber", bill.getProject().getProjectNumber());
+				model.addAttribute("projectNumber", bill.getProject()
+						.getProjectNumber());
 				model.addAttribute("bill", bill);
-				model.addAttribute("billTypes",BillType.values());
-				model.addAttribute("statuses",BillStatus.values());
+				model.addAttribute("billTypes", BillType.values());
+				model.addAttribute("statuses", BillStatus.values());
 				break;
 			case CLIENT:
 				break;
@@ -603,10 +628,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
-	
+
 	@RequestMapping("newProject")
-	public String CreateNewProject(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String CreateNewProject(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -619,13 +644,14 @@ public class Controller {
 			model.addAttribute("isNew", true);
 			model.addAttribute("accountNumber", num);
 			model.addAttribute("project", project);
-			model.addAttribute("projectTypes",ProjectType.values());
+			model.addAttribute("projectTypes", ProjectType.values());
 		}
 		return nextPage;
 	}
-	
+
 	@RequestMapping("editProject")
-	public String editProject(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String editProject(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
@@ -634,12 +660,14 @@ public class Controller {
 			switch (login.getUserType()) {
 			case ADMIN:
 			case VENDOR:
-				Project proj = finder.findProjects(num, null, null, null).get(0);
+				Project proj = finder.findProjects(num, null, null, null)
+						.get(0);
 				model.addAttribute("canEdit", true);
 				model.addAttribute("isNew", false);
-				model.addAttribute("accountNumber", proj.getUser().getAccountNumber());
+				model.addAttribute("accountNumber", proj.getUser()
+						.getAccountNumber());
 				model.addAttribute("project", proj);
-				model.addAttribute("projectTypes",ProjectType.values());
+				model.addAttribute("projectTypes", ProjectType.values());
 				break;
 			case CLIENT:
 				break;
@@ -647,45 +675,52 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
-	@RequestMapping(value="submitaccount", method = RequestMethod.POST)
-	public String submitAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
+
+	@RequestMapping(value = "submitaccount", method = RequestMethod.POST)
+	public String submitAccount(@ModelAttribute("accountLogin") Login login,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
-			if(service.createNewUser(login)){
-				nextPage = "redirect:retrieveAccount?num="+login.getUser().getAccountNumber();
+			if (service.createNewUser(login)) {
+				nextPage = "redirect:retrieveAccount?num="
+						+ login.getUser().getAccountNumber();
 			}
 		}
 		return nextPage;
 	}
-	
-	@RequestMapping(value="submitproject", method = RequestMethod.POST)
-	public String submitProject(@ModelAttribute("project") Project project, HttpServletRequest request) {
+
+	@RequestMapping(value = "submitproject", method = RequestMethod.POST)
+	public String submitProject(@ModelAttribute("project") Project project,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
-			if(service.createNewProject(project)){
-				nextPage = "redirect:retrieveProject?num="+project.getProjectNumber();
+			if (service.createNewProject(project)) {
+				nextPage = "redirect:retrieveProject?num="
+						+ project.getProjectNumber();
 			}
 		}
 		return nextPage;
 	}
-	
-	@RequestMapping(value="updateproject", method = RequestMethod.POST)
-	public String updateProject(@ModelAttribute("project") Project project, HttpServletRequest request) {
+
+	@RequestMapping(value = "updateproject", method = RequestMethod.POST)
+	public String updateProject(@ModelAttribute("project") Project project,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
-			if(service.updateProject(project)){
-				nextPage = "redirect:retrieveProject?num="+project.getProjectNumber();
+			if (service.updateProject(project)) {
+				nextPage = "redirect:retrieveProject?num="
+						+ project.getProjectNumber();
 			}
 		}
 		return nextPage;
 	}
-	
-	@RequestMapping(value="submitlegaldocument", method = RequestMethod.POST)
-	public String submitLegalDocument(@ModelAttribute("legalDocument") Document document,
+
+	@RequestMapping(value = "submitlegaldocument", method = RequestMethod.POST)
+	public String submitLegalDocument(
+			@ModelAttribute("legalDocument") Document document,
 			@RequestParam(value = "projNumber") String num,
 			@RequestParam(value = "documentFile", required = false) MultipartFile documentFile,
 			HttpServletRequest request) {
@@ -697,8 +732,8 @@ public class Controller {
 						.get(0);
 				String docFileName = EnvironmentUtil.getDocumentPath(project
 						.getUser().getAccountNumber(), project
-						.getProjectNumber(), documentFile.getOriginalFilename(),
-						true);
+						.getProjectNumber(),
+						documentFile.getOriginalFilename(), true);
 				File serverDocFile = new File(docFileName);
 				if (!serverDocFile.getParentFile().exists()) {
 					serverDocFile.getParentFile().mkdirs();
@@ -707,10 +742,13 @@ public class Controller {
 						serverDocFile);
 				document.setProject(project);
 				document.setDocumentType(DocumentType.CONTRACT);
-				document.setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
-						project.getProjectNumber(), serverDocFile.getName()));
-				if(service.createDocument(document)){
-					nextPage = "redirect:retrieveProject?num=" + num;	
+				document.setFileLocation(EnvironmentUtil
+						.getExposedDocumentPath(project.getUser()
+								.getAccountNumber(),
+								project.getProjectNumber(), serverDocFile
+										.getName()));
+				if (service.createDocument(document)) {
+					nextPage = "redirect:retrieveProject?num=" + num;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -718,10 +756,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
-	
-	@RequestMapping(value="updatelegaldocument", method = RequestMethod.POST)
-	public String updateLegalDocument(@ModelAttribute("legalDocument") Document document,
+
+	@RequestMapping(value = "updatelegaldocument", method = RequestMethod.POST)
+	public String updateLegalDocument(
+			@ModelAttribute("legalDocument") Document document,
 			@RequestParam(value = "projNumber") String num,
 			@RequestParam(value = "documentFile", required = false) MultipartFile documentFile,
 			HttpServletRequest request) {
@@ -729,8 +767,9 @@ public class Controller {
 		String nextPage = "redirect:/";
 		if (user != null) {
 			try {
-				if(service.updateDocument(num, document, documentFile)){
-					nextPage = "redirect:retrieveLegalDocument?num=" + document.getDocumentNumber();	
+				if (service.updateDocument(num, document, documentFile)) {
+					nextPage = "redirect:retrieveLegalDocument?num="
+							+ document.getDocumentNumber();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -738,9 +777,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
-	@RequestMapping(value="updatedrawing", method = RequestMethod.POST)
-	public String updateDrawing(@ModelAttribute("drawing") Drawing drawing,
+
+	@RequestMapping(value = "updatedrawing", method = RequestMethod.POST)
+	public String updateDrawing(
+			@ModelAttribute("drawing") Drawing drawing,
 			@RequestParam(value = "projNumber") String num,
 			@RequestParam(value = "drawingFile", required = false) MultipartFile drawingFile,
 			HttpServletRequest request) {
@@ -748,8 +788,9 @@ public class Controller {
 		String nextPage = "redirect:/";
 		if (user != null) {
 			try {
-				if(service.updateDrawing(num, drawing, drawingFile)){
-					nextPage = "redirect:retrieveDrawing?num=" + drawing.getDrawingNumber();	
+				if (service.updateDrawing(num, drawing, drawingFile)) {
+					nextPage = "redirect:retrieveDrawing?num="
+							+ drawing.getDrawingNumber();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -757,9 +798,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
-	@RequestMapping(value="updatebill", method = RequestMethod.POST)
-	public String updatebill(@ModelAttribute("bill") Bill bill,
+
+	@RequestMapping(value = "updatebill", method = RequestMethod.POST)
+	public String updatebill(
+			@ModelAttribute("bill") Bill bill,
 			@RequestParam(value = "projNumber") String num,
 			@RequestParam(value = "billFile", required = false) MultipartFile billFile,
 			HttpServletRequest request) {
@@ -767,8 +809,9 @@ public class Controller {
 		String nextPage = "redirect:/";
 		if (user != null) {
 			try {
-				if(service.updateBill(num, bill, billFile)){
-					nextPage = "redirect:retrieveBill?num=" + bill.getBillNumber();	
+				if (service.updateBill(num, bill, billFile)) {
+					nextPage = "redirect:retrieveBill?num="
+							+ bill.getBillNumber();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -776,8 +819,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	@RequestMapping(value="submitdrawing", method = RequestMethod.POST)
-	public String submitDrawing(@ModelAttribute("drawing") Drawing drawing,
+
+	@RequestMapping(value = "submitdrawing", method = RequestMethod.POST)
+	public String submitDrawing(
+			@ModelAttribute("drawing") Drawing drawing,
 			@RequestParam(value = "projNumber") String num,
 			@RequestParam(value = "drawingFile", required = false) MultipartFile drawingFile,
 			HttpServletRequest request) {
@@ -800,10 +845,12 @@ public class Controller {
 				drawing.setProject(project);
 				drawing.getDocument().setProject(project);
 				drawing.getDocument().setDocumentType(DocumentType.DRAWING);
-				drawing.getDocument().setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
-						project.getProjectNumber(), serverDocFile.getName()));
-				if(service.createDrawing(drawing)){
-					nextPage = "redirect:retrieveProject?num=" + num;	
+				drawing.getDocument().setFileLocation(
+						EnvironmentUtil.getExposedDocumentPath(project
+								.getUser().getAccountNumber(), project
+								.getProjectNumber(), serverDocFile.getName()));
+				if (service.createDrawing(drawing)) {
+					nextPage = "redirect:retrieveProject?num=" + num;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -811,9 +858,10 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
-	@RequestMapping(value="submitbill", method = RequestMethod.POST)
-	public String submitBill(@ModelAttribute("bill") Bill bill,
+
+	@RequestMapping(value = "submitbill", method = RequestMethod.POST)
+	public String submitBill(
+			@ModelAttribute("bill") Bill bill,
 			@RequestParam(value = "projNumber") String num,
 			@RequestParam(value = "billFile", required = false) MultipartFile billFile,
 			HttpServletRequest request) {
@@ -836,10 +884,12 @@ public class Controller {
 				bill.setProject(project);
 				bill.getDocument().setProject(project);
 				bill.getDocument().setDocumentType(DocumentType.BILL);
-				bill.getDocument().setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
-						project.getProjectNumber(), serverDocFile.getName()));
-				if(service.createBill(bill)){
-					nextPage = "redirect:retrieveProject?num=" + num;	
+				bill.getDocument().setFileLocation(
+						EnvironmentUtil.getExposedDocumentPath(project
+								.getUser().getAccountNumber(), project
+								.getProjectNumber(), serverDocFile.getName()));
+				if (service.createBill(bill)) {
+					nextPage = "redirect:retrieveProject?num=" + num;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -847,61 +897,37 @@ public class Controller {
 		}
 		return nextPage;
 	}
-	
-	
-	@RequestMapping(value="submitpayment", method = RequestMethod.POST)
+
+	@RequestMapping(value = "submitpayment", method = RequestMethod.POST)
 	public String submitPayment(@ModelAttribute("payment") Payment payment,
 			@RequestParam(value = "bNumber") String num,
-			@RequestParam(value = "receiptFile", required = false) MultipartFile receiptFile,
 			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
-			try {
-				Bill bill = finder.findBills(num, null).get(0);
-				Project project = bill.getProject();
-				if(receiptFile != null){
-					String docFileName = EnvironmentUtil.getDocumentPath(project
-							.getUser().getAccountNumber(), project
-							.getProjectNumber(), receiptFile.getOriginalFilename(),
-							true);
-					File serverDocFile = new File(docFileName);
-					if (!serverDocFile.getParentFile().exists()) {
-						serverDocFile.getParentFile().mkdirs();
-					}
-					FileUtils.copyInputStreamToFile(receiptFile.getInputStream(),
-							serverDocFile);	
-					payment.getDocument().setProject(project);
-					payment.getDocument().setDocumentType(DocumentType.RECEIPT);
-					payment.getDocument().setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
-							project.getProjectNumber(), serverDocFile.getName()));
-				}else{
-					payment.setDocument(null);
-				}
-				payment.setBill(bill);
-				if(service.createPayment(payment)){
-					nextPage = "redirect:retrieveBill?num=" + num;	
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			Bill bill = finder.findBills(num, null).get(0);
+			payment.setBill(bill);
+			if (service.createPayment(payment)) {
+				nextPage = "redirect:retrieveBill?num=" + num;
 			}
 		}
 		return nextPage;
 	}
-	
-	@RequestMapping(value="updateaccount", method = RequestMethod.POST)
-	public String updateAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
+
+	@RequestMapping(value = "updateaccount", method = RequestMethod.POST)
+	public String updateAccount(@ModelAttribute("accountLogin") Login login,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String nextPage = "redirect:/";
 		if (user != null) {
-			if(service.updateUser(login.getUser())){
-				nextPage = "redirect:retrieveAccount?num="+login.getUser().getAccountNumber();
+			if (service.updateUser(login.getUser())) {
+				nextPage = "redirect:retrieveAccount?num="
+						+ login.getUser().getAccountNumber();
 			}
 		}
 		return nextPage;
 	}
-	
-	
+
 	@ResponseBody
 	@JsonView(Views.Public.class)
 	@RequestMapping(value = "seacrhProject", method = RequestMethod.POST)
@@ -911,8 +937,7 @@ public class Controller {
 		AjaxResponse result = new AjaxResponse();
 		if (loggedIn != null) {
 			List<Project> projects = finder.findProjects(
-					projectSearch.getProjectNumber(),
-					projectSearch.getTitle(),
+					projectSearch.getProjectNumber(), projectSearch.getTitle(),
 					projectSearch.getType(), projectSearch.getPincode());
 			if (projects.size() > 0) {
 				List<ProjectSearchResult> searchResult = new ArrayList<>();
@@ -921,7 +946,8 @@ public class Controller {
 					projectSearchResult.setTitle(p.getTitle());
 					projectSearchResult.setProjectNumber(p.getProjectNumber());
 					projectSearchResult.setType(p.getProjectType().getValue());
-					projectSearchResult.setAddress(p.getAddress().getCity() +" - " + p.getAddress().getPincode());
+					projectSearchResult.setAddress(p.getAddress().getCity()
+							+ " - " + p.getAddress().getPincode());
 					searchResult.add(projectSearchResult);
 				}
 				result.setResult(searchResult);
@@ -935,15 +961,16 @@ public class Controller {
 		return result;
 	}
 
-	
 	@RequestMapping("retrieveProject")
-	public String retrieveProject(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String retrieveProject(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		String prevURL = request.getHeader("Referer");
-		if(StringUtils.isNotBlank(prevURL)){
-			prevURL = prevURL.substring(prevURL.lastIndexOf("/")+1, prevURL.length());
-			if(!"project".equalsIgnoreCase(prevURL)){
-				model.addAttribute("prevURL", prevURL);	
+		if (StringUtils.isNotBlank(prevURL)) {
+			prevURL = prevURL.substring(prevURL.lastIndexOf("/") + 1,
+					prevURL.length());
+			if (!"project".equalsIgnoreCase(prevURL)) {
+				model.addAttribute("prevURL", prevURL);
 			}
 		}
 		if (user != null) {
@@ -952,19 +979,19 @@ public class Controller {
 			switch (login.getUserType()) {
 			case ADMIN:
 			case VENDOR:
-				Cache.addToLRUProjects(user.getIduser()+"", num);
+				Cache.addToLRUProjects(user.getIduser() + "", num);
 				project = finder.findProjects(num, null, null, null).get(0);
 				model.addAttribute("project", project);
 				model.addAttribute("canEditProject", true);
 				break;
 			case CLIENT:
-				for(Project p : user.getProjects()){
-					if(p.getProjectNumber().equalsIgnoreCase(num)){
+				for (Project p : user.getProjects()) {
+					if (p.getProjectNumber().equalsIgnoreCase(num)) {
 						project = p;
 						break;
 					}
 				}
-				if(project == null){
+				if (project == null) {
 					project = user.getProjects().get(0);
 				}
 				model.addAttribute("project", project);
@@ -974,9 +1001,10 @@ public class Controller {
 		}
 		return navigatePage(user, "_projectdetail", request);
 	}
-	
+
 	@RequestMapping("retrieveLegalDocument")
-	public String retrieveLegalDocument(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String retrieveLegalDocument(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		if (user != null) {
 			Login login = user.getLogin();
@@ -987,15 +1015,15 @@ public class Controller {
 				document = finder.findDocuments(num, null).get(0);
 				break;
 			case CLIENT:
-				for(Project p : user.getProjects()){
-					for(Document d : p.getDocuments()){
-						if(num.equalsIgnoreCase(d.getDocumentNumber())){
+				for (Project p : user.getProjects()) {
+					for (Document d : p.getDocuments()) {
+						if (num.equalsIgnoreCase(d.getDocumentNumber())) {
 							document = d;
-							break;	
-						}		
+							break;
+						}
 					}
 				}
-				if(document == null){
+				if (document == null) {
 					document = user.getProjects().get(0).getDocuments().get(0);
 				}
 				break;
@@ -1005,9 +1033,10 @@ public class Controller {
 		}
 		return navigatePage(user, "_legaldocumentdetail", request);
 	}
-	
+
 	@RequestMapping("retrieveBill")
-	public String retrieveBill(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String retrieveBill(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		if (user != null) {
 			Login login = user.getLogin();
@@ -1018,15 +1047,15 @@ public class Controller {
 				bill = finder.findBills(num, null).get(0);
 				break;
 			case CLIENT:
-				for(Project p : user.getProjects()){
-					for(Bill b : p.getBills()){
-						if(num.equalsIgnoreCase(b.getBillNumber())){
+				for (Project p : user.getProjects()) {
+					for (Bill b : p.getBills()) {
+						if (num.equalsIgnoreCase(b.getBillNumber())) {
 							bill = b;
-							break;	
-						}		
+							break;
+						}
 					}
 				}
-				if(bill == null){
+				if (bill == null) {
 					bill = user.getProjects().get(0).getBills().get(0);
 				}
 				break;
@@ -1036,10 +1065,46 @@ public class Controller {
 		}
 		return navigatePage(user, "_billdetail", request);
 	}
-	
-	
+
+	@RequestMapping("retrievePayment")
+	public String retrievePayment(@RequestParam String num, Model model,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		if (user != null) {
+			Login login = user.getLogin();
+			Payment payment = null;
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				payment = finder.findPayments(num).get(0);
+				break;
+			case CLIENT:
+				for (Project p : user.getProjects()) {
+					for (Bill b : p.getBills()) {
+						for (Payment pay : b.getPayments()) {
+							if (num.equalsIgnoreCase(pay.getPaymentNumber())) {
+								payment = pay;
+								break;
+							}
+						}
+
+					}
+				}
+				if (payment == null) {
+					payment = user.getProjects().get(0).getBills().get(0)
+							.getPayments().get(0);
+				}
+				break;
+			}
+			model.addAttribute("paymentDetail", payment);
+			model.addAttribute("canEdit", true);
+		}
+		return navigatePage(user, "_paymentdetail", request);
+	}
+
 	@RequestMapping("retrieveDrawing")
-	public String retrieveDrawing(@RequestParam String num, Model model, HttpServletRequest request) {
+	public String retrieveDrawing(@RequestParam String num, Model model,
+			HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
 		if (user != null) {
 			Login login = user.getLogin();
@@ -1050,15 +1115,15 @@ public class Controller {
 				drawing = finder.findDrawings(num).get(0);
 				break;
 			case CLIENT:
-				for(Project p : user.getProjects()){
-					for(Drawing d : p.getDrawings()){
-						if(num.equalsIgnoreCase(d.getDrawingNumber())){
+				for (Project p : user.getProjects()) {
+					for (Drawing d : p.getDrawings()) {
+						if (num.equalsIgnoreCase(d.getDrawingNumber())) {
 							drawing = d;
-							break;	
-						}		
+							break;
+						}
 					}
 				}
-				if(drawing == null){
+				if (drawing == null) {
 					drawing = user.getProjects().get(0).getDrawings().get(0);
 				}
 				break;
@@ -1068,29 +1133,35 @@ public class Controller {
 		}
 		return navigatePage(user, "_drawingdetail", request);
 	}
-	
+
 	@RequestMapping(value = "images/{accountNumber}/{projectNumber}/{imageName:.+}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Resource> getImageAsResource(@PathVariable String accountNumber, @PathVariable String projectNumber, @PathVariable String imageName) {
-	    HttpHeaders headers = new HttpHeaders();
-	    Resource resource = 
-	      new FileSystemResource(EnvironmentUtil.getImagePath(accountNumber, projectNumber, imageName, false));
-	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	public ResponseEntity<Resource> getImageAsResource(
+			@PathVariable String accountNumber,
+			@PathVariable String projectNumber, @PathVariable String imageName) {
+		HttpHeaders headers = new HttpHeaders();
+		Resource resource = new FileSystemResource(
+				EnvironmentUtil.getImagePath(accountNumber, projectNumber,
+						imageName, false));
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "documents/{accountNumber}/{projectNumber}/{documentName:.+}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<Resource> getDocumentAsResource(@PathVariable String accountNumber, @PathVariable String projectNumber, @PathVariable String documentName) {
-	    HttpHeaders headers = new HttpHeaders();
-	    Resource resource = 
-	      new FileSystemResource(EnvironmentUtil.getDocumentPath(accountNumber, projectNumber, documentName, false));
-	    return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+	public ResponseEntity<Resource> getDocumentAsResource(
+			@PathVariable String accountNumber,
+			@PathVariable String projectNumber,
+			@PathVariable String documentName) {
+		HttpHeaders headers = new HttpHeaders();
+		Resource resource = new FileSystemResource(
+				EnvironmentUtil.getDocumentPath(accountNumber, projectNumber,
+						documentName, false));
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
-	
-	
+
 	@ResponseBody
 	@RequestMapping(value = "uploadImage", method = RequestMethod.POST)
-	public String uploadImage(@RequestParam("imageInfo") String imageInfo, 
+	public String uploadImage(@RequestParam("imageInfo") String imageInfo,
 			@RequestParam("imageFile") MultipartFile imageFile,
 			HttpServletRequest request) {
 		User loggedIn = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -1098,19 +1169,24 @@ public class Controller {
 		if (loggedIn != null) {
 			ObjectMapper mapper = new ObjectMapper();
 			try {
-				co.seyon.view.model.Document info =  mapper.readValue(imageInfo, co.seyon.view.model.Document.class);
-				String imageFileName = EnvironmentUtil.getImagePath(info.getAccountNumber(), 
-						info.getProjectNumber(), imageFile.getOriginalFilename(), true);
+				co.seyon.view.model.Document info = mapper.readValue(imageInfo,
+						co.seyon.view.model.Document.class);
+				String imageFileName = EnvironmentUtil.getImagePath(
+						info.getAccountNumber(), info.getProjectNumber(),
+						imageFile.getOriginalFilename(), true);
 				File serverImageFile = new File(imageFileName);
-				if(!serverImageFile.getParentFile().exists()){
+				if (!serverImageFile.getParentFile().exists()) {
 					serverImageFile.getParentFile().mkdirs();
 				}
-				FileUtils.copyInputStreamToFile(imageFile.getInputStream(), serverImageFile);
+				FileUtils.copyInputStreamToFile(imageFile.getInputStream(),
+						serverImageFile);
 				Document document = new Document();
 				document.setName(info.getName());
 				document.setDescription(info.getDescription());
 				document.setDocumentType(DocumentType.IMAGE);
-				document.setFileLocation(EnvironmentUtil.getExposedImagePath(info.getAccountNumber(), info.getProjectNumber(), serverImageFile.getName()));
+				document.setFileLocation(EnvironmentUtil.getExposedImagePath(
+						info.getAccountNumber(), info.getProjectNumber(),
+						serverImageFile.getName()));
 				service.createNewDocument(info.getProjectNumber(), document);
 				fileSaved = "Image uploaded";
 			} catch (IOException e) {
@@ -1119,7 +1195,7 @@ public class Controller {
 		}
 		return fileSaved;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "deleteItems", method = RequestMethod.POST)
 	public String deleteImage(@RequestBody Item item, HttpServletRequest request) {
@@ -1127,36 +1203,36 @@ public class Controller {
 		String fileDeleted = "Unable to delete";
 		if (loggedIn != null) {
 			String type = item.getType();
-			if(type.equalsIgnoreCase("Image")){
-				if(service.deleteDocuments(item.getIds())){
-					fileDeleted = "Delete successful";
-				}	
-			} else if(type.equalsIgnoreCase("Document")){
-				if(service.deleteDocuments(item.getIds())){
+			if (type.equalsIgnoreCase("Image")) {
+				if (service.deleteDocuments(item.getIds())) {
 					fileDeleted = "Delete successful";
 				}
-			} else if(type.equalsIgnoreCase("Bill")){
-				if(service.deleteBills(item.getIds())){
+			} else if (type.equalsIgnoreCase("Document")) {
+				if (service.deleteDocuments(item.getIds())) {
 					fileDeleted = "Delete successful";
 				}
-			} else if(type.equalsIgnoreCase("Drawing")){
-				if(service.deleteDrawings(item.getIds())){
+			} else if (type.equalsIgnoreCase("Bill")) {
+				if (service.deleteBills(item.getIds())) {
 					fileDeleted = "Delete successful";
 				}
-			} else if(type.equalsIgnoreCase("Project")){
-				if(service.deleteProjects(item.getIds())){
+			} else if (type.equalsIgnoreCase("Drawing")) {
+				if (service.deleteDrawings(item.getIds())) {
 					fileDeleted = "Delete successful";
 				}
-			} else if(type.equalsIgnoreCase("Payment")){
-				if(service.deletePayments(item.getIds())){
+			} else if (type.equalsIgnoreCase("Project")) {
+				if (service.deleteProjects(item.getIds())) {
+					fileDeleted = "Delete successful";
+				}
+			} else if (type.equalsIgnoreCase("Payment")) {
+				if (service.deletePayments(item.getIds())) {
 					fileDeleted = "Delete successful";
 				}
 			}
-			
+
 		}
 		return fileDeleted;
 	}
-	
+
 	private String navigatePage(User user, String pageSuffix,
 			HttpServletRequest request) {
 		String nextPage = "redirect:/";

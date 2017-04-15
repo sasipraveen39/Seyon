@@ -61,9 +61,13 @@ $(document).ready(function(){
 				itemsToDelete.push(parentTR);
 			});
 			break;
+		case 'Payment':
+			$('#paymentPanel').find('.delete-table>tbody>tr>td>input:checked').each(function (){
+				var parentTR = $(this).closest('tr').attr('id');
+				itemsToDelete.push(parentTR);
+			});
+			break;	
 		}
-		
-		
 
 		if(itemsToDelete.length == 0){
 			var content = '<div class="zero-selection"><br/><div class="alert alert-danger" role="alert">'
@@ -150,23 +154,25 @@ function validateFields(element, showBelow) {
 				var parent = $(this).closest(".form-group");
 				var labelText = $(parent).find(".col-form-label").html();
 				var errorText = null;
-				if ($(parent).hasClass("required") && (!value)) {
-					errorText = labelText + " is required";
-				} else {
-					if (value) {
-						var errorRegex = $(this).attr("error-regex");
-						if(errorRegex){
-							var regEx = new RegExp(errorRegex);
-							if(!regEx.test(value)){
-								var erTxt = $(this).attr("error-text");
-								if(erTxt){
-									errorText = erTxt;
-								}else{
-									errorText = labelText + " is invalid";
-								}	
+				if(!$(parent).hasClass("hidden")){
+					if ($(parent).hasClass("required") && (!value)) {
+						errorText = labelText + " is required";
+					} else {
+						if (value) {
+							var errorRegex = $(this).attr("error-regex");
+							if(errorRegex){
+								var regEx = new RegExp(errorRegex);
+								if(!regEx.test(value)){
+									var erTxt = $(this).attr("error-text");
+									if(erTxt){
+										errorText = erTxt;
+									}else{
+										errorText = labelText + " is invalid";
+									}	
+								}
 							}
 						}
-					}
+					}	
 				}
 				if (errorText) {
 					$(this).addClass("form-control-danger");

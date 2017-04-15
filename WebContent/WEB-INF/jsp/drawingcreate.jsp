@@ -56,6 +56,16 @@
 			complete : function() {
 			}
 		});
+		
+		$('#status').on('change', function(){
+			if($('#status').val() == 'FINAL'){
+				$('.conditional').removeClass('hidden');
+			}else{
+				$('.conditional').addClass('hidden');
+			}
+		});
+		
+		$('#status').trigger('change');
 	});
 </script>
 </head>
@@ -140,14 +150,6 @@
 										placeholder="" />
 								</div>
 							</div>
-							<div class="form-group row">
-								<label for="dateOfIssue" class="col-sm-3 col-form-label">Date
-									of Issue</label>
-								<div class="col-sm-6">
-									<form:input type="date" class="form-control" id="dateOfIssue"
-										path="dateOfIssue" placeholder="" />
-								</div>
-							</div>
 							<div class="form-group required row">
 								<label for="status" class="col-sm-3 col-form-label">Status</label>
 								<div class="col-sm-6">
@@ -155,6 +157,14 @@
 										<form:option value="" label="<none>" />
 										<form:options items="${statuses}" itemLabel="value" />
 									</form:select>
+								</div>
+							</div>
+							<div class="form-group required conditional row">
+								<label for="dateOfIssue" class="col-sm-3 col-form-label">Date
+									of Issue</label>
+								<div class="col-sm-6">
+									<form:input type="date" class="form-control" id="dateOfIssue"
+										path="dateOfIssue" placeholder="" />
 								</div>
 							</div>
 						</div>

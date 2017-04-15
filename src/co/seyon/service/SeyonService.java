@@ -339,11 +339,8 @@ public class SeyonService {
 	public boolean createPayment(Payment payment) {
 		boolean result = false;
 		if (payment != null) {
+			payment.setDocument(null);
 			payment.setPaymentNumber(SequenceGenerator.generateSequence(Payment.class));
-			if(payment.getDocument() != null){
-				payment.getDocument().setDocumentNumber(
-						SequenceGenerator.generateSequence(Document.class));	
-			}
 			Bundle bundle = new Bundle();
 			bundle.persist(payment);
 			bundle.closeConnection();
@@ -409,6 +406,11 @@ public class SeyonService {
 			bundle.closeConnection();
 		}
 		result = true;
+		return result;
+	}
+	
+	public boolean generateReceipt(Payment payment, String filePathName){
+		boolean result = false;
 		return result;
 	}
 }

@@ -205,6 +205,29 @@ public class Finder {
 		return bills;
 	}
 	
+	public List<Payment> findPayments(String paymentNumber){
+		createEntityManager();
+		String queryString = "Select p from Payment p";
+		List<String> constraints = new ArrayList<>();
+		
+		if(StringUtils.isNotBlank(paymentNumber)){
+			constraints.add( "p.paymentNumber='"+paymentNumber+"'");
+		}
+		
+		if(constraints.size() > 0){
+			queryString += " where "+ StringUtils.join(constraints, " and ");	
+		}
+		TypedQuery<Payment> query = entitymanager.createQuery(queryString, Payment.class);
+		List<Payment> payments = query.getResultList();
+		if(payments.size() > 0){
+			for(Payment d : payments){
+				this.refresh(d);
+			}
+		}
+		closeConnection();
+		return payments;
+	}
+	
 	public List<Drawing> findDrawings(String drawingNumber){
 		createEntityManager();
 		String queryString = "Select d from Drawing d";
