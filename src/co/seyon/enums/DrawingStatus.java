@@ -1,7 +1,7 @@
 package co.seyon.enums;
 
 public enum DrawingStatus implements Type {
-	DRAFT("Draft"),FINAL("Final") ;
+	DRAFT("Drafting"),DRAFT_COPY_FOR_APPROVAL("Draft Copy For Approval"),FINAL("Final") ;
 	
 	private String value;
 	

@@ -361,12 +361,6 @@
 												<dt class="col-sm-4">Total Area</dt>
 												<dd class="col-sm-8">${proj.totalAreaOfProject} sqft</dd>
 
-												<dt class="col-sm-4">Requested Date</dt>
-												<dd class="col-sm-8">
-													<fmt:formatDate type="date" dateStyle="long"
-														value="${proj.requestedDate}" />
-												</dd>
-
 												<dt class="col-sm-4">Start Date</dt>
 												<dd class="col-sm-8">
 													<fmt:formatDate type="date" dateStyle="long"
@@ -475,6 +469,7 @@
 											<tr>
 												<th>Drawing #</th>
 												<th>Type</th>
+												<th>Description</th>
 												<th>Status</th>
 												<th>Est. Date of Issue</th>
 												<th>Date of Issue</th>
@@ -486,6 +481,7 @@
 												<tr id="${drawing.iddrawing}">
 													<th scope="row"><a href="retrieveDrawing?num=${drawing.drawingNumber}">${drawing.drawingNumber}</a></th>
 													<td>${drawing.typeOfDrawing.value}</td>
+													<td>${drawing.document.description}</td>
 													<td>${drawing.status.value}</td>
 													<td><fmt:formatDate type="date" dateStyle="long"
 															value="${drawing.estimatedDateOfIssue}" /></td>
@@ -530,8 +526,8 @@
 												<th>Bill #</th>
 												<th>Bill Date</th>
 												<th>Type</th>
-												<th>Status</th>
 												<th>Total Amount</th>
+												<th>Payment Status</th>
 												<th>Document Link</th>
 											</tr>
 										</thead>
@@ -542,10 +538,10 @@
 													<td><fmt:formatDate type="date" dateStyle="long"
 															value="${bill.billDate}" /></td>
 													<td>${bill.billType.value}</td>
-													<td>${bill.billStatus.value}</td>
 													<td>&#x20b9; ${bill.totalBillAmount}</td>
+													<td>${bill.billPaymentStatus.value}</td>
 													<td><a target="_blank" href="${bill.document.fileLocation}" class="btn btn-primary btn-sm"
-														role="button">Open Drawing</a></td>
+														role="button">Open Bill</a></td>
 												</tr>
 											</c:forEach>
 										</tbody>

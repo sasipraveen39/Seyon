@@ -44,45 +44,97 @@
 					</c:if>
 				</h3>
 				<hr />
-				<dl class="row">
-					<dt class="col-sm-2">Project #</dt>
-					<dd class="col-sm-10">
-						<b><a href="retrieveProject?num=${bill.project.projectNumber}">${bill.project.projectNumber}</a></b>
-					</dd>
+				<div class="row">
+					<div class="col-sm-6">
+						<dl class="row">
+							<dt class="col-sm-4">Project #</dt>
+							<dd class="col-sm-8">
+								<b><a
+									href="retrieveProject?num=${bill.project.projectNumber}">${bill.project.projectNumber}</a></b>
+							</dd>
 
-					<dt class="col-sm-2">Type</dt>
-					<dd class="col-sm-10">${bill.billType.value}</dd>
+							<dt class="col-sm-4">Type</dt>
+							<dd class="col-sm-8">${bill.billType.value}</dd>
 
-					<dt class="col-sm-2">Status</dt>
-					<dd class="col-sm-10">${bill.billStatus.value}</dd>
+							<dt class="col-sm-4">Bill Date</dt>
+							<dd class="col-sm-8">
+								<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
+									value="${bill.billDate}" />
+							</dd>
 
-					<dt class="col-sm-2">Bill Date</dt>
-					<dd class="col-sm-10">
-						<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
-							value="${bill.billDate}" />
-					</dd>
+							<dt class="col-sm-4">Due Date</dt>
+							<dd class="col-sm-8">
+								<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
+									value="${bill.dueDate}" />
+							</dd>
 
-					<dt class="col-sm-2">Total Amount</dt>
-					<dd class="col-sm-10">&#x20b9; ${bill.totalBillAmount}</dd>
+							<dt class="col-sm-4">Total Amount</dt>
+							<dd class="col-sm-8">&#x20b9; ${bill.totalBillAmount}</dd>
 
-					<dt class="col-sm-2">Document Name</dt>
-					<dd class="col-sm-10">${bill.document.name}</dd>
+							<dt class="col-sm-4">Installment</dt>
+							<dd class="col-sm-8">${bill.paymentInstallement.value}</dd>
 
-					<dt class="col-sm-2">Description</dt>
-					<dd class="col-sm-10">${bill.document.description}</dd>
+							<dt class="col-sm-4">Document Name</dt>
+							<dd class="col-sm-8">${bill.document.name}</dd>
 
-					<dt class="col-sm-2">File Link</dt>
-					<dd class="col-sm-10">
-						<b><a target="_blank" href="${bill.document.fileLocation}">Open
-								Document</a></b>
-					</dd>
+							<dt class="col-sm-4">Description</dt>
+							<dd class="col-sm-8">${bill.document.description}</dd>
 
-					<dt class="col-sm-2">Created On</dt>
-					<dd class="col-sm-10">
-						<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
-							value="${bill.createTime}" />
-					</dd>
-				</dl>
+							<dt class="col-sm-4">File Link</dt>
+							<dd class="col-sm-8">
+								<b><a target="_blank" href="${bill.document.fileLocation}">Open
+										Document</a></b>
+							</dd>
+
+							<dt class="col-sm-4">Created On</dt>
+							<dd class="col-sm-8">
+								<fmt:formatDate type="both" dateStyle="long" timeStyle="short"
+									value="${bill.createTime}" />
+							</dd>
+						</dl>
+					</div>
+					<div class="col-sm-6">
+						<div class="card card-outline-warning mb-3">
+							<div class="card-header">
+								<div class="d-flex justify-content-start">
+									<div class="p-2">
+										<h5>Payment Summary</h5>
+									</div>
+									<div class="ml-auto p-2">
+										<h5>
+											<c:choose>
+												<c:when test="${bill.billPaymentStatus == 'PENDING'}">
+													<span class="badge badge-danger">${bill.billPaymentStatus.value}</span>
+												</c:when>
+												<c:when test="${bill.billPaymentStatus.value == 'Paid'}">
+													<span class="badge badge-success">${bill.billPaymentStatus.value}</span>
+												</c:when>
+												<c:when
+													test="${bill.billPaymentStatus.value == 'Paid In Excess'}">
+													<span class="badge badge-warning">${bill.billPaymentStatus.value}</span>
+												</c:when>
+											</c:choose>
+										</h5>
+									</div>
+								</div>
+							</div>
+							<div class="card-block">
+								<dl class="row">
+									<dt class="col-sm-3">Total Amount</dt>
+									<dd class="col-sm-9">&#x20b9; ${bill.totalBillAmount}</dd>
+
+									<dt class="col-sm-3">Amount Paid</dt>
+									<dd class="col-sm-9">&#x20b9; ${bill.paidAmount}</dd>
+								</dl>
+								<hr />
+								<dl class="row">
+									<dt class="col-sm-3">Amount Pending</dt>
+									<dd class="col-sm-9">&#x20b9; ${bill.amountPending}</dd>
+								</dl>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -106,8 +158,8 @@
 							<thead>
 								<tr>
 									<th>Payment #</th>
-									<th>Due Date</th>
 									<th>Amount Payable</th>
+									<th>Due Date</th>
 									<th>Status</th>
 									<th>Mode of Payment</th>
 									<th>Link</th>
@@ -117,9 +169,9 @@
 								<c:forEach items="${bill.payments}" var="payment">
 									<tr>
 										<th scope="row"><a href="retrievePayment?num=${'001'}">PY00000001</a></th>
+										<td>&#x20b9; ${payment.amountPayable}</td>
 										<td><fmt:formatDate type="date" dateStyle="long"
 												value="${payment.dueDate}" /></td>
-										<td>&#x20b9; ${payment.amountPayable}</td>
 										<td>&#x20b9; ${payment.status}</td>
 										<td>&#x20b9; ${payment.modeOfPayment.value}</td>
 										<td><a target="_blank"

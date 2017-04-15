@@ -39,6 +39,7 @@ import co.seyon.enums.BillType;
 import co.seyon.enums.DocumentType;
 import co.seyon.enums.DrawingStatus;
 import co.seyon.enums.DrawingType;
+import co.seyon.enums.PaymentInstallementType;
 import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
@@ -549,6 +550,7 @@ public class Controller {
 			model.addAttribute("bill", bill);
 			model.addAttribute("billTypes",BillType.values());
 			model.addAttribute("statuses",BillStatus.values());
+			model.addAttribute("paymentInstallementTypes", PaymentInstallementType.values());
 		}
 		return nextPage;
 	}

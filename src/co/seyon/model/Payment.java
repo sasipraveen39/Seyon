@@ -8,6 +8,7 @@ import org.eclipse.persistence.annotations.Customizer;
 
 import co.seyon.customizer.PaymentCustomizer;
 import co.seyon.enums.ModeOfPayment;
+import co.seyon.enums.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -147,12 +148,15 @@ public class Payment implements Serializable {
 		this.referenceNumber = referenceNumber;
 	}
 
-	public String getStatus() {
-		return this.status;
+	public PaymentStatus getStatus() {
+		if(this.status != null){
+			return PaymentStatus.valueOf(this.status);
+		}
+		return null;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	public void setStatus(PaymentStatus status) {
+		this.status = status.toString();
 	}
 
 	public Bill getBill() {

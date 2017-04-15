@@ -12,16 +12,16 @@
 <c:set var="IsNew" value="${isNew}"></c:set>
 <c:choose>
 	<c:when test="${IsNew}">
-		<c:set var="title" value="Create New Bill"></c:set>
+		<c:set var="title" value="Create New Payment"></c:set>
 		<c:set var="mainButton" value="Create"></c:set>
-		<c:set var="formAction" value="submitbill"></c:set>
-		<c:set var="cancelPage" value="retrieveProject?num=${projectNumber}"></c:set>
+		<c:set var="formAction" value="submitpayment"></c:set>
+		<c:set var="cancelPage" value="retrieveBill?num=${projectNumber}"></c:set>
 	</c:when>
 	<c:otherwise>
-		<c:set var="title" value="Edit Bill"></c:set>
+		<c:set var="title" value="Edit Payment"></c:set>
 		<c:set var="mainButton" value="Save"></c:set>
-		<c:set var="formAction" value="updatebill"></c:set>
-		<c:set var="cancelPage" value="retrieveBill?num=${bill.billNumber}"></c:set>
+		<c:set var="formAction" value="updatepayment"></c:set>
+		<c:set var="cancelPage" value="retrievePayment?num=${bill.billNumber}"></c:set>
 	</c:otherwise>
 </c:choose>
 <title>${title} - Seyon</title>
@@ -138,11 +138,12 @@
 								</div>
 							</div>
 							<div class="form-group required row">
-								<label for="dueDate" class="col-sm-3 col-form-label">Due
-									Date</label>
+								<label for="status" class="col-sm-3 col-form-label">Status</label>
 								<div class="col-sm-6">
-									<form:input type="date" class="form-control" id="dueDate"
-										path="dueDate" placeholder="" />
+									<form:select class="form-control" path="billStatus" id="status">
+										<form:option value="" label="<none>" />
+										<form:options items="${statuses}" itemLabel="value" />
+									</form:select>
 								</div>
 							</div>
 							<div class="form-group required row">
@@ -155,15 +156,6 @@
 										aria-describedby="ruppee-addon1" />
 								</div>
 							</div>
-							<div class="form-group required row">
-								<label for="paymentInstallement" class="col-sm-3 col-form-label">Installment</label>
-								<div class="col-sm-6">
-									<form:select class="form-control" path="paymentInstallement" id="paymentInstallement">
-										<form:option value="" label="<none>" />
-										<form:options items="${paymentInstallementTypes}" itemLabel="value" />
-									</form:select>
-								</div>
-						</div>
 						</div>
 						<div class="col-sm-6">
 							<legend>Document</legend>

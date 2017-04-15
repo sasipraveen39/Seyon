@@ -7,8 +7,11 @@ import org.eclipse.persistence.annotations.AdditionalCriteria;
 import org.eclipse.persistence.annotations.Customizer;
 
 import co.seyon.customizer.BillCustomizer;
+import co.seyon.enums.BillPaymentStatus;
 import co.seyon.enums.BillStatus;
 import co.seyon.enums.BillType;
+import co.seyon.enums.PaymentInstallementType;
+import co.seyon.enums.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -39,6 +42,10 @@ public class Bill implements Serializable {
 	@Column(name="bill_date", nullable=false)
 	private Date billDate;
 
+    @Temporal( TemporalType.TIMESTAMP)
+	@Column(name="due_date", nullable=false)
+	private Date dueDate;
+    
 	@Column(name="bill_number", nullable=false, length=100)
 	private String billNumber;
 
@@ -48,6 +55,9 @@ public class Bill implements Serializable {
 	@Column(name="bill_type", nullable=false, length=45)
 	private String billType;
 
+	@Column(name="payment_installement", length=45)
+	private String paymentInstallement;
+	
 	@Column(name="create_time", nullable=false)
 	private Timestamp createTime;
 
@@ -106,7 +116,10 @@ public class Bill implements Serializable {
 	}
 
 	public void setBillStatus(BillStatus billStatus) {
-		this.billStatus = billStatus.toString();
+		if(billStatus != null){
+			this.billStatus = billStatus.toString();	
+		}
+		this.billStatus = null;
 	}
 
 	public BillType getBillType() {
@@ -166,5 +179,50 @@ public class Bill implements Serializable {
 
 	public void setRetired(boolean retired) {
 		this.retired = retired;
+	}
+	
+	public PaymentInstallementType getPaymentInstallement() {
+		if(this.billType != null){
+			return PaymentInstallementType.valueOf(this.paymentInstallement);	
+		}
+		return null;
+	}
+
+	public void setPaymentInstallement(PaymentInstallementType paymentInstallementType) {
+		this.paymentInstallement = paymentInstallementType.toString();
+	}
+	
+	public Date getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
+	}
+
+	public BigDecimal getPaidAmount(){
+		double paidAmount = 0.00;
+		if(this.getPayments() != null){
+			for(Payment p : this.getPayments()){
+				if(p.getStatus() == PaymentStatus.PAID){
+					paidAmount += p.getAmountPayable().doubleValue();	
+				}
+			}
+		}
+		return BigDecimal.valueOf(paidAmount);
+	}
+	
+	public BigDecimal getAmountPending(){
+		return BigDecimal.valueOf(this.getTotalBillAmount().doubleValue() - this.getPaidAmount().doubleValue());
+	}
+	
+	public BillPaymentStatus getBillPaymentStatus(){
+		if(this.getAmountPending().doubleValue() > 0){
+			return BillPaymentStatus.PENDING;
+		}else if(this.getAmountPending().doubleValue() < 0){
+			return BillPaymentStatus.PAID_IN_EXCESS;
+		} else{
+			return BillPaymentStatus.PAID;
+		}
 	}
 }

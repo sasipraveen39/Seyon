@@ -129,11 +129,11 @@
 								</div>
 							</div>
 							<div class="form-group required row">
-								<label for="requestedDate" class="col-sm-3 col-form-label">Requested
+								<label for="startDate" class="col-sm-3 col-form-label">Start
 									Date</label>
 								<div class="col-sm-6">
-									<form:input type="date" class="form-control" id="requestedDate"
-										path="requestedDate" placeholder="" />
+									<form:input type="date" class="form-control" id="startDate"
+										path="startDate" placeholder="" />
 								</div>
 							</div>
 							<div class="form-group row">
@@ -228,5 +228,10 @@
 			</div>
 		</div>
 	</div>
+	<c:if test="${not isNew}">
+		<br />
+		<br />
+		<br />
+	</c:if>
 </body>
 </html>

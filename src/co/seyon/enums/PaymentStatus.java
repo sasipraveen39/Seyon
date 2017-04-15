@@ -1,11 +1,11 @@
 package co.seyon.enums;
 
-public enum ProjectType implements Type{
-	COMMERCIAL("Commercial"), RESEDENTIAL("Resedential");
-
+public enum PaymentStatus implements Type {
+	NOT_PAID("Not Paid"), PAID("Paid");
+	
 	private String value;
-
-	private ProjectType(String value) {
+	
+	private PaymentStatus(String value) {
 		this.value = value;
 	}
 
@@ -13,4 +13,5 @@ public enum ProjectType implements Type{
 	public String getValue() {
 		return this.value;
 	}
+
 }

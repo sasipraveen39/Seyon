@@ -117,8 +117,8 @@
 								<div class="col-sm-6">
 									<form:input type="text" class="form-control"
 										readonly="${not IsNew}" id="drawingNumber"
-										error-regex="^[a-zA-Z0-9 ]{6,}$" path="drawingNumber"
-										placeholder="XXXXXXXXXX" />
+										error-regex="^[a-zA-Z0-9 ]{3,}$" path="drawingNumber"
+										placeholder="XXX" />
 								</div>
 							</div>
 							<div class="form-group required row">
@@ -131,14 +131,6 @@
 									</form:select>
 								</div>
 							</div>
-							<div class="form-group row">
-								<label for="dateOfIssue" class="col-sm-3 col-form-label">Date
-									of Issue</label>
-								<div class="col-sm-6">
-									<form:input type="date" class="form-control" id="dateOfIssue"
-										path="dateOfIssue" placeholder="" />
-								</div>
-							</div>
 							<div class="form-group required row">
 								<label for="estimatedDateOfIssue"
 									class="col-sm-3 col-form-label">Estd. Date of Issue</label>
@@ -146,6 +138,14 @@
 									<form:input type="date" class="form-control"
 										id="estimatedDateOfIssue" path="estimatedDateOfIssue"
 										placeholder="" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="dateOfIssue" class="col-sm-3 col-form-label">Date
+									of Issue</label>
+								<div class="col-sm-6">
+									<form:input type="date" class="form-control" id="dateOfIssue"
+										path="dateOfIssue" placeholder="" />
 								</div>
 							</div>
 							<div class="form-group required row">
@@ -180,9 +180,10 @@
 									File</label>
 								<div class="col-sm-6">
 									<input type="file" class="form-control-file" id="drawingFile"
-										name="drawingFile" accept="application/pdf"
+										name="drawingFile" accept="application/pdf,image/x-png,image/gif,image/jpeg"
 										aria-describedby="fileHelp"> <small id="fileHelp"
-										class="form-text text-muted">Upload only pdf file. <c:if
+										class="form-text text-muted">Upload only pdf file, jpeg, png
+												or gif file.<c:if
 											test="${not isNew}">
 											<b><a target="_blank"
 												href="${drawing.document.fileLocation}">Open Document</a></b>

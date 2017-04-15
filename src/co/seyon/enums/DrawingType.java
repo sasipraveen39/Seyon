@@ -1,7 +1,8 @@
 package co.seyon.enums;
 
 public enum DrawingType implements Type{
-	STRUCTURAL("Structural");
+	ARCHITECTURAL("Architectural"), ELECTRICAL("Electrical"), 
+	INTERIOR("Interior"), PLUMBING("Plumbing"), STRUCTURAL("Structural");
 
 	private String value;
 
