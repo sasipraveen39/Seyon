@@ -39,7 +39,9 @@ import co.seyon.enums.BillType;
 import co.seyon.enums.DocumentType;
 import co.seyon.enums.DrawingStatus;
 import co.seyon.enums.DrawingType;
+import co.seyon.enums.ModeOfPayment;
 import co.seyon.enums.PaymentInstallementType;
+import co.seyon.enums.PaymentStatus;
 import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
@@ -49,6 +51,7 @@ import co.seyon.model.Bill;
 import co.seyon.model.Document;
 import co.seyon.model.Drawing;
 import co.seyon.model.Login;
+import co.seyon.model.Payment;
 import co.seyon.model.Project;
 import co.seyon.model.User;
 import co.seyon.service.SeyonService;
@@ -555,6 +558,27 @@ public class Controller {
 		return nextPage;
 	}
 	
+	@RequestMapping("newPayment")
+	public String CreateNewPayment(@RequestParam String num, Model model, HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "paymentcreate";
+			Bill bill = finder.findBills(num, null).get(0);
+			Payment payment = new Payment();
+			payment.setStatus(PaymentStatus.NOT_PAID);
+			payment.setDocument(new Document());
+			model.addAttribute("canEdit", true);
+			model.addAttribute("isNew", true);
+			model.addAttribute("billNumber", num);
+			model.addAttribute("projectNumber", bill.getProject().getProjectNumber());
+			model.addAttribute("payment", payment);
+			model.addAttribute("paymentStatuses",PaymentStatus.values());
+			model.addAttribute("modeOfPayments",ModeOfPayment.values());
+		}
+		return nextPage;
+	}
+	
 	@RequestMapping("editBill")
 	public String editBill(@RequestParam String num, Model model, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -824,6 +848,47 @@ public class Controller {
 		return nextPage;
 	}
 	
+	
+	@RequestMapping(value="submitpayment", method = RequestMethod.POST)
+	public String submitPayment(@ModelAttribute("payment") Payment payment,
+			@RequestParam(value = "bNumber") String num,
+			@RequestParam(value = "receiptFile", required = false) MultipartFile receiptFile,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			try {
+				Bill bill = finder.findBills(num, null).get(0);
+				Project project = bill.getProject();
+				if(receiptFile != null){
+					String docFileName = EnvironmentUtil.getDocumentPath(project
+							.getUser().getAccountNumber(), project
+							.getProjectNumber(), receiptFile.getOriginalFilename(),
+							true);
+					File serverDocFile = new File(docFileName);
+					if (!serverDocFile.getParentFile().exists()) {
+						serverDocFile.getParentFile().mkdirs();
+					}
+					FileUtils.copyInputStreamToFile(receiptFile.getInputStream(),
+							serverDocFile);	
+					payment.getDocument().setProject(project);
+					payment.getDocument().setDocumentType(DocumentType.RECEIPT);
+					payment.getDocument().setFileLocation(EnvironmentUtil.getExposedDocumentPath(project.getUser().getAccountNumber(),
+							project.getProjectNumber(), serverDocFile.getName()));
+				}else{
+					payment.setDocument(null);
+				}
+				payment.setBill(bill);
+				if(service.createPayment(payment)){
+					nextPage = "redirect:retrieveBill?num=" + num;	
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return nextPage;
+	}
+	
 	@RequestMapping(value="updateaccount", method = RequestMethod.POST)
 	public String updateAccount(@ModelAttribute("accountLogin") Login login, HttpServletRequest request) {
 		User user = (User) request.getSession().getAttribute(LOGGEDIN);
@@ -1080,6 +1145,10 @@ public class Controller {
 				}
 			} else if(type.equalsIgnoreCase("Project")){
 				if(service.deleteProjects(item.getIds())){
+					fileDeleted = "Delete successful";
+				}
+			} else if(type.equalsIgnoreCase("Payment")){
+				if(service.deletePayments(item.getIds())){
 					fileDeleted = "Delete successful";
 				}
 			}

@@ -19,6 +19,7 @@ import co.seyon.model.Bill;
 import co.seyon.model.Document;
 import co.seyon.model.Drawing;
 import co.seyon.model.Login;
+import co.seyon.model.Payment;
 import co.seyon.model.Project;
 import co.seyon.model.User;
 
@@ -268,6 +269,17 @@ public class Finder {
 		return projects;
 	}
 	
+	public List<Payment> findPaymentsByID(List<Long> paymentIDs){
+		createEntityManager();
+		TypedQuery<Payment> query = entitymanager
+				.createQuery("SELECT d from Payment d WHERE d.idpayment IN :ids", Payment.class);
+		query.setParameter("ids", paymentIDs);
+		List<Payment> payments = query.getResultList();
+		closeConnection();
+		return payments;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int findLastSequence(Class className) {
 		createEntityManager();
 		String sequence = null;
@@ -295,6 +307,8 @@ public class Finder {
 			sequence = ((Bill) result).getBillNumber();
 		} else if (result instanceof Document) {
 			sequence = ((Document) result).getDocumentNumber();
+		} else if (result instanceof Payment){
+			sequence = ((Payment) result).getPaymentNumber();
 		}
 		
 		if(sequence != null){

@@ -23,6 +23,9 @@ import java.sql.Timestamp;
 @Table(name="payment")
 @AdditionalCriteria(":disableRetiredFeature = 1 or this.retired = false")
 @Customizer(value = PaymentCustomizer.class)
+@NamedQueries({
+	@NamedQuery(name = "Payment.findAll", query = "SELECT b FROM Payment b"),
+	@NamedQuery(name = "Payment.findAllByReverseNumber", query = "SELECT b FROM Payment b order by b.paymentNumber desc") })
 public class Payment implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -31,6 +34,9 @@ public class Payment implements Serializable {
 	@Column(unique=true, nullable=false)
 	private int idpayment;
 
+	@Column(name="payment_number", nullable=false, length=100)
+	private String paymentNumber;
+	
 	@Column(name="amount_payable", nullable=false, precision=10, scale=2)
 	private BigDecimal amountPayable;
 
@@ -44,8 +50,9 @@ public class Payment implements Serializable {
 	@Column(name="mode_of_payment", length=45)
 	private String modeOfPayment;
 
+	@Temporal( TemporalType.TIMESTAMP)
 	@Column(name="payment_date")
-	private int paymentDate;
+	private Date paymentDate;
 
     @Temporal( TemporalType.TIMESTAMP)
 	@Column(name="receipt_date")
@@ -84,6 +91,14 @@ public class Payment implements Serializable {
 		this.idpayment = idpayment;
 	}
 
+	public String getPaymentNumber() {
+		return paymentNumber;
+	}
+
+	public void setPaymentNumber(String paymentNumber) {
+		this.paymentNumber = paymentNumber;
+	}
+
 	public BigDecimal getAmountPayable() {
 		return this.amountPayable;
 	}
@@ -109,18 +124,25 @@ public class Payment implements Serializable {
 	}
 
 	public ModeOfPayment getModeOfPayment() {
-		return ModeOfPayment.valueOf(this.modeOfPayment);
+		if(this.modeOfPayment != null){
+			return ModeOfPayment.valueOf(this.modeOfPayment);	
+		}
+		return null;
 	}
 
 	public void setModeOfPayment(ModeOfPayment modeOfPayment) {
-		this.modeOfPayment = modeOfPayment.toString();
+		if(modeOfPayment != null){
+			this.modeOfPayment = modeOfPayment.toString();	
+		}else{
+			this.modeOfPayment = null;
+		}
 	}
 
-	public int getPaymentDate() {
+	public Date getPaymentDate() {
 		return this.paymentDate;
 	}
 
-	public void setPaymentDate(int paymentDate) {
+	public void setPaymentDate(Date paymentDate) {
 		this.paymentDate = paymentDate;
 	}
 

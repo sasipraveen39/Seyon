@@ -17,6 +17,7 @@ import co.seyon.model.Bill;
 import co.seyon.model.Document;
 import co.seyon.model.Drawing;
 import co.seyon.model.Login;
+import co.seyon.model.Payment;
 import co.seyon.model.Project;
 import co.seyon.model.User;
 import co.seyon.sequence.SequenceGenerator;
@@ -334,6 +335,22 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
+	
+	public boolean createPayment(Payment payment) {
+		boolean result = false;
+		if (payment != null) {
+			payment.setPaymentNumber(SequenceGenerator.generateSequence(Payment.class));
+			if(payment.getDocument() != null){
+				payment.getDocument().setDocumentNumber(
+						SequenceGenerator.generateSequence(Document.class));	
+			}
+			Bundle bundle = new Bundle();
+			bundle.persist(payment);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
 
 	public boolean deleteDocuments(List<Long> docIDs) {
 		boolean result = false;
@@ -377,6 +394,18 @@ public class SeyonService {
 		if (projects != null) {
 			Bundle bundle = new Bundle();
 			bundle.removeAll(projects);
+			bundle.closeConnection();
+		}
+		result = true;
+		return result;
+	}
+	
+	public boolean deletePayments(List<Long> paymentIDs) {
+		boolean result = false;
+		List<Payment> payments = finder.findPaymentsByID(paymentIDs);
+		if (payments != null) {
+			Bundle bundle = new Bundle();
+			bundle.removeAll(payments);
 			bundle.closeConnection();
 		}
 		result = true;

@@ -94,7 +94,7 @@ public class ScratchPad {
 		bill.setProject(project);
 		
 		Payment payment = new Payment();
-		payment.setStatus("not Paid");
+		//payment.setStatus("not Paid");
 		payment.setDueDate(new Date());
 		payment.setDocument(document);
 		payment.setBill(bill);
