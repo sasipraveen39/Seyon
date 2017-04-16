@@ -9,6 +9,7 @@ import org.eclipse.persistence.annotations.Customizer;
 import co.seyon.customizer.PaymentCustomizer;
 import co.seyon.enums.ModeOfPayment;
 import co.seyon.enums.PaymentStatus;
+import co.seyon.util.NumberToWords;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -205,4 +206,7 @@ public class Payment implements Serializable {
 		this.retired = retired;
 	}
 	
+	public String getAmountInWords(){
+		return NumberToWords.convertIntegerToWords(this.getAmountPayable().intValue()) + " Only";
+	}
 }

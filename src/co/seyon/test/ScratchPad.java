@@ -11,9 +11,11 @@ import co.seyon.enums.DocumentType;
 import co.seyon.enums.DrawingStatus;
 import co.seyon.enums.DrawingType;
 import co.seyon.enums.HistoryType;
+import co.seyon.enums.ModeOfPayment;
 import co.seyon.enums.ProjectType;
 import co.seyon.enums.UserType;
 import co.seyon.model.*;
+import co.seyon.pdf.generator.ReportGenerator;
 import co.seyon.sequence.SequenceGenerator;
 import co.seyon.util.EncryptionUtil;
 
@@ -21,9 +23,7 @@ public class ScratchPad {
 
 	public static void main(String[] args) {
 		System.out.println("Start");
-		
-		Bundle bundle = new Bundle();
-		
+	
 		Login login = new Login();
 		login.setUsername("sasipraveen56");
 		login.setPassword(EncryptionUtil.getSecurePassword("sample"));
@@ -95,13 +95,17 @@ public class ScratchPad {
 		
 		Payment payment = new Payment();
 		//payment.setStatus("not Paid");
+		payment.setReceiptDate(new Date());
+		payment.setModeOfPayment(ModeOfPayment.DEMAND_DRAFT);
+		payment.setReceiptNumber("RC000000012");
+		payment.setReferenceNumber("334567788");
 		payment.setDueDate(new Date());
 		payment.setDocument(document);
 		payment.setBill(bill);
 		payment.setAmountPayable(new BigDecimal(100.22));
 		
-		bundle.persistAll(new Object[]{login,user, address, project, drawing, document, bill, payment, history});
-		bundle.closeConnection();
+		ReportGenerator generator = new ReportGenerator();
+		generator.generateReceipt(payment, null);
 		
 		System.out.println("Complete");
 	}

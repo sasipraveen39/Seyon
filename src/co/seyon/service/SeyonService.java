@@ -2,6 +2,7 @@ package co.seyon.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -20,6 +21,7 @@ import co.seyon.model.Login;
 import co.seyon.model.Payment;
 import co.seyon.model.Project;
 import co.seyon.model.User;
+import co.seyon.pdf.generator.ReportGenerator;
 import co.seyon.sequence.SequenceGenerator;
 import co.seyon.util.Constants;
 import co.seyon.util.DateUtil;
@@ -410,7 +412,8 @@ public class SeyonService {
 	}
 	
 	public boolean generateReceipt(Payment payment, String filePathName){
-		boolean result = false;
-		return result;
+		payment.setReceiptDate(new Date());
+		ReportGenerator generator = new ReportGenerator();
+		return generator.generateReceipt(payment, filePathName);
 	}
 }

@@ -91,7 +91,7 @@
 							</c:if>
 						</dl>
 						<c:if test="${empty payment.receiptNumber}">
-							<button type="button" class="btn btn-warning btn-sm" ${payment.status == 'PAID'?'':'disabled'}>Generate receipt</button>
+							<button type="button" onclick="window.location.href='generateReceipt?num=${payment.paymentNumber}'"class="btn btn-warning btn-sm" ${payment.status == 'PAID'?'':'disabled'}>Generate receipt</button>
 							<p><em>Mark the Payment as paid to generate receipt.</em></p>
 						</c:if>
 					</div>

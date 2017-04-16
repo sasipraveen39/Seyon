@@ -629,6 +629,36 @@ public class Controller {
 		return nextPage;
 	}
 
+	@RequestMapping("editPayment")
+	public String editPayment(@RequestParam String num, Model model,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			nextPage = "paymentcreate";
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				Payment payment = finder.findPayments(num).get(0);
+				model.addAttribute("canEdit", true);
+				model.addAttribute("isNew", false);
+				model.addAttribute("payment", payment);
+				model.addAttribute("billNumber", payment.getBill()
+						.getBillNumber());
+				model.addAttribute("projectNumber", payment.getBill()
+						.getProject().getProjectNumber());
+				model.addAttribute("payment", payment);
+				model.addAttribute("paymentStatuses", PaymentStatus.values());
+				model.addAttribute("modeOfPayments", ModeOfPayment.values());
+				break;
+			case CLIENT:
+				break;
+			}
+		}
+		return nextPage;
+	}
+
 	@RequestMapping("newProject")
 	public String CreateNewProject(@RequestParam String num, Model model,
 			HttpServletRequest request) {
@@ -1132,6 +1162,35 @@ public class Controller {
 			model.addAttribute("canEdit", true);
 		}
 		return navigatePage(user, "_drawingdetail", request);
+	}
+
+	@RequestMapping("generateReceipt")
+	public String generateReceipt(@RequestParam String num, Model model,
+			HttpServletRequest request) {
+		User user = (User) request.getSession().getAttribute(LOGGEDIN);
+		String nextPage = "redirect:/";
+		if (user != null) {
+			Login login = user.getLogin();
+			switch (login.getUserType()) {
+			case ADMIN:
+			case VENDOR:
+				Payment payment = finder.findPayments(num).get(0);
+				Project project = payment.getBill().getProject();
+				String docFileName = EnvironmentUtil.getDocumentPath(project
+						.getUser().getAccountNumber(), project
+						.getProjectNumber(), "Receipt.pdf", true);
+				File serverDocFile = new File(docFileName);
+				if (!serverDocFile.getParentFile().exists()) {
+					serverDocFile.getParentFile().mkdirs();
+				}
+				service.generateReceipt(payment, docFileName);
+				nextPage = "redirect:retrievePayment?num=" + num;
+				break;
+			case CLIENT:
+				break;
+			}
+		}
+		return nextPage;
 	}
 
 	@RequestMapping(value = "images/{accountNumber}/{projectNumber}/{imageName:.+}", method = RequestMethod.GET)
