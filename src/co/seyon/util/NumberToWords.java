@@ -30,10 +30,5 @@ public class NumberToWords {
         }
         return answer.trim();
     }
-    public static void main(String args[]){
-        System.out.println("10000: "+convertIntegerToWords(1000000));
-        System.out.println("10005006: "+convertIntegerToWords(10005006));
-        System.out.println("-10005006: "+convertIntegerToWords(-10005006));
-
-    }
+   
 }

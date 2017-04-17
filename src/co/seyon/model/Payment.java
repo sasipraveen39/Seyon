@@ -26,7 +26,8 @@ import java.sql.Timestamp;
 @Customizer(value = PaymentCustomizer.class)
 @NamedQueries({
 	@NamedQuery(name = "Payment.findAll", query = "SELECT b FROM Payment b"),
-	@NamedQuery(name = "Payment.findAllByReverseNumber", query = "SELECT b FROM Payment b order by b.paymentNumber desc") })
+	@NamedQuery(name = "Payment.findAllByReverseNumber", query = "SELECT b FROM Payment b order by b.paymentNumber desc"),
+	@NamedQuery(name = "Payment.findAllByReverseReceiptNumber", query = "SELECT b FROM Payment b where b.receiptNumber IS NOT NULL order by b.receiptNumber desc")})
 public class Payment implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -77,7 +78,7 @@ public class Payment implements Serializable {
 	private Bill bill;
 
 	//bi-directional one-to-one association to Document
-    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="receipt_document_id")
 	private Document document;
 

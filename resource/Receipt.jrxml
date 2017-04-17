@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2017-04-16T21:16:36 -->
+<!-- 2017-04-17T09:41:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Receipt" pageWidth="595" pageHeight="421" orientation="Landscape" columnWidth="381" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="24ca0c21-9edd-44b7-b0fd-ff3cc7af245c">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SeyonBean"/>
 	<property name="com.jaspersoft.studio.unit." value="cm"/>
@@ -203,14 +203,14 @@
 			<rectangle>
 				<reportElement x="410" y="53" width="140" height="38" uuid="5c54c177-58b7-42bc-b3b1-2d903599f9f7"/>
 			</rectangle>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00#;(#,##0.00#)" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement x="436" y="62" width="114" height="21" uuid="f4c8770a-5786-4846-97eb-f728d657ab27">
 					<property name="com.jaspersoft.studio.unit.height" value="cm"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Monospaced" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amountPayable}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.ibm.icu.text.NumberFormat.getCurrencyInstance(new Locale("en", "in")).format($F{amountPayable})]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="410" y="62" width="26" height="21" uuid="eae1b4f2-a7c0-4f86-85e3-8d72789e770f"/>

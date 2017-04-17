@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import co.seyon.dao.Bundle;
 import co.seyon.dao.Finder;
 import co.seyon.enums.AddressType;
+import co.seyon.enums.DocumentType;
 import co.seyon.enums.UserType;
 import co.seyon.exception.InitialPasswordException;
 import co.seyon.exception.UserDeActiveException;
@@ -206,7 +207,7 @@ public class SeyonService {
 
 		return result;
 	}
-	
+
 	public boolean updateUser(User user) {
 		boolean result = false;
 		Bundle bundle = new Bundle();
@@ -241,7 +242,6 @@ public class SeyonService {
 		return result;
 	}
 
-	
 	public boolean updateBill(String projectNumber, Bill bill,
 			MultipartFile multipartFile) throws IOException {
 		boolean result = false;
@@ -253,7 +253,7 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
+
 	public boolean updateDocument(String projectNumber, Document document,
 			MultipartFile multipartFile) throws IOException {
 		boolean result = false;
@@ -337,12 +337,13 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
+
 	public boolean createPayment(Payment payment) {
 		boolean result = false;
 		if (payment != null) {
 			payment.setDocument(null);
-			payment.setPaymentNumber(SequenceGenerator.generateSequence(Payment.class));
+			payment.setPaymentNumber(SequenceGenerator
+					.generateSequence(Payment.class));
 			Bundle bundle = new Bundle();
 			bundle.persist(payment);
 			bundle.closeConnection();
@@ -398,7 +399,7 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
+
 	public boolean deletePayments(List<Long> paymentIDs) {
 		boolean result = false;
 		List<Payment> payments = finder.findPaymentsByID(paymentIDs);
@@ -410,10 +411,37 @@ public class SeyonService {
 		result = true;
 		return result;
 	}
-	
-	public boolean generateReceipt(Payment payment, String filePathName){
-		payment.setReceiptDate(new Date());
+
+	public boolean generateReceipt(Payment payment) {
+		boolean result = false;
+		Project project = payment.getBill().getProject();
+		String docFileName = EnvironmentUtil.getDocumentPath(project.getUser()
+				.getAccountNumber(), project.getProjectNumber(), "Receipt.pdf",
+				true);
+		File serverDocFile = new File(docFileName);
+		if (!serverDocFile.getParentFile().exists()) {
+			serverDocFile.getParentFile().mkdirs();
+		}
+
 		ReportGenerator generator = new ReportGenerator();
-		return generator.generateReceipt(payment, filePathName);
+		payment.setReceiptDate(new Date());
+		payment.setReceiptNumber(SequenceGenerator.generateReceiptSequence());
+		if (generator.generateReceipt(payment, docFileName)) {
+			Document document = new Document();
+			document.setProject(project);
+			document.setName("Receipt for Payment "
+					+ payment.getPaymentNumber());
+			document.setDescription("Receipt for Payment "
+					+ payment.getPaymentNumber());
+			document.setDocumentType(DocumentType.RECEIPT);
+			document.setFileLocation(EnvironmentUtil.getExposedDocumentPath(
+					project.getUser().getAccountNumber(),
+					project.getProjectNumber(), serverDocFile.getName()));
+			payment.setDocument(document);
+			if (this.createDocument(document)) {
+				result = true;
+			}
+		}
+		return result;
 	}
 }

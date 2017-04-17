@@ -1175,15 +1175,7 @@ public class Controller {
 			case ADMIN:
 			case VENDOR:
 				Payment payment = finder.findPayments(num).get(0);
-				Project project = payment.getBill().getProject();
-				String docFileName = EnvironmentUtil.getDocumentPath(project
-						.getUser().getAccountNumber(), project
-						.getProjectNumber(), "Receipt.pdf", true);
-				File serverDocFile = new File(docFileName);
-				if (!serverDocFile.getParentFile().exists()) {
-					serverDocFile.getParentFile().mkdirs();
-				}
-				service.generateReceipt(payment, docFileName);
+				service.generateReceipt(payment);
 				nextPage = "redirect:retrievePayment?num=" + num;
 				break;
 			case CLIENT:
